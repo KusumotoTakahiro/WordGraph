@@ -1,6 +1,17 @@
 import colors from 'vuetify/es5/util/colors'
+//import path from 'path'
+//import fs from 'fs'
 
 export default {
+  // server: {
+  //   port: 3000,
+  //   host: "0.0.0.0",
+  //   https: {
+  //     key: fs.readFileSync(path.resolve(__dirname, 'localhost-key.pem')),
+  //     cert: fs.readFileSync(path.resolve(__dirname, 'localhost.pem'))
+  //   }
+  // },
+  
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - word-graph-project',
