@@ -4,3 +4,11 @@ test投稿
 
 5/11 詰まったところ．
 npm run dev でlocalサーバを起動するみたいです．
+
+5/12
+layoutのdefault.vueがおそらく全体のひな型で．
+その中にあるNuxtタグがindex.vueとinspire.vueを指定しているのだと思う．ただどこに書いてるのかよくわからない．
+componentsにはlogoとかしか入ってない．navigation varとかも入ってそうだけど，見た感じだとdefault.vueに直書きされてた．
+
+button とかのプロパティでnuxtというものがあった．これは<nuxt-link>と同等の機能を付加できるものらしい．
+nuxt-linkをつかうと勝手にrouterの処理をしてくれるらしい．
