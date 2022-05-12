@@ -2,74 +2,21 @@
   <v-row justify="center" align="center">
     <v-col cols="12" sm="8" md="6">
       <v-card class="logo py-4 d-flex justify-center">
-        <NuxtLogo />
-        <VuetifyLogo />
+        <!-- <NuxtLogo />
+        <VuetifyLogo /> -->
       </v-card>
       <v-card>
         <v-card-title class="headline">
-          Welcome to the Vuetify + Nuxt.js template
+          word graph
         </v-card-title>
         <v-card-text>
-          <p>Vuetify is a progressive Material Design component framework for Vue.js. It was designed to empower developers to create amazing applications.</p>
-          <p>
-            For more information on Vuetify, check out the <a
-              href="https://vuetifyjs.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              documentation
-            </a>.
-          </p>
-          <p>
-            If you have questions, please join the official <a
-              href="https://chat.vuetifyjs.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="chat"
-            >
-              discord
-            </a>.
-          </p>
-          <p>
-            Find a bug? Report it on the github <a
-              href="https://github.com/vuetifyjs/vuetify/issues"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="contribute"
-            >
-              issue board
-            </a>.
-          </p>
-          <p>Thank you for developing with Vuetify and I look forward to bringing more exciting features in the future.</p>
-          <div class="text-xs-right">
-            <em><small>&mdash; John Leider</small></em>
-          </div>
-          <hr class="my-3">
-          <a
-            href="https://nuxtjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt Documentation
-          </a>
-          <br>
-          <a
-            href="https://github.com/nuxt/nuxt.js"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt GitHub
-          </a>
+          ここにWordGraphを表示する．
+          <p>{{finalTranscript}}</p>
+          <v-btn @click="start_recog()" color="primary">音声認識の開始</v-btn>
+          <v-btn @click="stop_recog()" color="red">音声認識の終了</v-btn>
         </v-card-text>
         <v-card-actions>
-          <v-spacer />
-          <v-btn
-            color="primary"
-            nuxt
-            to="/inspire"
-          >
-            Continue
-          </v-btn>
+          <!-- ここには遷移するためのボタンとかを置くと思われる -->
         </v-card-actions>
       </v-card>
     </v-col>
@@ -77,7 +24,56 @@
 </template>
 
 <script>
+//import kuromoji from "kuromoji";
+import axios from "axios";
+
 export default {
-  name: 'IndexPage'
+  name: 'IndexPage',
+  data() {
+    return {
+      recognition: null,
+      interimTranscrip: "",
+      finalTranscript: "",
+    }
+  },
+  methods: {
+    async init_recog() {
+    },
+    recog() {
+    },
+    analysis() {
+    },
+    talk_recog() {
+      let SpeechRecog = window.webkitSpeechRecognition || window.webkitSpeechRecognition;
+      this.recognition = new SpeechRecog();
+
+      //recognitionの設定
+      this.recognition.lang = "ja-JP";
+      this.recognition.interimResults = true;
+      this.recognition.continuous = true;
+
+      this.recognition.onresult = (event) => {
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          let transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            this.finalTranscript += transcript;
+          }
+          else {
+            this.interimTranscript = transcript;
+          }
+        }
+      }
+      this.recognition.start();
+    },
+    start_recog() {
+      this.talk_recog();
+    },
+    stop_recog() {
+      this.recognition.stop();
+    },
+  }
 }
 </script>
+<style scoped>
+
+</style>
