@@ -10,10 +10,14 @@
           word graph
         </v-card-title>
         <v-card-text>
+          <flag iso="it" />
+          <flag iso="gb" />
+          <flag iso="us" />
           ここにWordGraphを表示する．
           <p>{{finalTranscript}}</p>
           <v-btn @click="start_recog()" color="primary">音声認識の開始</v-btn>
           <v-btn @click="stop_recog()" color="red">音声認識の終了</v-btn>
+          <v-btn @click="analysis()" color="red">test analysis</v-btn>
         </v-card-text>
         <v-card-actions>
           <!-- ここには遷移するためのボタンとかを置くと思われる -->
@@ -37,12 +41,16 @@ export default {
     }
   },
   methods: {
+    //音声認識APIの初期化
     async init_recog() {
     },
+    //音声認識APIの実行
     recog() {
     },
+    //kuromoji.jsを使って形態素解析を行う．
     analysis() {
     },
+    //現時点で上記の音声認識関数が分割できないのでひとまとめにしている．
     talk_recog() {
       let SpeechRecog = window.webkitSpeechRecognition || window.webkitSpeechRecognition;
       this.recognition = new SpeechRecog();
@@ -65,9 +73,11 @@ export default {
       }
       this.recognition.start();
     },
+    //音声認識開始を取りまとめる関数．ボタンと連携．
     start_recog() {
       this.talk_recog();
     },
+    //音声認識終了を取りまとめる関数．ボタンと連携.
     stop_recog() {
       this.recognition.stop();
     },
