@@ -15,9 +15,10 @@
           <flag iso="us" />
           ここにWordGraphを表示する．
           <p>{{finalTranscript}}</p>
+          <p>{{keywords}}</p>
           <v-btn @click="start_recog()" color="primary">音声認識の開始</v-btn>
           <v-btn @click="stop_recog()" color="red">音声認識の終了</v-btn>
-          <v-btn @click="analysis()" color="red">test analysis</v-btn>
+          <v-btn @click="analysis()" color="green">test analysis</v-btn>
         </v-card-text>
         <v-card-actions>
           <!-- ここには遷移するためのボタンとかを置くと思われる -->
@@ -28,7 +29,7 @@
 </template>
 
 <script>
-//import kuromoji from "kuromoji";
+import kuromoji from "kuromoji";
 import axios from "axios";
 
 export default {
@@ -36,8 +37,8 @@ export default {
   data() {
     return {
       recognition: null,
-      interimTranscrip: "",
       finalTranscript: "",
+      keywords : [],
     }
   },
   methods: {
@@ -48,7 +49,21 @@ export default {
     recog() {
     },
     //kuromoji.jsを使って形態素解析を行う．
-    analysis() {
+    async analysis() {
+      kuromoji.builder({ dicPath: "/dict" }).build((err, tokenizer) => {
+        if (err) {
+          console.log(err);
+        } else {
+          const tokens = tokenizer.tokenize(this.finalTranscript);
+          console.log("finalTranscript = "+this.finalTranscript);
+          for (let token of tokens) {
+            if (token.pos == "名詞") {
+              console.log("token: ", token.basic_form);
+              this.keywords.push(token.basic_form);
+            }
+          }
+        }
+      });
     },
     //現時点で上記の音声認識関数が分割できないのでひとまとめにしている．
     talk_recog() {
@@ -64,10 +79,8 @@ export default {
         for (let i = event.resultIndex; i < event.results.length; i++) {
           let transcript = event.results[i][0].transcript;
           if (event.results[i].isFinal) {
-            this.finalTranscript += transcript;
-          }
-          else {
-            this.interimTranscript = transcript;
+            this.finalTranscript = transcript;
+            this.analysis();
           }
         }
       }
