@@ -106,7 +106,12 @@ export default {
           icon: 'mdi-chart-bubble',
           title: 'Inspire',
           to: '/inspire'
-        }
+        },
+        {
+          icon: 'mdi-graph-outline',
+          title: 'word graph',
+          to: '/sample'
+        },
       ],
       miniVariant: false,
       right: true,
