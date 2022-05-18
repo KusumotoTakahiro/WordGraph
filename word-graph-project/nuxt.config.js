@@ -34,6 +34,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '@/plugins/flag-icon',
+    '@/plugins/cytoscape',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -87,6 +88,6 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    transpile: ['vue-flag-icon']
+    transpile: ['vue-flag-icon'],
   }
 }
