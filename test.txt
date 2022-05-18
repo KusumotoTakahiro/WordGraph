@@ -12,3 +12,7 @@ componentsにはlogoとかしか入ってない．navigation varとかも入っ�
 
 button とかのプロパティでnuxtというものがあった．これは<nuxt-link>と同等の機能を付加できるものらしい．
 nuxt-linkをつかうと勝手にrouterの処理をしてくれるらしい．
+
+
+5/18
+研究室のPCから編集してみた．
