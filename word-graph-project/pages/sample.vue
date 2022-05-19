@@ -43,7 +43,6 @@ export default {
                 },
             ]);
             this.node_id += 1;
-            this.edge_id += 1;
             this.sita += Math.PI/10;
             this.k = 200 + Math.random()*100;
         },
@@ -51,15 +50,16 @@ export default {
             this.cy.add({
                 group : 'edges',
                 data : { 
-                    id : this.edge_id, 
+                    //id : String(this.edge_id), 
                     source : this.node_id-2,
                     target : this.node_id-1,
                 },
             })
+            console.log(this.cy.edges.id)
         },
         update : function() {
             this.update_nodes();
-            //this.update_edges();
+            this.update_edges();
         },
         view_init : function() {
             this.cy = cytoscape({
@@ -67,6 +67,9 @@ export default {
             container: document.getElementById('cy'),
 
             elements: [ // list of graph elements to start with
+                { // node a
+                    data: { id: 0 }
+                },
             ],
             style: [ // the stylesheet for the graph
                 {
@@ -89,7 +92,7 @@ export default {
                 }
             ],
             layout: {
-                name: 'grid',
+                name: 'concentric',
                 rows: 1
             }
             });
