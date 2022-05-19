@@ -8,22 +8,28 @@
           word graph
         </v-card-title>
         <v-card-text>
-          <flag iso="it" />
-          <flag iso="gb" />
-          <flag iso="us" />
-          <div id="cy1"></div>
+          <div>
+            <flag iso="it" />
+            <flag iso="gb" />
+            <flag iso="us" />
+          </div>
+          
           <div>
             <p>{{finalTranscript}}</p>
-            <p>{{keywords}}</p>
+            <p>{{keywords.keyword}}</p>
           </div>
           <v-btn @click="start_recog()" color="primary">音声認識の開始</v-btn>
           <v-btn @click="stop_recog()" color="red">音声認識の終了</v-btn>
           <v-btn @click="make_graph()" color="green">update graph</v-btn>
         </v-card-text>
+        
         <v-card-actions>
           <!-- ここには遷移するためのボタンとかを置くと思われる -->
         </v-card-actions>
       </v-card>
+    </v-col>
+    <v-col>
+    <div id="cy"></div>
     </v-col>
   </v-row>
 </template>
@@ -39,21 +45,26 @@ export default {
     return {
       recognition: null,
       finalTranscript: "",
-      keywords : [],
-      cy_nodes : [],
-      cy_edges : [],
-      cy_count : 0, //graphの頂点数(頂点のid)を管理する変数
-      arg_x : 0,
-      arg_y : 0,
-      edge_id : 0,
+      keywords : [{"keyword":'start', "weight":0, "isInGraph":true}], //ここがword graphのノードにもなる．
+      theta : 0, //nodeの位置をΘで管理する．
     }
   },
   methods: {
-    //音声認識APIの初期化
-    async init_recog() {
-    },
-    //音声認識APIの実行
-    recog() {
+    // //音声認識APIの初期化
+    // async init_recog() {
+    // },
+    // //音声認識APIの実行
+    // recog() {
+    // },
+    //keywordがすでに出たものかを確認する関数
+    check_duplicate(keyword) {
+      let index = -1;
+      this.keywords.forEach(function(value, index){
+        if (keyword == value.keyword) {
+          index = index;
+        }
+      });
+      return index;
     },
     //kuromoji.jsを使って形態素解析を行う．
     async analysis() {
@@ -66,7 +77,19 @@ export default {
           for (let token of tokens) {
             if (token.pos == "名詞") {
               console.log("token: ", token.basic_form);
-              this.keywords.push(token.basic_form);
+              keyword = token.basic_form;
+              let index = check_duplicate(keyword);
+              if (index != -1) { //keywordが重複していた場合は重複した値のプロパティを更新する．
+                this.keywords[index].weight += 1;
+                this.keywords[index].isInGraph = false;
+              }
+              else {  //keywordが重複していなかった場合は新規でkeywordを追加する
+                keywords.push({
+                  "keyword":keyword, 
+                  "weight":0, 
+                  "isInGraph":false
+                });
+              }
             }
           }
         }
@@ -104,13 +127,18 @@ export default {
     //グラフ初期化の関数
     init_graph() {
       this.cy = cytoscape({
-        container : document.getElementById('cy1'),
-        elements : [],
+        container : document.getElementById('cy'),
+        elements : [
+          {
+            data : { id : 'start' }
+          },
+        ],
         style: [
           {
             selector: 'node',
             style: {
               'background-color': '#3cb371',
+              'color': 'white',
               'label' : 'data(id)'
             }
           },
@@ -129,40 +157,8 @@ export default {
           name: 'grid',
           rows: 1
         }
-      })
-    },
-    //グラフ更新の関数
-    add_node(keyword, exkeyword) {
-      cy.add([
-        {
-          group: 'nodes',
-          data: {id : keyword}, position: {x : 100 + this.arg_x, y : 100 + this.arg_y}
-        },
-        {
-          group: 'edges',
-          data: {id : this.edge_id, source: exkeyword, target: keyword}
-        }
-      ]);
-      this.arg_x += 20;
-      this.arg_y += 20;
-      this.edge_id += 1;
-    },
-    //グラフ生成の関数
-    make_graph() {
-      let exkeyword = "";
-      let keyword = "";
-      for (let i = 0; i < this.keywords.length; i++) {
-        if (i==0){
-          keyword = this.keywords[i];
-        }
-        else {
-          exkeyword = keyword;
-          keyword = this.keywords[i];
-          this.add_node(keyword, exkeyword);
-        }
-      }
+      });
     }
-
   },
   mounted: function() {
     this.init_graph()
@@ -173,6 +169,7 @@ export default {
 #cy {
     width: 100%;
     height: 80%;
+    position: absolute;
     top: 50px;
     left: 0px;
     text-align: left;
