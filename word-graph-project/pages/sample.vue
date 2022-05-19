@@ -8,8 +8,8 @@
             </small>
         </header>
         <p>ここにWordGraphを表示する．</p>
-        <button v-on:click="add_node">push</button>
         <div id="cy"></div>
+        <v-btn @click="update('node')">button</v-btn>
         <footer>
             <small>
             <em>&mdash;word graph</em>
@@ -27,62 +27,75 @@ export default {
     data() {
         return {
             count: 0,
+            node_id : 1,
+            edge_id : 0,
+            sita : 0,
+            k : 100
         }
     },
     methods: {
-        add_node: function() {
-            console.info(this.cy)
+        update_nodes : function() {
             this.cy.add([
-                {'group': 'nodes', data: {'id': 'node' + this.count }, position: {x: 300, y:200} },
-                {'group': 'edges', data: {'id': 'edge' + this.count, 'source': 'node' + this.count, 'target': 'cat'}}
-            ])
+                { 
+                    group : 'nodes',
+                    data : { id : this.node_id },
+                    position : { x : 150 + Math.cos(this.sita)*this.k, y: 150 + Math.sin(this.sita)*this.k},
+                },
+            ]);
+            this.node_id += 1;
+            this.edge_id += 1;
+            this.sita += Math.PI/10;
+            this.k = 200 + Math.random()*100;
         },
-        view_init: function() {
+        update_edges : function() {
+            this.cy.add({
+                group : 'edges',
+                data : { 
+                    id : this.edge_id, 
+                    source : this.node_id-2,
+                    target : this.node_id-1,
+                },
+            })
+        },
+        update : function() {
+            this.update_nodes();
+            //this.update_edges();
+        },
+        view_init : function() {
             this.cy = cytoscape({
 
-    container: document.getElementById('cy'),
+            container: document.getElementById('cy'),
 
-  elements: [ // list of graph elements to start with
-    { // node a
-        data: { id: 'a' }
-    },
-    { // node b
-        data: { id: 'b' }
-    },
-    { // edge ab
-        data: { id: 'ab', source: 'a', target: 'b' }
-    }
-    ],
-
-  style: [ // the stylesheet for the graph
-    {
-        selector: 'node',
-        style: {
-        'background-color': '#666',
-        'label': 'data(id)'
+            elements: [ // list of graph elements to start with
+            ],
+            style: [ // the stylesheet for the graph
+                {
+                    selector: 'node',
+                    style: {
+                        'background-color': 'brown',
+                        'color' : 'red',
+                        'label': 'data(id)'
+                    }
+                },
+                {
+                    selector: 'edge',
+                    style: {
+                        'width': 3,
+                        'line-color': '#ccc',
+                        'target-arrow-color': '#ccc',
+                        'target-arrow-shape': 'triangle',
+                        'curve-style': 'bezier'
+                    }
+                }
+            ],
+            layout: {
+                name: 'grid',
+                rows: 1
+            }
+            });
         }
     },
-
-    {
-        selector: 'edge',
-        style: {
-        'width': 3,
-        'line-color': '#ccc',
-        'target-arrow-color': '#ccc',
-        'target-arrow-shape': 'triangle',
-        'curve-style': 'bezier'
-        }
-    }
-    ],
-
-    layout: {
-    name: 'grid',
-    rows: 1
-    }
-});
-        }
-    },
-    mounted: function() {
+    mounted : function(){
         this.view_init()
     }
 }

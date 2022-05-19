@@ -11,7 +11,7 @@
           <flag iso="it" />
           <flag iso="gb" />
           <flag iso="us" />
-          <div id="cy"></div>
+          <div id="cy1"></div>
           <div>
             <p>{{finalTranscript}}</p>
             <p>{{keywords}}</p>
@@ -104,7 +104,7 @@ export default {
     //グラフ初期化の関数
     init_graph() {
       this.cy = cytoscape({
-        container : document.getElementById('cy'),
+        container : document.getElementById('cy1'),
         elements : [],
         style: [
           {
