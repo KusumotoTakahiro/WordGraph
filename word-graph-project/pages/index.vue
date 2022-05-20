@@ -43,7 +43,15 @@ export default {
     return {
       recognition: null,
       finalTranscript: "",
-      keywords : [{"keyword":'start', "weight":0, "isInGraph":true}], //ここがword graphのノードにもなる．
+      keywords : [
+          {
+            "keyword":'start', 
+            "weight":0,
+            "next":[],  //次の発言で出てくる単語
+            "isLatest":true, //最新の発言であるか
+            "isInGraph":true, //graphにnodeが含まれているか．
+          },
+        ], 
       theta : 0, //nodeの位置をΘで管理する．
       k : 100,
     }
@@ -75,24 +83,43 @@ export default {
         } else {
           const tokens = tokenizer.tokenize(this.finalTranscript);
           console.log("finalTranscript = "+this.finalTranscript);
+          //latestをもとにnextを更新
+          for (let token of tokens) {
+            if (tokens.pos=="名詞"){
+              let keyword = token.basic_form;
+              this.keywords.forEach(function(value){
+                if (value.isLatest==true){
+                  value.next.push(keyword);
+                }
+              })
+            }
+          }
+          this.keywords.forEach(function(value){
+            value.isLatest = false;
+          })
+          //keywordsの更新
           for (let token of tokens) {
             if (token.pos == "名詞") {
-              console.log("token: ", token.basic_form);
               let keyword = token.basic_form;
               let index = this.check_duplicate(keyword);
-              if (index != -1) { //keywordが重複していた場合は重複した値のプロパティを更新する．
+              //keywordが重複していた場合は重複した値のプロパティを更新する．
+              if (index != -1) { 
                 this.keywords[index].weight += 1;
-                this.keywords[index].isInGraph = false;
+                this.keywords[index].isLatest = true;
               }
-              else {  //keywordが重複していなかった場合は新規でkeywordを追加する
+              //keywordが重複していなかった場合は新規でkeywordを追加する
+              else { 
                 this.keywords.push({
                   "keyword":keyword, 
                   "weight":0, 
-                  "isInGraph":false
+                  "next":[],
+                  "isLatest":true,
+                  "isInGraph":false,
                 });
               }
             }
           }
+          
         }
       });
     },
@@ -171,21 +198,37 @@ export default {
       this.k = 200 + Math.random()*100;
       this.theta += Math.PI/10;
     },
-    update_edges(source_node, target_node) {
+    update_edges(edge_id, source_node, target_node) {
       this.cy.add([
         {
           group : 'edges',
           data : {
+            id : edge_id, 
             source : source_node,
             target : target_node,
           }
         }
       ]);
     },
-    update_graph(keyword, source_node, target_node) {
-      
-      this.update_nodes(keyword);
-      this.update_edges(source_node, target_node);
+    update_graph() {
+      //先にキーワードをノードとして追加する
+      this.keywords.forEach(function(value){
+        if (value.isInGraph==false){
+          update_nodes(value.keyword);
+          value.isInGraph = true;
+        }
+      })
+      //keywordsからedgeを生成する
+      this.keywords.forEach(function(value){
+        let next = value.next;
+        let keyword = value.keyword;
+        next.forEach(function(next_word){
+          let id = keyword+next_word;
+          if (this.cy.edges(id)==null){ //すでに存在していないか確認する
+            this.update_edges(id, keyword, next_word);
+          }
+        })
+      })
     }
   },
   mounted: function() {
@@ -198,7 +241,7 @@ export default {
     width: 100%;
     height: 80%;
     position: absolute;
-    top: 300px;
+    top: 200px;
     left: 0px;
     text-align: left;
 }
