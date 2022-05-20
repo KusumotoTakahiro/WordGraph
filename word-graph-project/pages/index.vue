@@ -1,8 +1,7 @@
 <template>
+  <v-container>
   <v-row justify="center" align="center">
     <v-col cols="12" sm="8" md="6">
-      <v-card class="logo py-4 d-flex justify-center">
-      </v-card>
       <v-card>
         <v-card-title class="headline">
           word graph
@@ -13,25 +12,24 @@
             <flag iso="gb" />
             <flag iso="us" />
           </div>
-          
           <div>
             <p>{{finalTranscript}}</p>
-            <p>{{keywords.keyword}}</p>
+            <p>{{keywords}}</p>
           </div>
           <v-btn @click="start_recog()" color="primary">音声認識の開始</v-btn>
           <v-btn @click="stop_recog()" color="red">音声認識の終了</v-btn>
           <v-btn @click="make_graph()" color="green">update graph</v-btn>
         </v-card-text>
-        
         <v-card-actions>
           <!-- ここには遷移するためのボタンとかを置くと思われる -->
         </v-card-actions>
       </v-card>
     </v-col>
-    <v-col>
-    <div id="cy"></div>
-    </v-col>
   </v-row>
+  <v-row>
+    <div id="cy"></div>
+  </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -47,6 +45,7 @@ export default {
       finalTranscript: "",
       keywords : [{"keyword":'start', "weight":0, "isInGraph":true}], //ここがword graphのノードにもなる．
       theta : 0, //nodeの位置をΘで管理する．
+      k : 100,
     }
   },
   methods: {
@@ -58,13 +57,15 @@ export default {
     // },
     //keywordがすでに出たものかを確認する関数
     check_duplicate(keyword) {
-      let index = -1;
+      let idx = -1;
       this.keywords.forEach(function(value, index){
         if (keyword == value.keyword) {
-          index = index;
+          idx = index;
+          console.log("idx="+idx);
         }
       });
-      return index;
+      console.log("idx="+idx);
+      return idx;
     },
     //kuromoji.jsを使って形態素解析を行う．
     async analysis() {
@@ -77,14 +78,14 @@ export default {
           for (let token of tokens) {
             if (token.pos == "名詞") {
               console.log("token: ", token.basic_form);
-              keyword = token.basic_form;
-              let index = check_duplicate(keyword);
+              let keyword = token.basic_form;
+              let index = this.check_duplicate(keyword);
               if (index != -1) { //keywordが重複していた場合は重複した値のプロパティを更新する．
                 this.keywords[index].weight += 1;
                 this.keywords[index].isInGraph = false;
               }
               else {  //keywordが重複していなかった場合は新規でkeywordを追加する
-                keywords.push({
+                this.keywords.push({
                   "keyword":keyword, 
                   "weight":0, 
                   "isInGraph":false
@@ -158,6 +159,33 @@ export default {
           rows: 1
         }
       });
+    },
+    update_nodes(keyword) {
+      this.cy.add([
+        {
+          group : 'nodes',
+          data : { id : keyword },
+          position : {  x : 150 + Math.cos(this.theta)*this.k, y: 150 + Math.sin(this.theta)*this.k }
+        }
+      ]);
+      this.k = 200 + Math.random()*100;
+      this.theta += Math.PI/10;
+    },
+    update_edges(source_node, target_node) {
+      this.cy.add([
+        {
+          group : 'edges',
+          data : {
+            source : source_node,
+            target : target_node,
+          }
+        }
+      ]);
+    },
+    update_graph(keyword, source_node, target_node) {
+      
+      this.update_nodes(keyword);
+      this.update_edges(source_node, target_node);
     }
   },
   mounted: function() {
@@ -170,7 +198,7 @@ export default {
     width: 100%;
     height: 80%;
     position: absolute;
-    top: 50px;
+    top: 300px;
     left: 0px;
     text-align: left;
 }
