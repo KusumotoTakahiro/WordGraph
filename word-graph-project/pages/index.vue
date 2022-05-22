@@ -14,11 +14,16 @@
           </div>
           <div>
             <p>{{finalTranscript}}</p>
-            <p>{{keywords}}</p>
+            <v-data-table
+              :headers="headers"
+              :items="keywords"
+              class="elevation-1"
+            >
+            </v-data-table>
           </div>
           <v-btn @click="start_recog()" color="primary">音声認識の開始</v-btn>
           <v-btn @click="stop_recog()" color="red">音声認識の終了</v-btn>
-          <v-btn @click="make_graph()" color="green">update graph</v-btn>
+          <v-btn @click="update_graph()" color="green">update graph</v-btn>
         </v-card-text>
         <v-card-actions>
           <!-- ここには遷移するためのボタンとかを置くと思われる -->
@@ -41,19 +46,46 @@ export default {
   name: 'IndexPage',
   data() {
     return {
+      headers: [//テーブルのheaderの設定
+        {
+          text: 'Keywords', //列の名前
+          align: 'start',
+          sortable: false,
+          value: 'keyword', //紐づける際のデータ名
+        },
+        {
+          text : '重さ',
+          value : 'weight',
+        },
+        {
+          text : '次ノード',
+          value : 'next',
+        },
+        {
+          text : '最新の単語',
+          value : 'isLatest'
+        },
+        {
+          text : '描画済み',
+          value : 'isInGraph'
+        }
+      ],
       recognition: null,
       finalTranscript: "",
       keywords : [
           {
             "keyword":'start', 
             "weight":0,
-            "next":[],  //次の発言で出てくる単語
+            "before_next":[], //次の単語(描画まえ)
+            "after_next":[],  //次の単語(描画済み)
             "isLatest":true, //最新の発言であるか
             "isInGraph":true, //graphにnodeが含まれているか．
+            "keywordID":0
           },
         ], 
       theta : 0, //nodeの位置をΘで管理する．
       k : 100,
+      keywordID : 1,
     }
   },
   methods: {
@@ -69,53 +101,56 @@ export default {
       this.keywords.forEach(function(value, index){
         if (keyword == value.keyword) {
           idx = index;
-          console.log("idx="+idx);
         }
       });
-      console.log("idx="+idx);
       return idx;
     },
     //kuromoji.jsを使って形態素解析を行う．
     async analysis() {
+      let vm = this;
       kuromoji.builder({ dicPath: "/dict" }).build((err, tokenizer) => {
         if (err) {
           console.log(err);
         } else {
-          const tokens = tokenizer.tokenize(this.finalTranscript);
-          console.log("finalTranscript = "+this.finalTranscript);
+          const tokens = tokenizer.tokenize(vm.finalTranscript);
+          console.log("finalTranscript = "+vm.finalTranscript);
           //latestをもとにnextを更新
           for (let token of tokens) {
-            if (tokens.pos=="名詞"){
+            if (token.pos=="名詞"){
               let keyword = token.basic_form;
-              this.keywords.forEach(function(value){
+              vm.keywords.forEach(function(value){
                 if (value.isLatest==true){
-                  value.next.push(keyword);
+                  value.before_next.push(keyword);
                 }
-              })
+              });
             }
           }
-          this.keywords.forEach(function(value){
+          //nextを更新し終えたのでisLatestを更新．
+          vm.keywords.forEach(function(value){
             value.isLatest = false;
           })
           //keywordsの更新
           for (let token of tokens) {
             if (token.pos == "名詞") {
               let keyword = token.basic_form;
-              let index = this.check_duplicate(keyword);
+              let index = vm.check_duplicate(keyword);
               //keywordが重複していた場合は重複した値のプロパティを更新する．
               if (index != -1) { 
-                this.keywords[index].weight += 1;
-                this.keywords[index].isLatest = true;
+                vm.keywords[index].weight += 1;
+                vm.keywords[index].isLatest = true;
               }
               //keywordが重複していなかった場合は新規でkeywordを追加する
               else { 
-                this.keywords.push({
+                vm.keywords.push({
                   "keyword":keyword, 
                   "weight":0, 
-                  "next":[],
+                  "before_next":[],
+                  "after_next":[],
                   "isLatest":true,
                   "isInGraph":false,
+                  "keywordID":vm.keywordID,
                 });
+                vm.keywordID += 1;
               }
             }
           }
@@ -192,18 +227,20 @@ export default {
         {
           group : 'nodes',
           data : { id : keyword },
-          position : {  x : 150 + Math.cos(this.theta)*this.k, y: 150 + Math.sin(this.theta)*this.k }
+          position : {  
+            x : 150 + Math.cos(this.theta)*this.k, 
+            y : 150 + Math.sin(this.theta)*this.k 
+          }
         }
       ]);
       this.k = 200 + Math.random()*100;
       this.theta += Math.PI/10;
     },
-    update_edges(edge_id, source_node, target_node) {
+    update_edges(source_node, target_node) {
       this.cy.add([
         {
           group : 'edges',
           data : {
-            id : edge_id, 
             source : source_node,
             target : target_node,
           }
@@ -211,23 +248,34 @@ export default {
       ]);
     },
     update_graph() {
+      let vm = this;
       //先にキーワードをノードとして追加する
-      this.keywords.forEach(function(value){
+      vm.keywords.forEach(function(value){
         if (value.isInGraph==false){
-          update_nodes(value.keyword);
+          vm.update_nodes(value.keyword);
           value.isInGraph = true;
         }
-      })
+      });
+      
       //keywordsからedgeを生成する
-      this.keywords.forEach(function(value){
-        let next = value.next;
+      vm.keywords.forEach(function(value){
+        let before_next = value.before_next;
+        let after_next = value.after_next;
         let keyword = value.keyword;
-        next.forEach(function(next_word){
-          let id = keyword+next_word;
-          if (this.cy.edges(id)==null){ //すでに存在していないか確認する
-            this.update_edges(id, keyword, next_word);
+        before_next.forEach(function(before_next_word){
+          let is_drawn = false;
+          after_next.forEach(function(after_next_word){
+            if (before_next_word==after_next_word){
+              is_drawn = true;
+            }
+          })
+          if (is_drawn==false) {
+            vm.update_edges(keyword, before_next_word);
           }
         })
+        //before_nextをafter_nextに更新する.重複する分は今のところ無視
+        after_next = after_next.concat(before_next);
+        before_next = [];
       })
     }
   },
@@ -241,7 +289,7 @@ export default {
     width: 100%;
     height: 80%;
     position: absolute;
-    top: 200px;
+    top: 500px;
     left: 0px;
     text-align: left;
 }
