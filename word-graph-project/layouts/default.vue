@@ -99,7 +99,7 @@ export default {
       items: [
         {
           icon: 'mdi-apps',
-          title: 'Home',
+          title: 'for testing',
           to: '/'
         },
         {
