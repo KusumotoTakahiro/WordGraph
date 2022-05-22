@@ -53,7 +53,7 @@ export default {
         },
         {
           text : '次ノード',
-          value : 'next',
+          value : 'before_next',
         },
         {
           text : '最新の単語',
@@ -256,25 +256,35 @@ export default {
         let before_next = value.before_next;
         let after_next = value.after_next;
         let keyword = value.keyword;
-        before_next.forEach(function(before_next_word){
+        for (let i = 0; i < before_next.length; i++) {
           let is_drawn = false;
-          after_next.forEach(function(after_next_word){
-            if (before_next_word==after_next_word){
+          //描画済みのedgeではないか確認する
+          for (let j = 0; j < after_next.length; j++) {
+            if (before_next[i]==after_next[j]){
               is_drawn = true;
             }
-          })
-          if (is_drawn==false) {
-            vm.update_edges(keyword, before_next_word);
           }
-        })
+          if (is_drawn==false) {
+            vm.update_edges(keyword, before_next[i]);
+          }
+        }
         //before_nextをafter_nextに更新する.重複する分は今のところ無視
-        after_next = after_next.concat(before_next);
-        before_next = [];
+        value.after_next = after_next.concat(before_next);
+        value.before_next = [];
+      })
+    },
+    zoom_func() {
+      let client_w = document.getElementById('cy').clientWidth;
+      let client_h = document.getElementById('cy').clientHeight;
+      this.cy.zoom({
+        level : 2.0,
+        renderedPosition: {x: client_w/2, y: client_h/2.5},
       })
     }
   },
   mounted: function() {
-    this.init_graph()
+    this.init_graph();
+    this.zoom_func();
   }
 }
 </script>
