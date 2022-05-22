@@ -99,12 +99,12 @@ export default {
       items: [
         {
           icon: 'mdi-apps',
-          title: 'Welcome',
+          title: 'Home',
           to: '/'
         },
         {
           icon: 'mdi-chart-bubble',
-          title: 'Inspire',
+          title: 'Layout Practice',
           to: '/inspire'
         },
         {

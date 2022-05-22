@@ -23,7 +23,7 @@
           </div>
           <v-btn @click="start_recog()" color="primary">音声認識の開始</v-btn>
           <v-btn @click="stop_recog()" color="red">音声認識の終了</v-btn>
-          <v-btn @click="update_graph()" color="green">update graph</v-btn>
+          <v-btn @click="update_graph()" color="green">グラフの更新</v-btn>
         </v-card-text>
         <v-card-actions>
           <!-- ここには遷移するためのボタンとかを置くと思われる -->
