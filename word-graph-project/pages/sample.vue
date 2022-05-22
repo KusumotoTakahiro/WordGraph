@@ -1,31 +1,33 @@
 <template>
   <v-container>
-  <v-row justify="center" align="center">
-    <v-col cols="12" sm="8" md="6">
-      <v-card>
-        <v-card-title class="headline">
-          word graph
-        </v-card-title>
-        <v-card-text>
-          <div>
-            <p>{{finalTranscript}}</p>
+    <v-row>
+      <v-col cols="12" sm="12" md="5" lg="5" xl="5">
+        <v-card>
+          <v-card-title>
+            音声認識の結果
+          </v-card-title>
+          <v-card-text style="margin:10px">{{finalTranscript}}</v-card-text>
+        </v-card>
+        <v-card>
+          <v-card-title class="headline">
+            Word Graph Table
+          </v-card-title>
+          <v-card-text>              
             <v-data-table
               :headers="headers"
               :items="keywords"
               class="elevation-1"
             >
             </v-data-table>
-          </div>
-          <v-btn @click="start_recog()" color="primary">音声認識の開始</v-btn>
-          <v-btn @click="stop_recog()" color="red">音声認識の終了</v-btn>
-          <v-btn @click="update_graph()" color="green">グラフの更新</v-btn>
-        </v-card-text>
-      </v-card>
-    </v-col>
-  </v-row>
-  <v-row>
-    <div id="cy"></div>
-  </v-row>
+          </v-card-text>
+        </v-card>
+        <v-btn @click="start_recog()" color="primary">音声認識の開始</v-btn>
+        <v-btn @click="stop_recog()" color="red">音声認識の終了</v-btn>
+        <v-btn @click="update_graph()" color="green">グラフの更新</v-btn>
+      </v-col>
+      <v-col cols="12" sm="12" md="7" lg="7" xl="7" id="cy">
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -278,11 +280,6 @@ export default {
 </script>
 <style scoped>
 #cy {
-    width: 100%;
-    height: 80%;
-    position: absolute;
-    top: 500px;
-    left: 0px;
-    text-align: left;
+    background-color: darkblue;
 }
 </style>
