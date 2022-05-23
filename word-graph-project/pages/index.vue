@@ -1,39 +1,33 @@
 <template>
   <v-container>
-  <v-row justify="center" align="center">
-    <v-col cols="12" sm="8" md="6">
-      <v-card>
-        <v-card-title class="headline">
-          word graph
-        </v-card-title>
-        <v-card-text>
-          <div>
-            <flag iso="it" />
-            <flag iso="gb" />
-            <flag iso="us" />
-          </div>
-          <div>
-            <p>{{finalTranscript}}</p>
+    <v-row>
+      <v-col cols="12" sm="12" md="5" lg="5" xl="5">
+        <v-card>
+          <v-card-title>
+            音声認識の結果
+          </v-card-title>
+          <v-card-text style="margin:10px">{{finalTranscript}}</v-card-text>
+        </v-card>
+        <v-card>
+          <v-card-title class="headline">
+            Word Graph Table
+          </v-card-title>
+          <v-card-text>              
             <v-data-table
               :headers="headers"
               :items="keywords"
               class="elevation-1"
             >
             </v-data-table>
-          </div>
-          <v-btn @click="start_recog()" color="primary">音声認識の開始</v-btn>
-          <v-btn @click="stop_recog()" color="red">音声認識の終了</v-btn>
-          <v-btn @click="update_graph()" color="green">グラフの更新</v-btn>
-        </v-card-text>
-        <v-card-actions>
-          <!-- ここには遷移するためのボタンとかを置くと思われる -->
-        </v-card-actions>
-      </v-card>
-    </v-col>
-  </v-row>
-  <v-row>
-    <div id="cy"></div>
-  </v-row>
+          </v-card-text>
+        </v-card>
+        <v-btn @click="start_recog()" color="primary">音声認識の開始</v-btn>
+        <v-btn @click="stop_recog()" color="red">音声認識の終了</v-btn>
+        <v-btn @click="update_graph()" color="green">グラフの更新</v-btn>
+      </v-col>
+      <v-col cols="12" sm="12" md="7" lg="7" xl="7" id="cy">
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -59,7 +53,7 @@ export default {
         },
         {
           text : '次ノード',
-          value : 'next',
+          value : 'before_next',
         },
         {
           text : '最新の単語',
@@ -202,7 +196,8 @@ export default {
             style: {
               'background-color': '#3cb371',
               'color': 'white',
-              'label' : 'data(id)'
+              'label' : 'data(id)',
+              //'text-valign': 'center',
             }
           },
           {
@@ -262,35 +257,40 @@ export default {
         let before_next = value.before_next;
         let after_next = value.after_next;
         let keyword = value.keyword;
-        before_next.forEach(function(before_next_word){
+        for (let i = 0; i < before_next.length; i++) {
           let is_drawn = false;
-          after_next.forEach(function(after_next_word){
-            if (before_next_word==after_next_word){
+          //描画済みのedgeではないか確認する
+          for (let j = 0; j < after_next.length; j++) {
+            if (before_next[i]==after_next[j]){
               is_drawn = true;
             }
-          })
-          if (is_drawn==false) {
-            vm.update_edges(keyword, before_next_word);
           }
-        })
+          if (is_drawn==false) {
+            vm.update_edges(keyword, before_next[i]);
+          }
+        }
         //before_nextをafter_nextに更新する.重複する分は今のところ無視
-        after_next = after_next.concat(before_next);
-        before_next = [];
+        value.after_next = after_next.concat(before_next);
+        value.before_next = [];
+      })
+    },
+    zoom_func() {
+      let client_w = document.getElementById('cy').clientWidth;
+      let client_h = document.getElementById('cy').clientHeight;
+      this.cy.zoom({
+        level : 2.0,
+        renderedPosition: {x: client_w/2, y: client_h/2.5},
       })
     }
   },
   mounted: function() {
-    this.init_graph()
+    this.init_graph();
+    this.zoom_func();
   }
 }
 </script>
 <style scoped>
 #cy {
-    width: 100%;
-    height: 80%;
-    position: absolute;
-    top: 500px;
-    left: 0px;
-    text-align: left;
+    background-color: darkblue;
 }
 </style>

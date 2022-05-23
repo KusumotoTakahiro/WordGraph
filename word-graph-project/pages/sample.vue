@@ -52,8 +52,12 @@ export default {
           value : 'weight',
         },
         {
-          text : '次ノード',
+          text : '次ノード(before)',
           value : 'before_next',
+        },
+        {
+          text : '次ノード(after)',
+          value : 'after_next',
         },
         {
           text : '最新の単語',
@@ -196,15 +200,16 @@ export default {
             style: {
               'background-color': '#3cb371',
               'color': 'white',
-              'label' : 'data(id)'
+              'label' : 'data(id)',
+              //'text-valign': 'center',
             }
           },
           {
             selector: 'edge',
             style: {
               'width':3,
-              'line-color':'#ccc',
-              'target-arrow-color':'#ccc',
+              'line-color':'black',
+              'target-arrow-color':'black',
               'target-arrow-shape':'triangle',
               'curve-style': 'bezier',
             }
@@ -269,7 +274,7 @@ export default {
           }
         }
         //before_nextをafter_nextに更新する.重複する分は今のところ無視
-        value.after_next = after_next.concat(before_next);
+        value.after_next = value.after_next.concat(before_next);
         value.before_next = [];
       })
     },
