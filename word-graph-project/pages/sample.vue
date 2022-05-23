@@ -208,8 +208,8 @@ export default {
             selector: 'edge',
             style: {
               'width':3,
-              'line-color':'black',
-              'target-arrow-color':'black',
+              'line-color':'#eedcb3',
+              'target-arrow-color':'#eedcb3',
               'target-arrow-shape':'triangle',
               'curve-style': 'bezier',
             }
@@ -258,9 +258,15 @@ export default {
       
       //keywordsからedgeを生成する
       vm.keywords.forEach(function(value){
-        let before_next = value.before_next;
+        let before_next_temp = value.before_next;
         let after_next = value.after_next;
         let keyword = value.keyword;
+        
+        //重複する値を除去する
+        let before_next = before_next_temp.filter(function(ele, pos){
+          return before_next_temp.indexOf(ele)==pos;
+        })
+
         for (let i = 0; i < before_next.length; i++) {
           let is_drawn = false;
           //描画済みのedgeではないか確認する
