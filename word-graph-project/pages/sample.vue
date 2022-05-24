@@ -302,5 +302,6 @@ export default {
 <style scoped>
 #cy {
     background-color: darkblue;
+    heigth: 100vh;
 }
 </style>
