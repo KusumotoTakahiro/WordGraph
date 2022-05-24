@@ -175,6 +175,11 @@ export default {
           }
         }
       }
+      this.recognition.onerror = (event) => {
+        if (event.error == "no-speech") {
+          recognition.start();
+        }
+      }
       this.recognition.start();
     },
     //音声認識開始を取りまとめる関数．ボタンと連携．

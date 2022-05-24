@@ -26,3 +26,8 @@ layoutというかnodeのポジションが既定できないため（おそら�
 5/20
 update_graphとしてgraphの更新を行う関数を作成した．
 正常に動作するかはまだ未検証．今日と土日で行う予定．
+
+5/24
+WebSpeechAPIのSpeechRecognitionは一定時間無音状態が続くと終了してしまう．
+onerrorイベントを利用してこれを回避する.
+
