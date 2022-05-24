@@ -84,6 +84,7 @@ export default {
       theta : 0, //nodeの位置をΘで管理する．
       k : 100,
       keywordID : 1,
+      recognition : null,
     }
   },
   methods: {
@@ -158,6 +159,7 @@ export default {
     },
     //現時点で上記の音声認識関数が分割できないのでひとまとめにしている．
     talk_recog() {
+      let vm = this;
       let SpeechRecog = window.webkitSpeechRecognition || window.webkitSpeechRecognition;
       this.recognition = new SpeechRecog();
 
@@ -177,8 +179,14 @@ export default {
       }
       this.recognition.onerror = (event) => {
         if (event.error == "no-speech") {
-          recognition.start();
+          setTimeout(function(){
+            vm.recognition.start();
+          }, 1000)
         }
+      }
+      this.recognition.onspeechend = (event) => {
+        vm.recognition.stop();
+        vm.recognition.start();
       }
       this.recognition.start();
     },
