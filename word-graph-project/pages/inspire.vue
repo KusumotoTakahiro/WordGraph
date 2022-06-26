@@ -1,21 +1,38 @@
 <template>
   <v-container>
-  <v-row class="grey lighten-3" style="height: 600px;">
-    <v-col cols="12" sm="8" md="6" lg="6" xl="6" style="background-color: #FFCDD2">
-      column 1
-    </v-col>
-    <v-col cols="12" sm="8" md="6" lg="6" xl="6" style="background-color: #F8BBD0">
-      column 2
-    </v-col>
-  </v-row>
-</v-container>
+    <v-row>
+      <v-col cols="12" sm="12" md="5" lg="5" xl="5">
+        <my-speech-recognition ref="spRecog"></my-speech-recognition>
+        <v-btn @click="start_recog()" color="primary">音声認識の開始</v-btn>
+        <v-btn @click="stop_recog()" color="red">音声認識の終了</v-btn>
+      </v-col>
+      <v-col cols="12" sm="12" md="7" lg="7" xl="7">
+        <my-cytoscape ></my-cytoscape>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-import NuxtLogo from '../components/NuxtLogo.vue'
-import Tutorial from '../components/Tutorial.vue'
+import MyCytoscape from '../components/MyCytoscape.vue'
+import MySpeechRecognition from '../components/MySpeechRecognition.vue'
+import MyKuromoji from '../components/MyKuromoji.vue'
+
 export default {
-  components: { NuxtLogo, Tutorial },
-  name: 'InspirePage'
+  components: { MyCytoscape, MySpeechRecognition, MyKuromoji },
+  name: 'InspirePage',
+  data() {
+    return {
+
+    }
+  },
+  methods: {
+    start_recog() {
+      this.$refs.spRecog.talk_recog();
+    },
+    stop_recog() {
+      this.$refs.spRecog.stop_recog();
+    }
+  }
 }
 </script>

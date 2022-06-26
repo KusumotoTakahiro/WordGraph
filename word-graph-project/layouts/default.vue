@@ -104,7 +104,7 @@ export default {
         },
         {
           icon: 'mdi-chart-bubble',
-          title: 'Layout Practice',
+          title: 'refactoring',
           to: '/inspire'
         },
         {
