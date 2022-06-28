@@ -52,6 +52,7 @@ export default {
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
+    '@nuxtjs/firebase',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -89,5 +90,24 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     transpile: ['vue-flag-icon'],
+  },
+  firebase : {
+    config : {
+      apiKey: "AIzaSyBK4_ef-nXROiUN9Ar__LNtNEY11XWsR_g",
+      authDomain: "word-graph-project.firebaseapp.com",
+      databaseURL: "https://word-graph-project-default-rtdb.firebaseio.com",
+      projectId: "word-graph-project",
+      storageBucket: "word-graph-project.appspot.com",
+      messagingSenderId: "692455276822",
+      appId: "1:692455276822:web:aaf6dc1eabb993259fd037",
+      measurementId: "G-46WXWG2Z7N"
+    },
+    services: {
+      database: true,
+    }
+  },
+  database: {
+    emulatorPort: 9000,
+    emulatorHost: 'localhost',
   }
 }

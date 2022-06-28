@@ -17,9 +17,10 @@
 import MyCytoscape from '../components/MyCytoscape.vue'
 import MySpeechRecognition from '../components/MySpeechRecognition.vue'
 import MyKuromoji from '../components/MyKuromoji.vue'
+import Mydatabase from '../components/Mydatabase.vue'
 
 export default {
-  components: { MyCytoscape, MySpeechRecognition, MyKuromoji },
+  components: { MyCytoscape, MySpeechRecognition, MyKuromoji, Mydatabase },
   name: 'InspirePage',
   data() {
     return {
