@@ -5,6 +5,7 @@
 export default {
   data() {
     return {
+      talk_title: "",
       keyword : {
         "keyword" : "",     //単語
         "weight" : 0,       //単語の出現回数による重みづけ
@@ -18,54 +19,64 @@ export default {
     }
   },
   methods: {
-    set_keyword(keyword) {
-      this.keyword = keyword;
+    init_talk(talk_title){
+      this.talk_title = talk_title;
     },
-    push_keyword() {
+    set_keyword(keyword) {
+      this.keyword.keyword = keyword;
+    },
+    set_weight(weight) {
+      this.keyword.weight = weight;
+    },
+    set_before_next(before_next) {
+      this.keyword.before_next = before_next;
+    },
+    set_after_next(after_next) {
+      this.keyword.after_next = after_next;
+    },
+    set_isLatest(isLatest) {
+      this.keyword.isLatest = isLatest;
+    },
+    set_isInGraph(isInGraph) {
+      this.keyword.isInGraph = isInGraph;
+    },
+    set_position(position) {
+      this.keyword.position = position;
+    },
+    set_speaker(speaker) {
+      this.keyword.speaker = speaker;
+    },
+    //databaseに現在保存されているkeywordを一語ずつ登録するメソッド
+    create_db() {
+      let vm = this;
       try {
-        this.$fire.database.ref('keywords').set({
-          "keyword" : this.keyword.keyword,     
-          "weight" : this.keyword.weight,       
-          "before_next" : this.keyword.before_next, 
-          "after_next" : this.keyword.after_next,  
-          "isLatest" : this.keyword.isLatest,  
-          "isInGraph" : this.keyword.isInGraph, 
-          "position" : this.keyword.position, 
-          "speaker" : this.keyword.speaker,
-      }).then(response => {
-        console.log(response, "push a data to the database");
-      })
+        const talk_ref = this.$fire.database.ref('talks/'+vm.talk_title);
+        talk_ref.child(vm.keyword.keyword).set({
+          "weight": vm.keyword.weight,
+          "before_next": vm.keyword.before_next,
+          "after_next": vm.keyword.after_next,
+          "isLatest": vm.keyword.isLatest,
+          "isInGraph": vm.keyword.isInGraph,
+          "position": vm.keyword.position,
+          "speaker": vm.keyword.speaker,
+        });
       }
       catch(err){
         console.log(err);
       }
     },
-    keyword_search_bykeyword(keyword) {
+    read_db() {
     },
-    keyword_update(keyword) {
+    update_db() {
     },
-    keyword_search_latest(){
+    delete_db(){
     }
   },
   mounted() {
     // RealtimeDatabaseの更新を検知
-    this.$fire.database.ref('keywords').on('value', (snapshot) => {
+    this.$fire.database.ref('talk/'+this.talk_title).on('value', (snapshot) => {
       console.log(snapshot.val());
-
-    })
-
-    let keyword = {
-      "keyword" : "start",
-      "weight" : 0,
-      "before_next" : [], 
-      "after_next" : [],  
-      "isLatest" : true,  
-      "isInGraph" : true, 
-      "position" : "noun", 
-      "speaker" : "default",
-    }
-    this.set_keyword(keyword);
-    this.push_keyword();
+    });
   }
 }
 </script>

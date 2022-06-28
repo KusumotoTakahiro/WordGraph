@@ -5,7 +5,7 @@
         <my-speech-recognition ref="spRecog"></my-speech-recognition>
         <v-btn @click="start_recog()" color="primary">音声認識の開始</v-btn>
         <v-btn @click="stop_recog()" color="red">音声認識の終了</v-btn>
-        <database-check></database-check>
+        
       </v-col>
       <v-col cols="12" sm="12" md="7" lg="7" xl="7">
         <my-cytoscape ></my-cytoscape>
@@ -26,7 +26,6 @@ export default {
   name: 'InspirePage',
   data() {
     return {
-
     }
   },
   methods: {
@@ -36,6 +35,6 @@ export default {
     stop_recog() {
       this.$refs.spRecog.stop_recog();
     }
-  }
+  },
 }
 </script>

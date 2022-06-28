@@ -97,11 +97,11 @@ export default {
       drawer: false,
       fixed: false,
       items: [
-        {
-          icon: 'mdi-apps',
-          title: 'for testing',
-          to: '/'
-        },
+        // {
+        //   icon: 'mdi-apps',
+        //   title: 'for testing',
+        //   to: '/'
+        // },
         {
           icon: 'mdi-chart-bubble',
           title: 'refactoring',
