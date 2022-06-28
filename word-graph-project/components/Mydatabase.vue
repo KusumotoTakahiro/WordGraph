@@ -23,7 +23,7 @@ export default {
     },
     push_keyword() {
       try {
-        this.$fire.database.push({
+        this.$fire.database.ref('keywords').set({
           "keyword" : this.keyword.keyword,     
           "weight" : this.keyword.weight,       
           "before_next" : this.keyword.before_next, 
@@ -48,6 +48,12 @@ export default {
     }
   },
   mounted() {
+    // RealtimeDatabaseの更新を検知
+    this.$fire.database.ref('keywords').on('value', (snapshot) => {
+      console.log(snapshot.val());
+
+    })
+
     let keyword = {
       "keyword" : "start",
       "weight" : 0,
