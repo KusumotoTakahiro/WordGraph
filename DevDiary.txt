@@ -31,3 +31,31 @@ update_graphとしてgraphの更新を行う関数を作成した．
 WebSpeechAPIのSpeechRecognitionは一定時間無音状態が続くと終了してしまう．
 onerrorイベントを利用してこれを回避する.
 
+6/28
+firabaseのrealtime databaseを導入した．version８と９の情報が混在していて，
+設定に相当時間を削られたが，設定さえ終われば，思いのほか使いやすい．
+
+6/29
+新たなグラフ生成のアルゴリズムを考えた．
+まず，名詞でグラフの骨格を作るのは今までと同様．
+名詞と同時に出てきた形容詞は名詞のnextに設定する．そこからの派生はなし．
+名詞と同時に出てきた動詞も名詞のnextに設定する．動詞には派生あり．
+動詞と同時にできた副詞は動詞のnextに設定する．そこからの派生はなし．
+名詞から有向グラフとして動詞，形容詞を繋ぐつもりだったが，よく考えると名詞，動詞，形容詞，副詞は同時
+に発生したものなので，その部分だけは無向グラフで表現することにした．
+
+いまのところ
+Mydatabase -- databaseとの実際の処理を担当．CRUDの内，D以外は一旦書いた．（動くかは確認してない）
+MyKuromoji -- textデータを受け取ってdatabaseに格納するまでのkeyword群を生成するメソッドを置いてある．
+MyCytoscape -- databaseからdataを受け取ってグラフを生成するメソッドを置く予定．
+MySpeechRecognition -- 音声認識を行う．
+MyDataCenter -- 入力データを統括する．今のところexcelと音声認識のデータをここに持ってきて，MyKuromoji
+　　　　　　　を用いてdatabaseの更新までをここで行う．graph生成も同時にするようにしたい．
+
+6/30
+talk_ref.orderByChild('isLatest').startAt(true).endAt(true).once('value',function(snapshot){
+        keywords = snapshot.val();
+        console.log('From Mydatabase');
+        console.log(snapshot);
+      })
+の書き方が間違っているよう．booleanで読み取りのフィルターをかける方法を探す．

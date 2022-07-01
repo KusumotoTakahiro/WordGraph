@@ -5,7 +5,7 @@
 export default {
   data() {
     return {
-      talk_title: "",
+      talk_title: "test", //本当は""で空の文字列にしておくが，検証用にtestとしておく．検証が終わったらもとに戻せ．
       keyword : {
         "keyword" : "",     //単語
         "weight" : 0,       //単語の出現回数による重みづけ
@@ -15,7 +15,9 @@ export default {
         "isInGraph" : false, //グラフに描画したかどうか
         "position" : "",     //品詞
         "speaker" : "",      //話者
-      }
+      },
+      read_keywords : {"keywords":null},
+      s : '',
     }
   },
   methods: {
@@ -65,9 +67,51 @@ export default {
         console.log(err);
       }
     },
-    read_db() {
+    read_db_latest() {
+      let vm = this;
+      const talk_ref = this.$fire.database.ref('talks/'+vm.talk_title);
+      talk_ref.orderByChild('isLatest').startAt(true).endAt(true).once('value', 
+      (snapshot) => {
+        var keywords = snapshot.val();
+        vm.$set(vm.read_keywords,"keywords", keywords);
+        console.log('From Mydatabase');
+        console.log('talk_title : '+vm.talk_title);
+        vm.s = JSON.stringify(vm.read_keywords);
+        console.log(vm.s);
+      })
+      console.log('Here');
+      console.log('s'+vm.s); //ここでも空のオブジェクトになってる．
+      return JSON.parse(vm.s);
     },
-    update_db() {
+    read_db_all() {
+      let keywords;
+      let vm = this;
+      const talk_ref = this.$fire.database.ref('talks/'+vm.talk_title);
+      talk_ref.once('value', function(snapshot){
+        keywords = snapshot.val();
+      })
+      return keywords;
+    },
+    update_db_weight(keyword, weight){
+      let vm = this;
+      const talk_ref = this.$fire.database.ref('talks/'+vm.talk_title);
+      talk_ref.child(keyword).update({
+        "weight": weight,
+      });
+    },
+    update_db_bnext(keyword, b_next) {
+      let vm = this;
+      const talk_ref = this.$fire.database.ref('talks/'+vm.talk_title);
+      talk_ref.child(keyword).update({
+        "before_next": b_next,
+      });
+    },
+    update_db_latest(keyword, flag){
+      let vm = this;
+      const talk_ref = this.$fire.database.ref('talks/'+vm.talk_title);
+      talk_ref.child(keyword).update({
+        "isLatest": flag,
+      });
     },
     delete_db(){
     }
