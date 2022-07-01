@@ -69,19 +69,22 @@ export default {
     },
     read_db_latest() {
       let vm = this;
+      let keywords = null;
       const talk_ref = this.$fire.database.ref('talks/'+vm.talk_title);
       talk_ref.orderByChild('isLatest').startAt(true).endAt(true).once('value', 
       (snapshot) => {
-        var keywords = snapshot.val();
+        keywords = JSON.stringify(snapshot.val());
         vm.$set(vm.read_keywords,"keywords", keywords);
         console.log('From Mydatabase');
         console.log('talk_title : '+vm.talk_title);
-        vm.s = JSON.stringify(vm.read_keywords);
-        console.log(vm.s);
-      })
-      console.log('Here');
-      console.log('s'+vm.s); //ここでも空のオブジェクトになってる．
-      return JSON.parse(vm.s);
+        console.log(keywords);
+      }).then(() => {
+          console.log('Here');
+          console.log(JSON.parse(keywords)); //ここでも空のオブジェクトになってる．
+          return JSON.parse(keywords);
+        }
+      )
+      
     },
     read_db_all() {
       let keywords;

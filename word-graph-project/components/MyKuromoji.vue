@@ -78,20 +78,24 @@ export default {
     //既出単語の次の単語(before_next)の更新 input:現在latestがtrueの単語群とanalysised_data output:なし
     update_next(analysised_data) {
       const db = this.$refs.db;
-      let keywords = db.read_db_latest();
-      console.log('From MyKuromoji update_next');
-      console.log(keywords);
-      let key = Object.keys(keywords);
-      key.forEach(function(index, value){
-        let b_next = keywords[index].before_next;
-        for (let data of analysised_data) {
-          if (data.position=="noun") {
-            b_next.push(data.keyword);
-          }
-        }
-        db.update_db_bnext(value, b_next); //before_nextを更新してdbに保存
-        db.update_db_latest(value, false); //latestを更新してdbに保存
+      const promise = new Promise((resolve) => {
+        let keywords = db.read_db_latest();
+        resolve(keywords);
+      }).then((val)=> {
+        console.log('From MyKuromoji update_next');
+        console.log(val);
       })
+      // let key = Object.keys(keywords);
+      // key.forEach(function(index, value){
+      //   let b_next = keywords[index].before_next;
+      //   for (let data of analysised_data) {
+      //     if (data.position=="noun") {
+      //       b_next.push(data.keyword);
+      //     }
+      //   }
+      //   db.update_db_bnext(value, b_next); //before_nextを更新してdbに保存
+      //   db.update_db_latest(value, false); //latestを更新してdbに保存
+      // })
     },
 
     //新規keyword(名詞，形容詞，動詞，副詞)をdbに登録できる形に加工してdbに保存する．
