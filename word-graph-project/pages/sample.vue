@@ -113,7 +113,7 @@ export default {
         } else {
           const tokens = tokenizer.tokenize(vm.finalTranscript);
           console.log("finalTranscript = "+vm.finalTranscript);
-          //latestをもとにnextを更新
+          //latestをもとにbefore_nextを更新
           for (let token of tokens) {
             if (token.pos=="名詞"){
               let keyword = token.basic_form;

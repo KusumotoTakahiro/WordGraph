@@ -59,3 +59,12 @@ talk_ref.orderByChild('isLatest').startAt(true).endAt(true).once('value',functio
         console.log(snapshot);
       })
 の書き方が間違っているよう．booleanで読み取りのフィルターをかける方法を探す．
+
+7/2
+async/awaitの処理はasyncをつけた関数の中でのみawaitを利用できる．
+つまり,asyncを上位の関数に持ってくれば色々なところでawaitを実行できるということ．
+
+7/6
+ずっと良く分からないエラーで止まっている．
+色々試した結果，まずデータベースとの交信はおそらく上手くいっている．
+Mykuromoji.vueのupdate_nextのtry文で何かエラーになって止まっているみたい．
