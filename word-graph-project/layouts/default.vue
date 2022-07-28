@@ -112,6 +112,11 @@ export default {
           title: 'word graph',
           to: '/sample'
         },
+        {
+          icon: 'mdi-apps',
+          title: 'all_methods',
+          to: '/all_methods'
+        },
       ],
       miniVariant: false,
       right: true,
