@@ -103,6 +103,11 @@ export default {
         //   to: '/'
         // },
         {
+          icon: 'mdi-apps',
+          title: 'all_methods',
+          to: '/all_methods'
+        },
+        {
           icon: 'mdi-chart-bubble',
           title: 'refactoring',
           to: '/inspire'
@@ -112,11 +117,7 @@ export default {
           title: 'word graph',
           to: '/sample'
         },
-        {
-          icon: 'mdi-apps',
-          title: 'all_methods',
-          to: '/all_methods'
-        },
+        
       ],
       miniVariant: false,
       right: true,

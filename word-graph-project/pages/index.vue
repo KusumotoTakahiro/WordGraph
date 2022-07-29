@@ -62,15 +62,15 @@ export default {
     go_to_main() {
       if (this.$refs.form.validate()){
         //パリデーションが通った時だけ行われる処理
-        const db = this.$refs.db;
-        db.init_talk(this.talk_title);
-        db.set_keyword("start");
-        db.set_isLatest(true);
-        db.set_isInGraph(true);
-        db.set_position("noun");
-        db.set_speaker("default");
-        db.create_db();
-        this.$router.push('/inspire');
+        // const db = this.$refs.db;
+        // db.init_talk(this.talk_title);
+        // db.set_keyword("start");
+        // db.set_isLatest(true);
+        // db.set_isInGraph(true);
+        // db.set_position("noun");
+        // db.set_speaker("default");
+        // db.create_db();
+        this.$router.push('/all_methods');
       }
     },
   },
