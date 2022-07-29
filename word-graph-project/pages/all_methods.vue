@@ -40,6 +40,7 @@ export default {
     return {
       excel_data: null,
       talk_title: "test",
+      speakers : ['default'],
       keywords : [
         {
           "keyword" : "start",
@@ -52,14 +53,13 @@ export default {
           "speaker" : "default",
         }
       ],
-      col_define: {
-        default_color: '#f8b500',  //山吹色
-        color_patarn_1: '',
-        color_patarn_2: '',
-        color_patarn_3: '',
-        color_patarn_4: '',
-        color_patarn_5: '',
-      },
+      col_define: [
+        '#f8b500',  //山吹色 default
+        '#3cb371',  //緑     color1 
+        '#0000ff',  //青     color2
+        '#8a2be2',  //紫     color3
+        '#f08080',  //ピンク color4
+      ],
       k : 100,
       theta : 0,
       headers: [//テーブルのheaderの設定
@@ -102,7 +102,7 @@ export default {
       for (let i = 1; i < len; i++) { //0番目は表の項目名のためデータは1番目から
         let sentence = vm.excel_data[i][0];
         let speaker = vm.excel_data[i][1];
-        vm.tokenize(sentence)
+        vm.tokenize([sentence, speaker])
         .then(vm.categolize)
         .then(vm.update_next)
         .then(vm.update_keywords)
@@ -132,53 +132,68 @@ export default {
         reader.readAsBinaryString(this.file);
       }
     },
-    tokenize(sentence) {
+    hiragana_fillter(keyword) {
+      keyword = (keyword==null)?"":keyword;
+      if(keyword.match(/^[ぁ-んー　]*$/) && keyword.length === 1){    //"ー"の後ろの文字は全角スペースです。
+        return true;
+      }
+      else{
+        return false;
+      }
+    },
+    tokenize(arrayData) {
       return new Promise((resolve)=>{
         kuromoji.builder({ dicPath: '/dict' }).build((err, tokenizer) => {
           if (err) {
             console.log(err);
           }
           else {
-            const tokens = tokenizer.tokenize(sentence);
-            resolve(tokens);
+            //arrayData[0]はsentenceのこと
+            const tokens = tokenizer.tokenize(arrayData[0]);
+            resolve([tokens,arrayData[1]]);
           }
         })
       })
     },
-    categolize(tokens) {
+    categolize(arrayData) {
       return new Promise((resolve)=> {
         let analysised_data = [];
+        let tokens = arrayData[0];
         for (let token of tokens) {
-          switch (token.pos) {
-            case '名詞':
-              analysised_data.push({
-                "keyword" : token.basic_form,
-                "position": 'noun',
-              });
-              break;
-            case '形容詞':
-              analysised_data.push({
-                "keyword": token.basic_form,
-                "position": 'adjective',
-              });
-              break;
-            case '副詞':
-              analysised_data.push({
-                "keyword": token.basic_form,
-                "position": 'adverb',
-              });
-              break;
-            case '動詞':
-              analysised_data.push({
-                "keyword": token.basic_form,
-                "position": 'verb',
-              });
-              break;
-            default:
-              //その他の品詞として無視（格納しない)
+          let flag = this.hiragana_fillter[token.basic_form];
+          if (!flag) {
+            switch (token.pos) {
+              case '名詞':
+                analysised_data.push({
+                  "keyword" : token.basic_form,
+                  "position": 'noun',
+                });
+                break;
+              case '形容詞':
+                analysised_data.push({
+                  "keyword": token.basic_form,
+                  "position": 'adjective',
+                });
+                break;
+              case '副詞':
+                analysised_data.push({
+                  "keyword": token.basic_form,
+                  "position": 'adverb',
+                });
+                break;
+              case '動詞':
+                analysised_data.push({
+                  "keyword": token.basic_form,
+                  "position": 'verb',
+                });
+                break;
+              default:
+                //その他の品詞として無視（格納しない)
+            }
           }
+          
         }
-        resolve(analysised_data);
+        resolve([analysised_data, arrayData[1]]);
       })
     },
     //keywordsで重複したkeywordかどうか判定する．
@@ -193,9 +208,11 @@ export default {
       return idx;
     },
     //既出単語のbefore_next(描画前の次単語)を更新
-    update_next(analysised_data) {
+    update_next(arrayData) {
       return new Promise((resolve)=>{
         let vm = this;
+        let analysised_data = arrayData[0];
+        let speaker = arrayData[1];
         for (let data of analysised_data) {
           for (let keyword of vm.keywords) {
             if (data.position=='noun' && keyword.position=='noun' && keyword.isLatest==true){
@@ -207,13 +224,15 @@ export default {
         for (let keyword of vm.keywords) {
           keyword.isLatest = false;
         }
-        resolve(analysised_data);
+        resolve([analysised_data, speaker]);
       })
     },
     //既出単語の更新，および新出単語の更新
-    update_keywords(analysised_data){
+    update_keywords(arrayData){
       return new Promise((resolve)=>{
         let vm = this;
+        let analysised_data = arrayData[0];
+        let speaker = arrayData[1];
         let nouns = [];
         let verbs = [];
         let adverbs = [];
@@ -250,7 +269,7 @@ export default {
                 "isLatest":true,
                 "isInGraph":false,
                 "position" : "noun",
-                "speaker" : "default",
+                "speaker" : speaker || "default",
               })
             }
             else if (data.position == "verb") {
@@ -262,7 +281,7 @@ export default {
                 "isLatest":true,
                 "isInGraph":false,
                 "position" : "verb",
-                "speaker" : "default",
+                "speaker" : speaker || "default",
               })
             }
             else if (data.position == "adverb"){
@@ -274,7 +293,7 @@ export default {
                 "isLatest":true,
                 "isInGraph":false,
                 "position" : "adverb",
-                "speaker" : "default",
+                "speaker" : speaker || "default",
               })
             }
             else if (data.position == "adjective"){
@@ -286,13 +305,25 @@ export default {
                 "isLatest":true,
                 "isInGraph":false,
                 "position" : "adjective",
-                "speaker" : "default",
+                "speaker" : speaker || "default",
               })
             }
           }
           resolve(analysised_data);
         }
       })
+    },
+    clabel_setter(speaker){
+      let is_exist = false;
+      for (let sp of this.speakers){
+        if (sp===speaker){
+          is_exist = true;
+        }
+      }
+      if (!is_exist){
+        this.speakers.push(speaker);
+      }
+      return this.col_define[this.speakers.indexOf(speaker)]
     },
     init_graph() {
       this.cy = cytoscape({
@@ -306,7 +337,7 @@ export default {
           {
             selector : 'node',
             style : {
-              'background-color' : this.col_define.default_color,
+              'background-color' : this.col_define[0],
               'color' : 'black',
               'label' : 'data(id)',
             }
@@ -324,7 +355,7 @@ export default {
         ]
       });
     },
-    update_node(keyword) {
+    update_node(keyword, speaker) {
       return new Promise((resolve)=>{
         this.cy.add([
           {
@@ -333,6 +364,9 @@ export default {
             position : {
               x : 150 + Math.cos(this.theta)*this.k,
               y : 150 + Math.sin(this.theta)*this.k,
+            },
+            style : {
+              'background-color' : this.clabel_setter(speaker),
             }
           }
         ]);
@@ -365,7 +399,7 @@ export default {
         //先にキーワードをノードとして追加する
         for (let key of vm.keywords) {
           if (key.isInGraph == false) {
-            vm.update_node(key.keyword);
+            vm.update_node(key.keyword, key.speaker);
             key.isInGraph = true;
           }
         }
