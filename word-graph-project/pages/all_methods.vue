@@ -6,12 +6,24 @@
         <v-btn @click="start_recog()" color="primary">音声認識の開始</v-btn>
         <v-btn @click="stop_recog()" color="red">音声認識の終了</v-btn> -->
         <v-btn @click="start_from_excel()" color="green">エクセルを解析</v-btn>
-        <v-btn @click="db_test()" color="yellow">db_test</v-btn>
+        <v-btn @click="store_result()" color="green">解析結果を保存</v-btn>
         <input type="file" @change="onFileChange" />
-        
+        <v-card>
+          <v-card-title class="headline">
+            Word Graph Table
+          </v-card-title>
+          <v-card-text>              
+            <v-data-table
+              :headers="headers"
+              :items="keywords"
+              class="elevation-1"
+            >
+            </v-data-table>
+          </v-card-text>
+        </v-card>
       </v-col>
       <v-col cols="12" sm="12" md="7" lg="7" xl="7">
-        
+        <div id="cy"></div> 
       </v-col>
     </v-row>
   </v-container>
@@ -20,6 +32,7 @@
 <script>
 import * as xlsx from 'xlsx';
 import kuromoji from 'kuromoji'
+import cytoscape from 'cytoscape';
 
 export default {
   name: 'all_methods',
@@ -38,11 +51,51 @@ export default {
           "position" : "noun",
           "speaker" : "default",
         }
-      ]
-
+      ],
+      col_define: {
+        default_color: '#f8b500',  //山吹色
+        color_patarn_1: '',
+        color_patarn_2: '',
+        color_patarn_3: '',
+        color_patarn_4: '',
+        color_patarn_5: '',
+      },
+      k : 100,
+      theta : 0,
+      headers: [//テーブルのheaderの設定
+        {
+          text: 'Keywords', //列の名前
+          align: 'start',
+          sortable: false,
+          value: 'keyword', //紐づける際のデータ名
+        },
+        {
+          text : '重さ',
+          value : 'weight',
+        },
+        {
+          text : '次ノード(before)',
+          value : 'before_next',
+        },
+        {
+          text : '次ノード(after)',
+          value : 'after_next',
+        },
+        {
+          text : '最新の単語',
+          value : 'isLatest'
+        },
+        {
+          text : '描画済み',
+          value : 'isInGraph'
+        }
+      ],
     }
   },
   methods: {
+    store_result() {
+      //canvasをimageとして保存する方法を探す
+    },
     start_from_excel() {
       let vm = this;
       let len = vm.excel_data.length;
@@ -54,6 +107,7 @@ export default {
         .then(vm.update_next)
         .then(vm.update_keywords)
         .then((res)=>{
+          vm.update_graph();
           console.log(i + "回目");
           console.log(vm.keywords);
         });
@@ -227,7 +281,7 @@ export default {
               vm.keywords.push({
                 "keyword":data.keyword, 
                 "weight":0, 
-                "before_next":adjectives,
+                "before_next":[],
                 "after_next":[],
                 "isLatest":true,
                 "isInGraph":false,
@@ -239,65 +293,126 @@ export default {
           resolve(analysised_data);
         }
       })
+    },
+    init_graph() {
+      this.cy = cytoscape({
+        container : document.getElementById('cy'),
+        elements : [
+          {
+            data: {id : 'start'}
+          },
+        ],
+        style : [
+          {
+            selector : 'node',
+            style : {
+              'background-color' : this.col_define.default_color,
+              'color' : 'black',
+              'label' : 'data(id)',
+            }
+          },
+          {
+            selector: 'edge',
+            style : {
+              'width':3,
+              'line-color':'#ccc',
+              'target-arrow-color': '#ccc',
+              'target-arrow-shape': 'triangle',
+              'curve-style': 'bezier',
+            }
+          }
+        ]
+      });
+    },
+    update_node(keyword) {
+      return new Promise((resolve)=>{
+        this.cy.add([
+          {
+            group : 'nodes',
+            data : {id : keyword},
+            position : {
+              x : 150 + Math.cos(this.theta)*this.k,
+              y : 150 + Math.sin(this.theta)*this.k,
+            }
+          }
+        ]);
+        this.k = 200 + Math.random()*1500;
+        this.theta += Math.PI/10;
+      })
+    },
+    update_edges(source_node, target_node) {
+      return new Promise((resolve)=> {
+        try {
+          this.cy.add([
+            {
+              group : 'edges',
+              data : {
+                source : source_node,
+                target : target_node,
+              }
+            }
+          ]);
+        }
+        catch(e) {
+          //console.log(e);
+        }
+      })
+      
+    },
+    update_graph() {
+      return new Promise((resolve)=>{
+        let vm = this;
+        //先にキーワードをノードとして追加する
+        for (let key of vm.keywords) {
+          if (key.isInGraph == false) {
+            vm.update_node(key.keyword);
+            key.isInGraph = true;
+          }
+        }
+
+        //keywordからedgeを生成する
+        for (let key of vm.keywords) {
+          //edgeのsourceとなるkeywordを取り出す．
+          let keyword = key.keyword;
+
+          //重複する値の削除して，nextを用意する．
+          //indexOf(ele)では，配列においてeleのあるindexのうち最小のものを返す．
+          let before_next = key.before_next.filter((ele, pos)=>{
+            return key.before_next.indexOf(ele)===pos;
+          })
+          let after_next = key.after_next.filter((ele, pos)=>{
+            return key.after_next.indexOf(ele)===pos;
+          })
+
+          for (let i = 0; i < before_next.length; i++) {
+            let is_drawn = false;
+            //描画済みのedgeではないか確認する
+            for (let j = 0; j < after_next.length; j++) {
+              if (before_next[i]==after_next[j]) {
+                is_drawn = true;
+              }
+            }
+            if (is_drawn == false) {
+              vm.update_edges(keyword, before_next[i]);
+            }
+          }
+          //before_nextをafter_nextに更新する.
+          key.after_next = after_next.concat(before_next);
+          key.before_next = [];
+        }
+      })
+      
     }
-    
-    // //databaseに新規単語をpushする．
-    // push_data(keyword, weight, before_next, after_next, isLatest, isInGraph, position, speaker) {
-    //   return new Promise((resolve)=>{
-    //     let vm = this;
-    //     const talk_ref = this.$fire.database.ref('talks/'+vm.talk_title);
-    //     talk_ref.child(keyword).set({
-    //       "weight": weight,
-    //       "before_next": before_next,
-    //       "after_next": after_next,
-    //       "isLatest": isLatest,
-    //       "isInGraph": isInGraph,
-    //       "position": position,
-    //       "speaker": speaker,
-    //     })
-    //     console.log('保存したのは'+keyword);
-    //   })
-    // },
-    // //databaseにある既出単語の更新を行う．
-    // update_data_weight(keyword, weight){
-    //   return new Promise((resolve)=>{
-    //     let vm = this;
-    //     const talk_ref = this.$fire.database.ref('talks/'+vm.talk_title);
-    //     talk_ref.child(keyword).update({
-    //       "weight": weight,
-    //     });
-    //   })
-    // },
-    // update_data_bnext(keyword, b_next) {
-    //   return new Promise((resolve)=>{
-    //     let vm = this;
-    //     const talk_ref = this.$fire.database.ref('talks/'+vm.talk_title);
-    //     talk_ref.child(keyword).update({
-    //       "before_next": b_next,
-    //     });
-    //   })
-    // },
-    // update_data_latest(keyword, flag){
-    //   return new Promise((resolve)=>{
-    //     let vm = this;
-    //     const talk_ref = this.$fire.database.ref('talks/'+vm.talk_title);
-    //     talk_ref.child(keyword).update({
-    //       "isLatest": flag,
-    //     });
-    //   })
-    // },
-    // //databaseからdataを読み取る
-    // read_data_OOOO(){
-    // },
-    // //databaseから指定のtalk_titleの全データを削除する
-    // delete_db(talk_title) {
-    //   return new Promise((resolve)=>{
-    //     let vm = this;
-    //     const talk_ref = this.$fire.database.ref('talks/'+talk_title);
-    //     talk_ref.remove()
-    //     console.log('全データ削除');
-    //   })
-    // },
+  },
+  mounted() {
+    this.init_graph();
   }
 }
 </script>
+
+<style scoped>
+#cy {
+  background-color: #f3f3f2;
+  height: calc(100vw / 3);
+}
+</style>
