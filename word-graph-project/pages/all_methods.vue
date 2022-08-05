@@ -1,14 +1,16 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12" sm="12" md="5" lg="5" xl="5">
+      <v-col cols="12" sm="12" md="1" lg="1" xl="1">
         <!-- <my-speech-recognition ref="spRecog"></my-speech-recognition>
         <v-btn @click="start_recog()" color="primary">音声認識の開始</v-btn>
         <v-btn @click="stop_recog()" color="red">音声認識の終了</v-btn> -->
-        <v-btn @click="start_from_excel()" color="green">エクセルを解析</v-btn>
-        <v-btn @click="store_result()" color="green">解析結果を保存</v-btn>
-        <input type="file" @change="onFileChange" />
-        <v-card>
+        <div class="float-left">
+          <v-btn @click="start_from_excel()" color="green">エクセルを解析</v-btn>
+          <v-btn @click="store_result()" color="green">解析結果を保存</v-btn>
+          <input type="file" @change="onFileChange" />
+        </div>
+        <!-- <v-card>
           <v-card-title class="headline">
             Word Graph Table
           </v-card-title>
@@ -20,9 +22,9 @@
             >
             </v-data-table>
           </v-card-text>
-        </v-card>
+        </v-card> -->
       </v-col>
-      <v-col cols="12" sm="12" md="7" lg="7" xl="7">
+      <v-col cols="12" sm="12" md="12" lg="12" xl="12">
         <div id="cy"></div> 
       </v-col>
     </v-row>
@@ -39,7 +41,7 @@ export default {
   data() {
     return {
       excel_data: null,
-      talk_title: "test",
+      talk_title: "",
       speakers : ['default'],
       keywords : [
         {
@@ -95,6 +97,25 @@ export default {
   methods: {
     store_result() {
       //canvasをimageとして保存する方法を探す
+    },
+    dl_JSON() {
+      // 保存するJSONファイルの名前
+      const fileName = "mochi.json";
+      
+      // データをJSON形式の文字列に変換する。
+      const data = JSON.stringify(originalData);
+      
+      // HTMLのリンク要素を生成する。
+      const link = document.createElement("a");
+      
+      // リンク先にJSON形式の文字列データを置いておく。
+      link.href = "data:text/plain," + encodeURIComponent(data);
+      
+      // 保存するJSONファイルの名前をリンクに設定する。
+      a.download = fileName;
+      
+      // ファイルを保存する。
+      a.click();
     },
     start_from_excel() {
       let vm = this;
