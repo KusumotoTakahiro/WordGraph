@@ -104,8 +104,8 @@ export default {
         // },
         {
           icon: 'mdi-apps',
-          title: 'all_methods',
-          to: '/all_methods'
+          title: 'index',
+          to: '/'
         },
         {
           icon: 'mdi-chart-bubble',
@@ -117,7 +117,6 @@ export default {
           title: 'word graph',
           to: '/sample'
         },
-        
       ],
       miniVariant: false,
       right: true,

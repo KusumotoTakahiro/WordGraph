@@ -1,34 +1,38 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12" sm="12" md="12" lg="12" xl="12">
+      <v-col cols="12" sm="12" md="9" lg="9" xl="9">
         <!-- <my-speech-recognition ref="spRecog"></my-speech-recognition>
         <v-btn @click="start_recog()" color="primary">音声認識の開始</v-btn>
         <v-btn @click="stop_recog()" color="red">音声認識の終了</v-btn> -->
         <div class="float-left">
           <v-btn @click="save_log()" color="green">
             <v-icon>mdi-download</v-icon>
-            <v-title>JSONで保存</v-title>
+            JSONで保存
           </v-btn>
           <v-btn @click="store_result()" color="green">
             <v-icon>mdi-download</v-icon>
-            <v-title>画像で保存</v-title>
+            画像で保存
           </v-btn>
           <v-btn @click="start_from_excel()" color="green">
             <v-icon>mdi-microsoft-excel</v-icon>
-            <v-title>excelから解析</v-title>
+            excelから解析
           </v-btn>
-          <v-btn color="green">
+          <v-btn @click="start_from_json()" color="green">
             <v-icon>mdi-upload</v-icon>
-            <v-title>JSONから読込</v-title>
+            JSONから読込
+          </v-btn>
+          <v-btn @click="clear_graph()" color="green">
+            <v-icon>mdi-cached</v-icon>
+            グラフを初期化
           </v-btn>
           <!-- <input type="file" @change="onFileChange" style="color:#FDD"/> -->
           <v-file-input
             show-size
             type="file"
             @change="onFileChange2"
-            label="excelファイルを選択してください"
-            accept=".xlsx"
+            label="excelまたはjsonファイルを選択してください"
+            accept=".xlsx, .json"
           ></v-file-input>
         </div>
         <!-- <v-card>
@@ -44,6 +48,9 @@
             </v-data-table>
           </v-card-text>
         </v-card> -->
+      </v-col>
+      <v-col cols="12" sm="12" md="3" lg="3" xl="3">
+        <div>{{node_info}}</div>
       </v-col>
       <v-col cols="12" sm="12" md="12" lg="12" xl="12">
         <div id="cy"></div> 
@@ -66,6 +73,7 @@ export default {
     return {
       excel_data: null,
       talk_title: "",
+      node_info: "text",
       speakers : ['default'],
       keywords : [
         {
@@ -154,44 +162,99 @@ export default {
         .then(vm.update_keywords)
         .then((res)=>{
           vm.update_graph();
-          console.log(i + "回目");
-          console.log(vm.keywords);
+          // console.log(i + "回目");
+          // console.log(vm.keywords);
         });
-        // console.log('From MydataCenter');
-        // await this.$refs.kuromoji.update_next(analysised_data); 
-        // console.log('end update next');
-        // await this.$refs.kuromoji.process_keyword(analysised_data, speaker);
-        // console.log('end promise_keyword');
       }
     },
-    onFileChange(event) {
-      console.log(event);
-      this.file = event.target.files ? event.target.files[0] : null;
-      if (this.file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const bstr = e.target.result;
-          const wb = xlsx.read(bstr, {type: 'binary'});
-          const wsname = wb.SheetNames[0];
-          const ws = wb.Sheets[wsname];
-          this.excel_data = xlsx.utils.sheet_to_json(ws, {header: 1}); 
+    start_from_json() {
+      let vm = this;
+      //先にキーワードをノードとして追加する
+      for (let key of vm.keywords) {
+        vm.update_node(key.keyword, key.weight, key.speaker);
+      }
+      //ノードをweight(出た回数)に応じてリサイズする
+      vm.resize_nodes();
+      //keywordからedgeを生成する 
+      for (let key of vm.keywords) {
+        let after_next = key.after_next.filter((ele, pos)=>{
+          return key.after_next.indexOf(ele)===pos;
+        })
+        for (let i = 0; i < after_next.length; i++) {
+          vm.update_edges(key.keyword, key.after_next[i]);
         }
-        reader.readAsBinaryString(this.file);
       }
     },
+    clear_graph() {
+      //keywordsの初期化
+      this.keywords = [
+        {
+          "keyword" : "start",
+          "weight" : 0,
+          "before_next" : [],
+          "after_next" : [],
+          "isLatest" : true,
+          "isInGraph" : true,
+          "position" : "noun",
+          "speaker" : "default",
+        }
+      ];
+      this.k = 100;
+      this.theta = 0;
+      for (let key of this.keywords) {
+        this.cy.remove( key.keyword );
+      }
+      this.update_node("start", 0, "default");
+    },
+    // 通常のinputバージョン，input(typeがfile)では，eventが引数として入ってくる．
+    // onFileChange(event) {
+    //   console.log(event);
+    //   this.file = event.target.files ? event.target.files[0] : null;
+    //   if (this.file) {
+    //     const reader = new FileReader();
+    //     reader.onload = (e) => {
+    //       const bstr = e.target.result;
+    //       const wb = xlsx.read(bstr, {type: 'binary'});
+    //       const wsname = wb.SheetNames[0];
+    //       const ws = wb.Sheets[wsname];
+    //       this.excel_data = xlsx.utils.sheet_to_json(ws, {header: 1}); 
+    //     }
+    //     reader.readAsBinaryString(this.file);
+    //   }
+    // },
     //vuetifyのv-file-inputでは，eventではなくfilesが入ってくるため書き換えた．
     onFileChange2(files) {
+      let vm = this;
       if (files) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const bstr = e.target.result;
-          const wb = xlsx.read(bstr, {type: 'binary'});
-          const wsname = wb.SheetNames[0];
-          const ws = wb.Sheets[wsname];
-          this.excel_data = xlsx.utils.sheet_to_json(ws, {header: 1}); 
+        //excelファイルを読み込んだとき
+        if (files.name.indexOf('.xlsx') > -1) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const bstr = e.target.result;
+            const wb = xlsx.read(bstr, {type: 'binary'});
+            const wsname = wb.SheetNames[0];
+            const ws = wb.Sheets[wsname];
+            this.excel_data = xlsx.utils.sheet_to_json(ws, {header: 1}); 
+          }
+          reader.readAsBinaryString(files);
         }
-        reader.readAsBinaryString(files);
+        //jsonファイルを読み込んだとき
+        else if (files.name.indexOf('.json') > -1) {
+          vm.get_file_data(files)
+          .then((res)=>{
+            vm.keywords = res;
+          })
+        }
       }
+    },
+    //jsonファイルからデータを読み取るメソッド
+    get_file_data(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(JSON.parse(e.target.result));
+        reader.onerror = () => reject(error)
+        reader.readAsText(file);
+      })
     },
     hiragana_fillter(keyword) {
       keyword = (keyword==null)?"":keyword;
@@ -391,7 +454,10 @@ export default {
         container : document.getElementById('cy'),
         elements : [
           {
-            data: {id : 'start'}
+            data: {
+              id : 'start',
+              weight : 0,
+            }
           },
         ],
         style : [
@@ -416,12 +482,15 @@ export default {
         ]
       });
     },
-    update_node(keyword, speaker) {
+    update_node(keyword, weight, speaker) {
       return new Promise((resolve)=>{
         this.cy.add([
           {
             group : 'nodes',
-            data : {id : keyword},
+            data : {
+              id : keyword, 
+              weight: weight,
+            },
             position : {
               x : 150 + Math.cos(this.theta)*this.k,
               y : 150 + Math.sin(this.theta)*this.k,
@@ -460,10 +529,12 @@ export default {
         //先にキーワードをノードとして追加する
         for (let key of vm.keywords) {
           if (key.isInGraph == false) {
-            vm.update_node(key.keyword, key.speaker);
+            vm.update_node(key.keyword, key.weight, key.speaker);
             key.isInGraph = true;
           }
         }
+        //ノードをweight(出た回数)に応じてリサイズする
+        vm.resize_nodes();
 
         //keywordからedgeを生成する
         for (let key of vm.keywords) {
@@ -496,11 +567,30 @@ export default {
           key.before_next = [];
         }
       })
-      
+    },
+    resize_node(weight) {
+      let collection = this.cy.elements('node[weight = ' + weight + ']');
+      let r = 30 + weight*10;
+      collection.css('width',r);
+      collection.css('height',r);
+    },
+    resize_nodes() {
+      for (let weight = 0; weight < 50; weight++) {
+        this.resize_node(weight);
+      }
+      this.resize_node(51);
+    },
+    graph_event_tap() {
+      this.cy.on('tap', 'node', function(evt){
+        let node = evt.target;
+        this.node_info = 'tapped ' + node.id() + " \nweight=" + node._private.data.weight;
+        console.log(this.node_info);
+      });
     }
   },
   mounted() {
     this.init_graph();
+    this.graph_event_tap();
   }
 }
 </script>
