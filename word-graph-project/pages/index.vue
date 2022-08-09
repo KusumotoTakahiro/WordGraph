@@ -50,7 +50,9 @@
         </v-card> -->
       </v-col>
       <v-col cols="12" sm="12" md="3" lg="3" xl="3">
-        <div>{{node_info}}</div>
+        <!-- <v-card style="height: 100%; weight:100%">
+          <v-card-text></v-card-text>
+        </v-card> -->
       </v-col>
       <v-col cols="12" sm="12" md="12" lg="12" xl="12">
         <div id="cy"></div> 
@@ -583,10 +585,30 @@ export default {
     graph_event_tap() {
       this.cy.on('tap', 'node', function(evt){
         let node = evt.target;
-        this.node_info = 'tapped ' + node.id() + " \nweight=" + node._private.data.weight;
-        console.log(this.node_info);
+        let next_nodes = "";
+        let prev_nodes = "";
+        for (let i = 0; i < node._private.edges.length; i++){
+          let edge_source = node._private.edges[i]._private.data.source;
+          let edge_target = node._private.edges[i]._private.data.target;
+          if (edge_source != node.id()) {
+            prev_nodes += edge_source + ", ";
+          }
+          if (edge_target != node.id()) {
+            next_nodes += edge_target + ", ";
+          }
+        }
+        let resouce_value = next_nodes.length != 0 ? prev_nodes.length/next_nodes.length : 0;
+        let node_info = "keyword = " + node.id() 
+                      + " \nweight = " + node._private.data.weight
+                      + "\nprev = " + prev_nodes
+                      + "\nnext = " + next_nodes
+                      + "\n資源率 = " + resouce_value;
+        alert(node_info);
+        // console.log(node_info);
       });
     }
+  },
+  computed: {
   },
   mounted() {
     this.init_graph();
