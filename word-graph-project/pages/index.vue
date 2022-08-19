@@ -398,42 +398,42 @@ export default {
                 "speaker" : speaker || "default",
               })
             }
-            else if (data.position == "verb") {
-              vm.keywords.push({
-                "keyword":data.keyword, 
-                "weight":0, 
-                "before_next":adverbs,
-                "after_next":[],
-                "isLatest":true,
-                "isInGraph":false,
-                "position" : "verb",
-                "speaker" : speaker || "default",
-              })
-            }
-            else if (data.position == "adverb"){
-              vm.keywords.push({
-                "keyword":data.keyword, 
-                "weight":0, 
-                "before_next":[],
-                "after_next":[],
-                "isLatest":true,
-                "isInGraph":false,
-                "position" : "adverb",
-                "speaker" : speaker || "default",
-              })
-            }
-            else if (data.position == "adjective"){
-              vm.keywords.push({
-                "keyword":data.keyword, 
-                "weight":0, 
-                "before_next":[],
-                "after_next":[],
-                "isLatest":true,
-                "isInGraph":false,
-                "position" : "adjective",
-                "speaker" : speaker || "default",
-              })
-            }
+            // else if (data.position == "verb") {
+            //   vm.keywords.push({
+            //     "keyword":data.keyword, 
+            //     "weight":0, 
+            //     "before_next":adverbs,
+            //     "after_next":[],
+            //     "isLatest":true,
+            //     "isInGraph":false,
+            //     "position" : "verb",
+            //     "speaker" : speaker || "default",
+            //   })
+            // }
+            // else if (data.position == "adverb"){
+            //   vm.keywords.push({
+            //     "keyword":data.keyword, 
+            //     "weight":0, 
+            //     "before_next":[],
+            //     "after_next":[],
+            //     "isLatest":true,
+            //     "isInGraph":false,
+            //     "position" : "adverb",
+            //     "speaker" : speaker || "default",
+            //   })
+            // }
+            // else if (data.position == "adjective"){
+            //   vm.keywords.push({
+            //     "keyword":data.keyword, 
+            //     "weight":0, 
+            //     "before_next":[],
+            //     "after_next":[],
+            //     "isLatest":true,
+            //     "isInGraph":false,
+            //     "position" : "adjective",
+            //     "speaker" : speaker || "default",
+            //   })
+            // }
           }
           resolve(analysised_data);
         }
