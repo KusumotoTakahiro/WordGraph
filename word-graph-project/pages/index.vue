@@ -32,7 +32,7 @@
             type="file"
             @change="onFileChange2"
             label="excelまたはjsonファイルを選択してください"
-            accept=".xlsx, .json"
+            accept=".xlsx, .json, .csv"
           ></v-file-input>
         </div>
         <!-- <v-card>
@@ -74,6 +74,7 @@ export default {
   data() {
     return {
       excel_data: null,
+      csv_data: [],
       talk_title: "",
       node_info: "text",
       speakers : ['default'],
@@ -154,19 +155,19 @@ export default {
     },
     start_from_excel() {
       let vm = this;
-      let len = vm.excel_data.length;
-      for (let i = 1; i < len; i++) { //0番目は表の項目名のためデータは1番目から
-        let sentence = vm.excel_data[i][0];
-        let speaker = vm.excel_data[i][1];
+      let cnt = 0;
+      for (let data of vm.csv_data) { //0番目は表の項目名のためデータは1番目から
+        let sentence = data.word;
+        let speaker = data.speaker;
         vm.tokenize([sentence, speaker])
         .then(vm.categolize)
         .then(vm.update_next)
         .then(vm.update_keywords)
         .then((res)=>{
           vm.update_graph();
-          // console.log(i + "回目");
-          // console.log(vm.keywords);
         });
+        if (cnt===50) break;
+        else cnt+=1;
       }
     },
     start_from_json() {
@@ -228,21 +229,14 @@ export default {
     onFileChange2(files) {
       let vm = this;
       if (files) {
-        //excelファイルを読み込んだとき
-        if (files.name.indexOf('.xlsx') > -1) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const bstr = e.target.result;
-            const wb = xlsx.read(bstr, {type: 'binary'});
-            const wsname = wb.SheetNames[0];
-            const ws = wb.Sheets[wsname];
-            this.excel_data = xlsx.utils.sheet_to_json(ws, {header: 1}); 
-          }
-          reader.readAsBinaryString(files);
+        //csvファイルを読み込んだとき
+        if (files.name.indexOf('.csv') > -1) {
+          vm.get_csv_data(files)
+          .then(vm.process_csv_data)
         }
         //jsonファイルを読み込んだとき
         else if (files.name.indexOf('.json') > -1) {
-          vm.get_file_data(files)
+          vm.get_json_data(files)
           .then((res)=>{
             vm.keywords = res;
           })
@@ -250,12 +244,37 @@ export default {
       }
     },
     //jsonファイルからデータを読み取るメソッド
-    get_file_data(file) {
+    get_json_data(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => resolve(JSON.parse(e.target.result));
         reader.onerror = () => reject(error)
         reader.readAsText(file);
+      })
+    },
+    //csvファイルからデータを読み取るメソッド
+    get_csv_data(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result.split('\r\n'));
+        reader.onerror = () => reject(error)
+        reader.readAsText(file);
+      })
+    },
+    //get_csv_dataから来た結果をここで扱えるdataに変換するメソッド
+    process_csv_data(res) {
+      let vm = this;
+      let result = res;
+      let header = result[0].split(',')
+      result.shift();
+      vm.csv_data = result.map(item=>{
+        let datas = item.split(',');
+        let temp = {};
+        for (const index in datas) {
+          let key = header[index];
+          temp[key] = datas[index];
+        }
+        return temp;
       })
     },
     hiragana_fillter(keyword) {
