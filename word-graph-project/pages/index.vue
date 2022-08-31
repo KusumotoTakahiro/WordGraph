@@ -166,7 +166,7 @@ export default {
         .then((res)=>{
           vm.update_graph();
         });
-        if (cnt===50) break;
+        if (cnt===150) break;
         else cnt+=1;
       }
     },
