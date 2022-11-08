@@ -1,12 +1,51 @@
 <template>
   <v-container>
+    <v-dialog
+    v-model="dialog"
+    width="500"
+    >
+      <v-simple-table light>
+        <v-alert
+          border="left"
+          color=""
+          dense
+          width="300"
+          icon="mdi-information-outline"
+          elevation="2"
+        >
+          ノード情報
+        </v-alert>
+        <tbody style="color:black">
+          <tr>
+            <th>keyword</th>
+            <th>{{node_info.keyword}}</th>
+          </tr>
+          <tr>
+            <th>最初の発言者</th>
+            <th>{{node_info.speaker}}</th>
+          </tr>
+          <tr>
+            <th>tf-idf値</th>
+            <th>{{node_info.weight}}</th>
+          </tr>
+          <tr>
+            <th>元ノード</th>
+            <th>{{node_info.prev}}</th>
+          </tr>
+          <tr>
+            <th>次ノード</th>
+            <th>{{node_info.next}}</th>
+          </tr>
+        </tbody>
+      </v-simple-table>
+    </v-dialog>
     <v-row>
       <v-col cols="12" sm="12" md="9" lg="9" xl="9">
         <!-- <my-speech-recognition ref="spRecog"></my-speech-recognition>
         <v-btn @click="start_recog()" color="primary">音声認識の開始</v-btn>
         <v-btn @click="stop_recog()" color="red">音声認識の終了</v-btn> -->
         <div class="float-left">
-          <v-btn @click="save_log()" color="green">
+          <v-btn @click="save_log()" color="green" disabled>
             <v-icon>mdi-download</v-icon>
             JSONで保存
           </v-btn>
@@ -14,7 +53,7 @@
             <v-icon>mdi-download</v-icon>
             画像で保存
           </v-btn>
-          <v-btn @click="start_from_excel()" color="green">
+          <v-btn @click="start_from_excel()" color="green" disabled>
             <v-icon>mdi-microsoft-excel</v-icon>
             excelから解析
           </v-btn>
@@ -73,6 +112,8 @@ export default {
   name: 'all_methods',
   data() {
     return {
+      node_info: null,
+      dialog:false,
       excel_data: null,
       csv_data: [],
       talk_title: "",
@@ -96,6 +137,10 @@ export default {
         '#0000ff',  //青     color2
         '#8a2be2',  //紫     color3
         '#f08080',  //ピンク color4
+        '#0D9FF2',  //水色 color5
+        '#0DF2A9',  //黄緑 color6
+        '#F20D37',  //赤 color7
+        '#5D0212',  //赤褐色 color8
       ],
       k : 100,
       theta : 0,
@@ -154,6 +199,7 @@ export default {
       saveAs(blob, fileName);
     },
     start_from_excel() {
+      console.log('start_from_excel');
       let vm = this;
       let cnt = 0;
       for (let data of vm.csv_data) { //0番目は表の項目名のためデータは1番目から
@@ -602,6 +648,7 @@ export default {
       this.resize_node(51);
     },
     graph_event_tap() {
+      let vm = this;
       this.cy.on('tap', 'node', function(evt){
         let node = evt.target;
         let next_nodes = "";
@@ -616,13 +663,28 @@ export default {
             next_nodes += edge_target + ", ";
           }
         }
-        let resouce_value = next_nodes.length != 0 ? prev_nodes.length/next_nodes.length : 0;
-        let node_info = "keyword = " + node.id() 
-                      + " \nweight = " + node._private.data.weight
-                      + "\nprev = " + prev_nodes
-                      + "\nnext = " + next_nodes
-                      + "\n資源率 = " + resouce_value;
-        alert(node_info);
+        //現在参照しているノードの割り出し
+        let now = vm.keywords.find(e=>e.keyword === node.id());
+        console.log(now);
+        let resouce_rate = next_nodes.length != 0 ? prev_nodes.length/next_nodes.length : 0;
+        // let node_info = "keyword = " + node.id() 
+        //               + " \nweight = " + node._private.data.weight
+        //               + " \nspeaker = " + now.speaker
+        //               + "\nprev = " + prev_nodes
+        //               + "\nnext = " + next_nodes
+        //               + "\n資源率 = " + resouce_value;
+        let node_info = {
+          "keyword":node.id(),
+          "weight":node._private.data.weight,
+          "speaker":now.speaker,
+          "prev":prev_nodes,
+          "next":next_nodes,
+          "resouce_rate":resouce_rate,
+        }
+        console.log(node_info);
+        //alert(node_info);
+        vm.node_info = node_info;
+        vm.dialog = true;
         // console.log(node_info);
       });
     }
@@ -640,5 +702,20 @@ export default {
 #cy {
   background-color: #f3f3f2;
   height: calc(100vw / 3);
+}
+.design01 {
+  width: 100%;
+  text-align: center;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+.design01 th {
+  padding: 10px;
+  background: #e9faf9;
+  border: solid 1px #778ca3;
+}
+.design01 td {
+  padding: 10px;
+  border: solid 1px #778ca3;
 }
 </style>
