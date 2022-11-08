@@ -133,12 +133,12 @@ export default {
       ],
       col_define: [
         '#f8b500',  //山吹色 default
-        '#3cb371',  //緑     color1 
-        '#0000ff',  //青     color2
-        '#8a2be2',  //紫     color3
         '#f08080',  //ピンク color4
         '#0D9FF2',  //水色 color5
         '#0DF2A9',  //黄緑 color6
+        '#3cb371',  //緑     color1 
+        '#0000ff',  //青     color2
+        '#8a2be2',  //紫     color3
         '#F20D37',  //赤 color7
         '#5D0212',  //赤褐色 color8
       ],
@@ -254,6 +254,8 @@ export default {
         this.cy.remove( key.keyword );
       }
       this.update_node("start", 0, "default");
+      //clabel_setterの初期化
+      this.speakers = ['default'];
     },
     // 通常のinputバージョン，input(typeがfile)では，eventが引数として入ってくる．
     // onFileChange(event) {
@@ -282,6 +284,7 @@ export default {
         }
         //jsonファイルを読み込んだとき
         else if (files.name.indexOf('.json') > -1) {
+          vm.clear_graph();
           vm.get_json_data(files)
           .then((res)=>{
             vm.keywords = res;
@@ -642,10 +645,9 @@ export default {
       collection.css('height',r);
     },
     resize_nodes() {
-      for (let weight = 0; weight < 50; weight++) {
+      for (let weight = 0; weight < 100; weight++) {
         this.resize_node(weight);
       }
-      this.resize_node(51);
     },
     graph_event_tap() {
       let vm = this;
