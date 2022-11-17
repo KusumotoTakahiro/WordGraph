@@ -1,0 +1,691 @@
+[
+    {
+        "keyword": "start",
+        "speaker": "default",
+        "speakers": [],
+        "weight": 0,
+        "before_next": [],
+        "after_next": [
+            "カメラ"
+        ],
+        "isLatest": false,
+        "isInGraph": true,
+        "position": "noun"
+    },
+    {
+        "keyword": "カメラ",
+        "speaker": "19704018",
+        "speakers": [
+            "19704018",
+            "19704018",
+            "19704012",
+            "19704018",
+            "19704018",
+            "19704013",
+            "19704012",
+            "19704018",
+            "19704012",
+            "19704012",
+            "19704012",
+            "19704012",
+            "17233060",
+            "19704013",
+            "19704013",
+            "19704012",
+            "19704012",
+            "19704012",
+            "19704013",
+            "19704018"
+        ],
+        "weight": 34,
+        "before_next": [],
+        "after_next": [
+            "大学",
+            "カメラ",
+            "費用",
+            "役割",
+            "動画",
+            "ダンボール",
+            "映像"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "大学",
+        "speaker": "19704018",
+        "speakers": [
+            "19704018",
+            "19704018",
+            "19704013",
+            "19704018",
+            "19704013"
+        ],
+        "weight": 5,
+        "before_next": [],
+        "after_next": [
+            "幼稚園",
+            "大学",
+            "感じ",
+            "化学"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "幼稚園",
+        "speaker": "19704018",
+        "speakers": [
+            "19704018",
+            "19704013",
+            "19704018",
+            "19704018",
+            "19704018"
+        ],
+        "weight": 11,
+        "before_next": [],
+        "after_next": [
+            "大学",
+            "子供",
+            "感じ",
+            "化学",
+            "ダンボール"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "感じ",
+        "speaker": "19704013",
+        "speakers": [
+            "19704013",
+            "19704013",
+            "19704013",
+            "19704013",
+            "19704013",
+            "19704013",
+            "19704018",
+            "19704012",
+            "19704018",
+            "19704018",
+            "19704013",
+            "19704018",
+            "19704018",
+            "19704018"
+        ],
+        "weight": 12,
+        "before_next": [],
+        "after_next": [
+            "感じ",
+            "大学",
+            "幼稚園",
+            "出し物",
+            "スマホ",
+            "映像",
+            "子供",
+            "カメラ",
+            "ハサミ"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "子供",
+        "speaker": "19704012",
+        "speakers": [
+            "19704012",
+            "19704012",
+            "19704018",
+            "19704018",
+            "19704018",
+            "19704018",
+            "19704018",
+            "19704012",
+            "19704018"
+        ],
+        "weight": 21,
+        "before_next": [],
+        "after_next": [
+            "子供",
+            "感じ",
+            "余裕",
+            "スマホ",
+            "映像",
+            "サークル"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "出し物",
+        "speaker": "19704012",
+        "speakers": [
+            "19704012",
+            "19704012",
+            "19704018"
+        ],
+        "weight": 7,
+        "before_next": [],
+        "after_next": [
+            "出し物",
+            "大学",
+            "ゲーム"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "化学",
+        "speaker": "19704013",
+        "speakers": [
+            "19704013",
+            "19704018",
+            "19704013"
+        ],
+        "weight": 7,
+        "before_next": [],
+        "after_next": [
+            "教職",
+            "サークル",
+            "カメラ"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "教職",
+        "speaker": "19704012",
+        "speakers": [
+            "19704012",
+            "17233060",
+            "17233060"
+        ],
+        "weight": 7,
+        "before_next": [],
+        "after_next": [
+            "課程"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "課程",
+        "speaker": "19704012",
+        "speakers": [
+            "19704012",
+            "17233060",
+            "17233060"
+        ],
+        "weight": 7,
+        "before_next": [],
+        "after_next": [
+            "出し物",
+            "教職",
+            "費用"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "ゲーム",
+        "speaker": "19704018",
+        "speakers": [
+            "19704018",
+            "19704013",
+            "19704013",
+            "19704018",
+            "19704012",
+            "19704012",
+            "19704018"
+        ],
+        "weight": 9,
+        "before_next": [],
+        "after_next": [
+            "ゲーム",
+            "費用",
+            "感じ",
+            "クイズ",
+            "映像"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "費用",
+        "speaker": "19704013",
+        "speakers": [
+            "19704013",
+            "19704013",
+            "19704018",
+            "19704013",
+            "19704018"
+        ],
+        "weight": 8,
+        "before_next": [],
+        "after_next": [
+            "教職",
+            "スマホ",
+            "ダンボール",
+            "費用",
+            "カメラ"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "スマホ",
+        "speaker": "19704018",
+        "speakers": [
+            "19704018",
+            "19704018",
+            "19704018",
+            "19704018",
+            "19704012",
+            "19704018",
+            "19704018",
+            "19704018",
+            "19704018",
+            "19704012",
+            "19704012",
+            "19704018",
+            "19704018"
+        ],
+        "weight": 22,
+        "before_next": [],
+        "after_next": [
+            "スマホ",
+            "ゲーム",
+            "ダンボール",
+            "コントローラー",
+            "ジェット",
+            "セロテープ",
+            "幼稚園"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "ダンボール",
+        "speaker": "19704018",
+        "speakers": [
+            "19704018",
+            "19704018",
+            "19704018",
+            "19704012",
+            "19704013",
+            "19704018",
+            "19704012",
+            "19704012",
+            "19704012",
+            "19704013",
+            "19704013",
+            "19704018",
+            "19704018",
+            "19704013",
+            "19704012",
+            "19704012",
+            "19704013",
+            "17233060",
+            "19704012",
+            "19704012",
+            "19704018",
+            "19704018",
+            "19704018"
+        ],
+        "weight": 53,
+        "before_next": [],
+        "after_next": [
+            "スマホ",
+            "子供",
+            "動画",
+            "ダンボール",
+            "最悪",
+            "カメラ",
+            "映像",
+            "費用",
+            "余裕",
+            "トラブル"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "クイズ",
+        "speaker": "19704013",
+        "speakers": [
+            "19704013",
+            "19704018"
+        ],
+        "weight": 5,
+        "before_next": [],
+        "after_next": [
+            "クイズ",
+            "スマホ"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "コントローラー",
+        "speaker": "19704018",
+        "speakers": [
+            "19704018",
+            "19704018"
+        ],
+        "weight": 5,
+        "before_next": [],
+        "after_next": [
+            "スマホ",
+            "ゲーム"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "映像",
+        "speaker": "19704012",
+        "speakers": [
+            "19704012",
+            "19704012",
+            "19704012",
+            "19704012",
+            "19704012",
+            "19704018",
+            "19704018",
+            "19704013",
+            "19704018",
+            "19704018",
+            "19704018",
+            "19704012",
+            "19704012",
+            "19704018",
+            "19704012",
+            "19704012"
+        ],
+        "weight": 27,
+        "before_next": [],
+        "after_next": [
+            "ダンボール",
+            "映像",
+            "動画",
+            "感じ",
+            "カメラ",
+            "幼稚園",
+            "子供",
+            "トラブル"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "余裕",
+        "speaker": "19704012",
+        "speakers": [
+            "19704012",
+            "19704012",
+            "19704012",
+            "19704012",
+            "19704012"
+        ],
+        "weight": 8,
+        "before_next": [],
+        "after_next": [
+            "映像",
+            "余裕",
+            "最悪",
+            "トラブル"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "動画",
+        "speaker": "19704012",
+        "speakers": [
+            "19704012",
+            "19704012",
+            "19704012",
+            "19704013",
+            "19704012",
+            "19704012",
+            "19704012",
+            "19704018",
+            "19704013",
+            "19704012",
+            "19704012",
+            "19704018",
+            "19704012",
+            "19704012",
+            "19704013",
+            "19704013",
+            "19704018",
+            "19704018",
+            "19704012"
+        ],
+        "weight": 32,
+        "before_next": [],
+        "after_next": [
+            "映像",
+            "動画",
+            "感じ",
+            "スマホ",
+            "カメラ",
+            "役割",
+            "コード",
+            "ダンボール",
+            "子供",
+            "化学"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "ジェット",
+        "speaker": "19704018",
+        "speakers": [
+            "19704018",
+            "19704012",
+            "19704012"
+        ],
+        "weight": 7,
+        "before_next": [],
+        "after_next": [
+            "コースター",
+            "動画",
+            "映像"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "コースター",
+        "speaker": "19704018",
+        "speakers": [
+            "19704018",
+            "19704012",
+            "19704012"
+        ],
+        "weight": 7,
+        "before_next": [],
+        "after_next": [
+            "最悪",
+            "動画",
+            "トラブル"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "最悪",
+        "speaker": "19704012",
+        "speakers": [
+            "19704012",
+            "19704012",
+            "19704012",
+            "19704012",
+            "19704018",
+            "19704012"
+        ],
+        "weight": 14,
+        "before_next": [],
+        "after_next": [
+            "最悪",
+            "ジェット",
+            "動画",
+            "スマホ",
+            "感じ"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "役割",
+        "speaker": "19704018",
+        "speakers": [
+            "19704018",
+            "19704018",
+            "19704013",
+            "19704012",
+            "19704012"
+        ],
+        "weight": 11,
+        "before_next": [],
+        "after_next": [
+            "役割",
+            "動画",
+            "カメラ",
+            "感じ"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "コード",
+        "speaker": "19704012",
+        "speakers": [
+            "19704012",
+            "19704012"
+        ],
+        "weight": 5,
+        "before_next": [],
+        "after_next": [
+            "動画"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "セロテープ",
+        "speaker": "19704018",
+        "speakers": [
+            "19704018",
+            "19704018"
+        ],
+        "weight": 5,
+        "before_next": [],
+        "after_next": [
+            "感じ",
+            "ダンボール"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "サークル",
+        "speaker": "19704018",
+        "speakers": [
+            "19704018",
+            "19704018",
+            "19704012"
+        ],
+        "weight": 7,
+        "before_next": [],
+        "after_next": [
+            "映像",
+            "サークル"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "ハサミ",
+        "speaker": "19704018",
+        "speakers": [
+            "19704018",
+            "19704018"
+        ],
+        "weight": 5,
+        "before_next": [],
+        "after_next": [
+            "セロテープ",
+            "テープ"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "テープ",
+        "speaker": "19704018",
+        "speakers": [
+            "19704018",
+            "19704018",
+            "19704012"
+        ],
+        "weight": 7,
+        "before_next": [],
+        "after_next": [
+            "余裕",
+            "テープ",
+            "スマホ"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun"
+    },
+    {
+        "keyword": "トラブル",
+        "speaker": "19704012",
+        "speakers": [
+            "19704012",
+            "19704012",
+            "19704012",
+            "19704012"
+        ],
+        "weight": 9,
+        "before_next": [],
+        "after_next": [
+            "テープ",
+            "トラブル",
+            "ジェット"
+        ],
+        "isLatest": true,
+        "isInGraph": false,
+        "position": "noun"
+    }
+]

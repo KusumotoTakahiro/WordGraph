@@ -106,6 +106,7 @@ import kuromoji from 'kuromoji'
 import cytoscape from 'cytoscape';
 import {saveAs} from 'file-saver';
 import ver01_temp from './ver01_temp.vue';
+import sample1 from '../assets/sample1.json';
 
 export default {
   components: { ver01_temp },
@@ -218,6 +219,7 @@ export default {
     },
     start_from_json() {
       let vm = this;
+      //this.set_graph_style();
       //先にキーワードをノードとして追加する
       for (let key of vm.keywords) {
         vm.update_node(key.keyword, key.weight, key.speaker);
@@ -233,6 +235,26 @@ export default {
           vm.update_edges(key.keyword, key.after_next[i]);
         }
       }
+    },
+    //グラフのスタイルの設定
+    set_graph_style() {
+      let style = [
+        {
+          selector: 'node',
+          style: {
+            'background-color': 'red',
+            'font-size': '20px',
+          }
+        },
+        {
+          selector: 'edge',
+          style: {
+            'width': '10px',
+            'arrow-scale': '10'
+          }
+        },
+      ];
+      this.cy.style(style).update();
     },
     clear_graph() {
       //keywordsの初期化
@@ -275,6 +297,7 @@ export default {
     // },
     //vuetifyのv-file-inputでは，eventではなくfilesが入ってくるため書き換えた．
     onFileChange2(files) {
+      console.log(files);
       let vm = this;
       if (files) {
         //csvファイルを読み込んだとき
@@ -537,16 +560,21 @@ export default {
               'background-color' : this.col_define[0],
               'color' : 'black',
               'label' : 'data(id)',
+              'font-size': '100px',
+              'font-family': 'serif',
             }
           },
           {
             selector: 'edge',
             style : {
-              'width':3,
+              'width':4,
               'line-color':'#ccc',
               'target-arrow-color': '#ccc',
               'target-arrow-shape': 'triangle',
               'curve-style': 'bezier',
+              'arrow-scale': '4',
+              'arrow-shape': 'vee',
+              'loop-direction': '-90deg',
             }
           }
         ]
@@ -696,6 +724,9 @@ export default {
   mounted() {
     this.init_graph();
     this.graph_event_tap();
+    this.keywords = sample1;
+    this.start_from_json();
+    this.cy.fit();
   }
 }
 </script>
