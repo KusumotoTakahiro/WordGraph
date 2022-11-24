@@ -39,6 +39,7 @@
         </tbody>
       </v-simple-table>
     </v-dialog>
+
     <v-row>
       <v-col cols="12" sm="12" md="9" lg="9" xl="9">
         <!-- <my-speech-recognition ref="spRecog"></my-speech-recognition>
@@ -94,8 +95,13 @@
         </v-card> -->
       </v-col>
       <v-col cols="12" sm="12" md="12" lg="12" xl="12">
-        <div id="cy"></div> 
+        <v-card
+          
+        >
+          <div id="cy"></div>
+        </v-card>
       </v-col>
+      
     </v-row>
   </v-container>
 </template>
@@ -576,8 +582,8 @@ export default {
               'arrow-shape': 'vee',
               'loop-direction': '-90deg',
             }
-          }
-        ]
+          }, 
+        ],
       });
     },
     update_node(keyword, weight, speaker) {
@@ -734,7 +740,7 @@ export default {
 <style scoped>
 #cy {
   background-color: #f3f3f2;
-  height: calc(100vw / 3);
+  height: calc(100vw);
 }
 .design01 {
   width: 100%;
@@ -750,5 +756,9 @@ export default {
 .design01 td {
   padding: 10px;
   border: solid 1px #778ca3;
+}
+
+.original-height {
+  height: 100%;
 }
 </style>
