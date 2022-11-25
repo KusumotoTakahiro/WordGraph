@@ -723,6 +723,15 @@ export default {
         vm.dialog = true;
         // console.log(node_info);
       });
+    },
+    graph_event_tap_edge() {
+      let vm = this;
+      this.cy.on('tap', 'edge', function(evt){
+        let data = evt.target._private.data
+        console.log(data.id);
+        console.log(data.source);
+        console.log(data.target);
+      });
     }
   },
   computed: {
@@ -730,6 +739,7 @@ export default {
   mounted() {
     this.init_graph();
     this.graph_event_tap();
+    this.graph_event_tap_edge();
     this.keywords = sample1;
     this.start_from_json();
     this.cy.fit();
