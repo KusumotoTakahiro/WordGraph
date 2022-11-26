@@ -727,10 +727,27 @@ export default {
     graph_event_tap_edge() {
       let vm = this;
       this.cy.on('tap', 'edge', function(evt){
+        //edgeのevent情報を取得
         let data = evt.target._private.data
+        console.log(evt);
         console.log(data.id);
-        console.log(data.source);
-        console.log(data.target);
+        console.log('source: '+data.source);
+        console.log('target: '+data.target);
+        //元ノードをKeywordsから検索
+        let source = null;
+        vm.keywords.forEach((keyword)=>{
+          if (keyword.keyword == data.source) {
+            source = keyword;
+          }
+        })
+        let nxsp = source.next_speakers;
+        console.log(nxsp)
+        Object.keys(nxsp).forEach((key) => {
+          if (key===data.target) {
+            console.log(key);
+            console.log(nxsp[key]);
+          }
+        });
       });
     }
   },
