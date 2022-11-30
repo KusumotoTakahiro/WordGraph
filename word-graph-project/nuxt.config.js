@@ -113,5 +113,6 @@ export default {
   database: {
     emulatorPort: 9000,
     emulatorHost: 'localhost',
-  }
+  },
+  ssr: false,
 }
