@@ -35,6 +35,11 @@ export default {
   plugins: [
     '@/plugins/flag-icon',
     '@/plugins/cytoscape',
+    {
+      src: '@/plugins/compound',
+      ssr: false,
+    }
+    
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

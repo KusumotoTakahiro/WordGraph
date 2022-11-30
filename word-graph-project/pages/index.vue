@@ -66,6 +66,10 @@
             <v-icon>mdi-cached</v-icon>
             グラフを初期化
           </v-btn>
+          <v-btn @click="removeParentsOfOneChild" color="green">
+            
+            compoundクリア
+          </v-btn>
           <!-- <input type="file" @change="onFileChange" style="color:#FDD"/> -->
           <v-file-input
             show-size
@@ -225,23 +229,45 @@ export default {
     },
     start_from_json() {
       let vm = this;
-      //this.set_graph_style();
-      //先にキーワードをノードとして追加する
-      for (let key of vm.keywords) {
-        vm.update_node(key.keyword, key.weight, key.speaker);
-      }
-      //ノードをweight(出た回数)に応じてリサイズする
-      vm.resize_nodes();
-      //keywordからedgeを生成する 
-      for (let key of vm.keywords) {
-        let after_next = key.after_next.filter((ele, pos)=>{
-          return key.after_next.indexOf(ele)===pos;
-        })
-        for (let i = 0; i < after_next.length; i++) {
-          vm.update_edges(key.keyword, key.after_next[i]);
+      (new Promise((resolve)=>{
+        //this.set_graph_style();
+        //先にキーワードをノードとして追加する
+        console.log(1);
+        for (let key of vm.keywords) {
+          vm.update_node(key.keyword, key.weight, key.speaker);
         }
-      }
+        //ノードをweight(出た回数)に応じてリサイズする
+        vm.resize_nodes();
+        //keywordからedgeを生成する 
+        for (let key of vm.keywords) {
+          let after_next = key.after_next.filter((ele, pos)=>{
+            return key.after_next.indexOf(ele)===pos;
+          })
+          for (let i = 0; i < after_next.length; i++) {
+            vm.update_edges(key.keyword, key.after_next[i]);
+          }
+        }
+        resolve('ok');
+      }))
+      .then(()=>{
+        console.log(2)
+        this.cy.style()
+        .selector('node:parent')
+        .style('label', '')
+        .style('background-color', '#dcdcdc')
+        .style('border-color', 'red')
+        .style('border-style', 'dashed')
+        .selector('.cdnd-grabbed-node')
+        .style('background-color', 'red')
+        .selector('.cdnd-drop-sibling')
+        .style('background-color', 'red')
+        .selector('.cdnd-drop-target')
+        .style('border-color', 'red')
+        .style('border-style', 'dashed')
+        .update()
+      })
     },
+    
     //グラフのスタイルの設定
     set_graph_style() {
       let style = [
@@ -583,6 +609,33 @@ export default {
               'loop-direction': '-90deg',
             }
           }, 
+          {
+            selector: 'node:parent',
+            style: {
+              'label': ''
+            }
+          },
+          {
+            selector: '.cdnd-grabbed-node',
+            style: {
+              'background-color': 'red'
+            }
+          },
+
+          {
+            selector: '.cdnd-drop-sibling',
+            style: {
+              'background-color': 'red'
+            }
+          },
+
+          {
+            selector: '.cdnd-drop-target',
+            style: {
+              'border-color': 'red',
+              'border-style': 'dashed'
+            }
+          }
         ],
       });
     },
@@ -749,17 +802,52 @@ export default {
           }
         });
       });
-    }
+    },
+    //demoサイトからそのまま引用
+    isParentOfOneChild(node) {
+      return node.isParent() && node.children().length === 1;
+    },
+    removeParent(parent) {
+      parent.children().move({parent:null});
+      parent.remove();
+    },
+    removeParentsOfOneChild() {
+      this.cy.nodes().filter(this.isParentOfOneChild).forEach(this.removeParent);
+    },
   },
   computed: {
   },
   mounted() {
+    let vm = this;
     this.init_graph();
     this.graph_event_tap();
     this.graph_event_tap_edge();
     this.keywords = sample1;
     this.start_from_json();
     this.cy.fit();
+    const options = {
+      grabbedNode: node => true, // filter function to specify which nodes are valid to grab and drop into other nodes
+      dropTarget: (dropTarget, grabbedNode) => true, // filter function to specify which parent nodes are valid drop targets
+      dropSibling: (dropSibling, grabbedNode) => true, // filter function to specify which orphan nodes are valid drop siblings
+      newParentNode: (grabbedNode, dropSibling) => ({}), // specifies element json for parent nodes added by dropping an orphan node on another orphan (a drop sibling). You can chose to return the dropSibling in which case it becomes the parent node and will be preserved after all its children are removed.
+      boundingBoxOptions: { // same as https://js.cytoscape.org/#eles.boundingBox, used when calculating if one node is dragged over another
+        includeOverlays: false,
+        includeLabels: true
+      },
+      overThreshold: 10, // make dragging over a drop target easier by expanding the hit area by this amount on all sides
+      outThreshold: 10 // make dragging out of a drop target a bit harder by expanding the hit area by this amount on all sides
+    };
+    this.cy.compoundDragAndDrop(options);
+    this.cy.on('remove', (event)=>{
+      if (vm.removeEmptyParents ) {
+        vm.removeParentsOfOneChild();
+      }
+    });
+    this.cy.on('cdndout', (event, dropTarget) => {
+      if( vm.removeEmptyParents && vm.isParentOfOneChild(dropTarget) ){
+        vm.removeParent(dropTarget);
+      }
+    });
   }
 }
 </script>
