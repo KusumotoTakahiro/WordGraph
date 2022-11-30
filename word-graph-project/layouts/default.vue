@@ -121,7 +121,7 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Word Graph - ver1.0'
+      title: 'Word Graph - ver2.0'
     }
   }
 }
