@@ -39,7 +39,32 @@
         </tbody>
       </v-simple-table>
     </v-dialog>
-
+    <v-card v-if="chart" class="dialog" light>
+      <v-alert
+          border="left"
+          color=""
+          dense
+          width="400"
+          icon="mdi-information-outline"
+          elevation="2"
+        >
+        エッジ情報
+      </v-alert>
+      <v-card-text>
+        「{{dataSource}}」から「{{dataTarget}}」への話題転換者
+      </v-card-text>
+      <chart :chartData="chartData" :options="chartoptions"></chart>
+      <v-spacer></v-spacer>
+      <v-card-action>
+        <v-row 
+          align-content="center"
+          justify="space-around"
+          class="mt-5"
+        >
+          <v-btn @click="chart=!chart" text>close</v-btn>
+        </v-row>
+      </v-card-action>
+    </v-card>
     <v-row>
       <v-col cols="12" sm="12" md="9" lg="9" xl="9">
         <!-- <my-speech-recognition ref="spRecog"></my-speech-recognition>
@@ -117,9 +142,10 @@ import cytoscape from 'cytoscape';
 import {saveAs} from 'file-saver';
 import ver01_temp from './ver01_temp.vue';
 import sample1 from '../assets/sample1.json';
+import chart from '~/components/chart.vue';
 
 export default {
-  components: { ver01_temp },
+  components: { ver01_temp, chart },
   name: 'all_methods',
   data() {
     return {
@@ -183,6 +209,15 @@ export default {
           value : 'isInGraph'
         }
       ],
+      removeEmptyParents : false, //demoサイトから引用
+      chart: false,
+      chartData: null,
+      chartoptions: {
+        responsive: true,
+        maintainAspectRatio: false,
+      },
+      dataSource: '',
+      dataTarget: '',
     }
   },
   methods: {
@@ -777,15 +812,34 @@ export default {
         // console.log(node_info);
       });
     },
+    set_data(labels, backgroundColor, data) {
+      console.log('set_data')
+      this.chart = !this.chart;
+      this.chartData = {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Data One',
+            backgroundColor: backgroundColor,
+            borderColor: 'transparent' ,
+            data: data,
+          }
+        ]
+      }
+    },
     graph_event_tap_edge() {
       let vm = this;
       this.cy.on('tap', 'edge', function(evt){
+        let label = [];
+        let chartdata = {};
         //edgeのevent情報を取得
         let data = evt.target._private.data
         console.log(evt);
         console.log(data.id);
         console.log('source: '+data.source);
         console.log('target: '+data.target);
+        vm.dataSource = data.source;
+        vm.dataTarget = data.target;
         //元ノードをKeywordsから検索
         let source = null;
         vm.keywords.forEach((keyword)=>{
@@ -799,8 +853,30 @@ export default {
           if (key===data.target) {
             console.log(key);
             console.log(nxsp[key]);
+            Object.keys(nxsp[key]).forEach((key2) => {
+              let speaker = String(nxsp[key][key2]);
+              if (speaker in label) {
+                console.log('sp in data')
+                chartdata[speaker] += 10;
+                label.push(speaker);
+              }
+              else {
+                console.log('sp not in data')
+                chartdata[speaker] = 10;
+              }
+            })
           }
         });
+        console.log(chartdata)
+        let l = [];
+        let b = [];
+        let d = [];
+        Object.keys(chartdata).forEach(speaker => {
+          l.push(speaker);
+          b.push(vm.clabel_setter(speaker));
+          d.push(chartdata[speaker]);
+        })
+        vm.set_data(l, b, d)
       });
     },
     //demoサイトからそのまま引用
@@ -875,5 +951,14 @@ export default {
 
 .original-height {
   height: 100%;
+}
+
+.dialog {
+  z-index: 5;
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: 600px;
+  height: 600px;
 }
 </style>
