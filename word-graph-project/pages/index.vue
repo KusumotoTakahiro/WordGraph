@@ -1,12 +1,66 @@
 <template>
   <div>
     <div id="cy"></div>
-    <div class="contextmenu" v-if="contextmenu" :style="contextmenu_style">
+    <v-card class="contextmenu" v-if="contextmenu" :style="contextmenu_style">
+      <v-list>
+        <v-list-item-group>
+          <v-list-item @click="store_result()">
+            <v-list-item-icon>
+              <v-icon>
+                mdi-download
+              </v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>
+                画像で保存
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item @click="start_from_json()">
+            <v-list-item-icon>
+              <v-icon>
+                mdi-upload
+              </v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>
+                JSONから読込
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item @click="clear_graph()">
+            <v-list-item-icon>
+              <v-icon>
+                mdi-cached
+              </v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>
+                グラフを初期化
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item @click="removeParentsOfOneChild">
+            <v-list-item-icon>
+              <v-icon>
+                mdi-cached
+              </v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>
+                compoundクリア
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-card>
+    <!-- <div class="contextmenu" v-if="contextmenu" :style="contextmenu_style">
       <v-row>
-        <!-- <v-btn @click="save_log()" color="green" disabled>
+        <v-btn @click="save_log()" color="green" disabled>
           <v-icon>mdi-download</v-icon>
           JSONで保存
-        </v-btn> -->
+        </v-btn>
         <v-btn @click="store_result()" color="green" width="200px">
           <v-icon>mdi-download</v-icon>
           画像で保存
@@ -24,12 +78,12 @@
         <v-btn @click="removeParentsOfOneChild" color="green" width="200px">
           compoundクリア
         </v-btn>
-        <!-- <v-btn @click="start_from_excel()" color="green" disabled>
+        <v-btn @click="start_from_excel()" color="green" disabled>
           <v-icon>mdi-microsoft-excel</v-icon>
           excelから解析
-        </v-btn> -->
+        </v-btn>
       </v-row>
-      <!-- <input type="file" @change="onFileChange" style="color:#FDD"/> -->
+      <input type="file" @change="onFileChange" style="color:#FDD"/>
       <v-file-input
         show-size
         type="file"
@@ -37,7 +91,7 @@
         label="excelまたはjsonファイルを選択してください"
         accept=".xlsx, .json, .csv"
       ></v-file-input>
-    </div>
+    </div> -->
     <v-dialog
       v-model="dialog"
       width="500"
