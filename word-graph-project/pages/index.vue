@@ -1,8 +1,46 @@
 <template>
-  <v-container>
+  <div>
+    <div id="cy"></div>
+    <div class="contextmenu" v-if="contextmenu" :style="contextmenu_style">
+      <v-row>
+        <!-- <v-btn @click="save_log()" color="green" disabled>
+          <v-icon>mdi-download</v-icon>
+          JSONで保存
+        </v-btn> -->
+        <v-btn @click="store_result()" color="green" width="200px">
+          <v-icon>mdi-download</v-icon>
+          画像で保存
+        </v-btn>
+        <v-btn @click="start_from_json()" color="green" width="200px">
+          <v-icon>mdi-upload</v-icon>
+          JSONから読込
+        </v-btn>
+      </v-row>
+      <v-row>
+        <v-btn @click="clear_graph()" color="green" width="200px">
+          <v-icon>mdi-cached</v-icon>
+          グラフを初期化
+        </v-btn>
+        <v-btn @click="removeParentsOfOneChild" color="green" width="200px">
+          compoundクリア
+        </v-btn>
+        <!-- <v-btn @click="start_from_excel()" color="green" disabled>
+          <v-icon>mdi-microsoft-excel</v-icon>
+          excelから解析
+        </v-btn> -->
+      </v-row>
+      <!-- <input type="file" @change="onFileChange" style="color:#FDD"/> -->
+      <v-file-input
+        show-size
+        type="file"
+        @change="onFileChange2"
+        label="excelまたはjsonファイルを選択してください"
+        accept=".xlsx, .json, .csv"
+      ></v-file-input>
+    </div>
     <v-dialog
-    v-model="dialog"
-    width="500"
+      v-model="dialog"
+      width="500"
     >
       <v-simple-table light>
         <v-alert
@@ -65,74 +103,7 @@
         </v-row>
       </v-card-action>
     </v-card>
-    <v-row>
-      <v-col cols="12" sm="12" md="9" lg="9" xl="9">
-        <!-- <my-speech-recognition ref="spRecog"></my-speech-recognition>
-        <v-btn @click="start_recog()" color="primary">音声認識の開始</v-btn>
-        <v-btn @click="stop_recog()" color="red">音声認識の終了</v-btn> -->
-        <div class="float-left">
-          <v-btn @click="save_log()" color="green" disabled>
-            <v-icon>mdi-download</v-icon>
-            JSONで保存
-          </v-btn>
-          <v-btn @click="store_result()" color="green">
-            <v-icon>mdi-download</v-icon>
-            画像で保存
-          </v-btn>
-          <v-btn @click="start_from_excel()" color="green" disabled>
-            <v-icon>mdi-microsoft-excel</v-icon>
-            excelから解析
-          </v-btn>
-          <v-btn @click="start_from_json()" color="green">
-            <v-icon>mdi-upload</v-icon>
-            JSONから読込
-          </v-btn>
-          <v-btn @click="clear_graph()" color="green">
-            <v-icon>mdi-cached</v-icon>
-            グラフを初期化
-          </v-btn>
-          <v-btn @click="removeParentsOfOneChild" color="green">
-            
-            compoundクリア
-          </v-btn>
-          <!-- <input type="file" @change="onFileChange" style="color:#FDD"/> -->
-          <v-file-input
-            show-size
-            type="file"
-            @change="onFileChange2"
-            label="excelまたはjsonファイルを選択してください"
-            accept=".xlsx, .json, .csv"
-          ></v-file-input>
-        </div>
-        <!-- <v-card>
-          <v-card-title class="headline">
-            Word Graph Table
-          </v-card-title>
-          <v-card-text>              
-            <v-data-table
-              :headers="headers"
-              :items="keywords"
-              class="elevation-1"
-            >
-            </v-data-table>
-          </v-card-text>
-        </v-card> -->
-      </v-col>
-      <v-col cols="12" sm="12" md="3" lg="3" xl="3">
-        <!-- <v-card style="height: 100%; weight:100%">
-          <v-card-text></v-card-text>
-        </v-card> -->
-      </v-col>
-      <v-col cols="12" sm="12" md="12" lg="12" xl="12">
-        <v-card
-          
-        >
-          <div id="cy"></div>
-        </v-card>
-      </v-col>
-      
-    </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script>
@@ -149,6 +120,8 @@ export default {
   name: 'all_methods',
   data() {
     return {
+      contextmenu: false,
+      contextmenu_style:{'left':'20px', 'top':'20px'},
       node_info: null,
       dialog:false,
       excel_data: null,
@@ -178,6 +151,7 @@ export default {
         '#8a2be2',  //紫     color3
         '#F20D37',  //赤 color7
         '#5D0212',  //赤褐色 color8
+
       ],
       k : 100,
       theta : 0,
@@ -269,10 +243,10 @@ export default {
         //先にキーワードをノードとして追加する
         console.log(1);
         for (let key of vm.keywords) {
-          vm.update_node(key.keyword, key.weight, key.speaker);
+          vm.update_node(key.keyword, key.weight, key.speaker, key.speakers);
         }
         //ノードをweight(出た回数)に応じてリサイズする
-        vm.resize_nodes();
+        //vm.resize_nodes();
         //keywordからedgeを生成する 
         for (let key of vm.keywords) {
           let after_next = key.after_next.filter((ele, pos)=>{
@@ -609,6 +583,62 @@ export default {
       }
       return this.col_define[this.speakers.indexOf(speaker)]
     },
+    get_props(speakers) {
+      let result = {};
+      for (let i = 0; i < speakers.length; i++) {
+        if (Object.keys(result).indexOf(speakers[i].toString()) === -1) {
+          //console.log('first ', speakers[i].toString());
+          result[speakers[i].toString()] = 1;
+        }
+        else {
+          //console.log('second ', speakers[i].toString());
+          result[speakers[i].toString()] += 1;
+        }
+      }
+      return result;
+    },
+    makeIMG(len, speaker, speakers) {
+      const img = document.createElement('canvas');
+      img.setAttribute('width', len);
+      img.setAttribute('height', len);
+      const context = img.getContext("2d");
+      let num = 0;
+      for (const value of Object.values(speakers)) {
+        num += Number(value);
+      }
+
+      console.log(speakers)
+
+      let angle_now = 0, s_angle = 0, e_angle = 0, x = 0, y = 0, r = 0;
+      for (const [key, value] of Object.entries(speakers)) {
+        console.log(key, value);
+        context.beginPath();
+        angle_now = (value / num) * 360;
+        s_angle = e_angle;
+        e_angle += angle_now * Math.PI /180;
+        x = len/2; //円弧の中心のx座標 一辺の半分を指定
+        y = len/2; //円弧の中心のy座標 一辺の半分を指定
+        r = len/2; //円弧の半径
+        context.arc(x, y, r, s_angle, e_angle, false);
+        context.lineTo(len/2, len/2);
+        context.fillStyle = this.clabel_setter(key.toString());
+        context.fill();
+        context.strokeStyle = 'white';
+        context.lineWidth = 4;
+        context.stroke();
+      }
+
+      context.beginPath();
+      context.arc(len/2, len/2, len/3, 0, 2*Math.PI, false);
+      
+      context.fillStyle = this.clabel_setter(speaker.toString())
+      context.fill();
+      context.strokeStyle = 'white';
+      context.lineWidth = 5;
+      context.stroke();
+
+      return {'img':img.toDataURL(), 'width':len, 'height':len}
+    },
     init_graph() {
       this.cy = cytoscape({
         container : document.getElementById('cy'),
@@ -674,8 +704,10 @@ export default {
         ],
       });
     },
-    update_node(keyword, weight, speaker) {
+    update_node(keyword, weight, speaker, speakers) {
       return new Promise((resolve)=>{
+        //30+weight*10が半径
+        let result = this.makeIMG(30 + weight*10, speaker, this.get_props(speakers));
         this.cy.add([
           {
             group : 'nodes',
@@ -688,7 +720,10 @@ export default {
               y : 150 + Math.sin(this.theta)*this.k,
             },
             style : {
-              'background-color' : this.clabel_setter(speaker),
+              //'background-color' : this.clabel_setter(speaker),
+              'background-image': result.img, //ここで円グラフを表示する
+              'width': result.width,
+              'height' : result.height,
             }
           }
         ]);
@@ -890,6 +925,10 @@ export default {
     removeParentsOfOneChild() {
       this.cy.nodes().filter(this.isParentOfOneChild).forEach(this.removeParent);
     },
+    move_contextmenu(x, y) {
+      this.contextmenu_style.left = x.toString() + "px";
+      this.contextmenu_style.top = y.toString() + "px";
+    }
   },
   computed: {
   },
@@ -924,6 +963,13 @@ export default {
         vm.removeParent(dropTarget);
       }
     });
+    window.addEventListener('contextmenu',(e)=>{
+      this.move_contextmenu(e.pageX, e.pageY);
+      this.contextmenu = !this.contextmenu;
+    })
+    window.addEventListener('click',(e)=>{
+      this.contextmenu = false;
+    })
   }
 }
 </script>
@@ -961,4 +1007,13 @@ export default {
   width: 600px;
   height: 600px;
 }
+
+.contextmenu {
+  z-index: 5;
+  position: fixed;
+  inset: 20px; /* top, right, bottom left を一括指定するもの */
+  width: 600px;
+  height: 100px;
+}
+
 </style>
