@@ -1,7 +1,38 @@
 <template>
   <div>
+    <v-alert class="text-h2 title">Word Graph</v-alert>
     <div id="cy"></div>
-    <v-card class="contextmenu" v-if="contextmenu" :style="contextmenu_style">
+    <v-simple-table class="speaker_list" light dense>
+      <template v-slot:default>
+        <thead>
+          <tr>
+            <th class="text-left">
+              color label
+            </th>
+            <th class="text-left">
+              name
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="item in labels"
+            :key="item.speaker"
+          >
+            <td ><div style="'color:red;'"> {{ item.clabel }} </div></td>
+            <td>{{ item.speaker }}</td>
+          </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
+    <!-- 独自context-menu -->
+    <v-card 
+      class="contextmenu" 
+      v-if="contextmenu" 
+      :style="contextmenu_style"
+      light
+      elevation="10"
+    >
       <v-list>
         <v-list-item-group>
           <v-list-item @click="store_result()">
@@ -16,13 +47,28 @@
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item @click="start_from_json()">
+          <v-list-item @click="$refs.input.click()">
             <v-list-item-icon>
               <v-icon>
                 mdi-upload
               </v-icon>
             </v-list-item-icon>
             <v-list-item-content>
+              <!-- <v-file-input
+                show-size
+                type="file"
+                @change="onFileChange2"
+                label="jsonファイルを選択してください"
+                accept=".json, .csv"
+                style="display:none"
+              ></v-file-input> -->
+              <input
+                style="display: none"
+                ref="input"
+                type="file"
+                accept=".json"
+                @change="onFileChange3"
+              />
               <v-list-item-title>
                 JSONから読込
               </v-list-item-title>
@@ -48,50 +94,13 @@
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>
-                compoundクリア
+                グループ解除
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
       </v-list>
     </v-card>
-    <!-- <div class="contextmenu" v-if="contextmenu" :style="contextmenu_style">
-      <v-row>
-        <v-btn @click="save_log()" color="green" disabled>
-          <v-icon>mdi-download</v-icon>
-          JSONで保存
-        </v-btn>
-        <v-btn @click="store_result()" color="green" width="200px">
-          <v-icon>mdi-download</v-icon>
-          画像で保存
-        </v-btn>
-        <v-btn @click="start_from_json()" color="green" width="200px">
-          <v-icon>mdi-upload</v-icon>
-          JSONから読込
-        </v-btn>
-      </v-row>
-      <v-row>
-        <v-btn @click="clear_graph()" color="green" width="200px">
-          <v-icon>mdi-cached</v-icon>
-          グラフを初期化
-        </v-btn>
-        <v-btn @click="removeParentsOfOneChild" color="green" width="200px">
-          compoundクリア
-        </v-btn>
-        <v-btn @click="start_from_excel()" color="green" disabled>
-          <v-icon>mdi-microsoft-excel</v-icon>
-          excelから解析
-        </v-btn>
-      </v-row>
-      <input type="file" @change="onFileChange" style="color:#FDD"/>
-      <v-file-input
-        show-size
-        type="file"
-        @change="onFileChange2"
-        label="excelまたはjsonファイルを選択してください"
-        accept=".xlsx, .json, .csv"
-      ></v-file-input>
-    </div> -->
     <v-dialog
       v-model="dialog"
       width="500"
@@ -147,7 +156,7 @@
       </v-card-text>
       <chart :chartData="chartData" :options="chartoptions"></chart>
       <v-spacer></v-spacer>
-      <v-card-action>
+      <v-card-actions>
         <v-row 
           align-content="center"
           justify="space-around"
@@ -155,8 +164,45 @@
         >
           <v-btn @click="chart=!chart" text>close</v-btn>
         </v-row>
-      </v-card-action>
+      </v-card-actions>
     </v-card>
+    <!-- <div class="contextmenu" v-if="contextmenu" :style="contextmenu_style">
+      <v-row>
+        <v-btn @click="save_log()" color="green" disabled>
+          <v-icon>mdi-download</v-icon>
+          JSONで保存
+        </v-btn>
+        <v-btn @click="store_result()" color="green" width="200px">
+          <v-icon>mdi-download</v-icon>
+          画像で保存
+        </v-btn>
+        <v-btn @click="start_from_json()" color="green" width="200px">
+          <v-icon>mdi-upload</v-icon>
+          JSONから読込
+        </v-btn>
+      </v-row>
+      <v-row>
+        <v-btn @click="clear_graph()" color="green" width="200px">
+          <v-icon>mdi-cached</v-icon>
+          グラフを初期化
+        </v-btn>
+        <v-btn @click="removeParentsOfOneChild" color="green" width="200px">
+          compoundクリア
+        </v-btn>
+        <v-btn @click="start_from_excel()" color="green" disabled>
+          <v-icon>mdi-microsoft-excel</v-icon>
+          excelから解析
+        </v-btn>
+      </v-row>
+      <input type="file" @change="onFileChange" style="color:#FDD"/>
+      <v-file-input
+        show-size
+        type="file"
+        @change="onFileChange2"
+        label="excelまたはjsonファイルを選択してください"
+        accept=".xlsx, .json, .csv"
+      ></v-file-input>
+    </div> -->
   </div>
 </template>
 
@@ -205,8 +251,8 @@ export default {
         '#8a2be2',  //紫     color3
         '#F20D37',  //赤 color7
         '#5D0212',  //赤褐色 color8
-
       ],
+      labels: [],
       k : 100,
       theta : 0,
       headers: [//テーブルのheaderの設定
@@ -290,19 +336,17 @@ export default {
         else cnt+=1;
       }
     },
-    start_from_json() {
+    //もとはthis.keywordsだったが，
+    start_from_json(keywords) {
       let vm = this;
-      (new Promise((resolve)=>{
-        //this.set_graph_style();
+      new Promise((resolve)=>{
         //先にキーワードをノードとして追加する
         console.log(1);
-        for (let key of vm.keywords) {
+        for (let key of keywords) {
           vm.update_node(key.keyword, key.weight, key.speaker, key.speakers);
         }
-        //ノードをweight(出た回数)に応じてリサイズする
-        //vm.resize_nodes();
         //keywordからedgeを生成する 
-        for (let key of vm.keywords) {
+        for (let key of keywords) {
           let after_next = key.after_next.filter((ele, pos)=>{
             return key.after_next.indexOf(ele)===pos;
           })
@@ -310,10 +354,23 @@ export default {
             vm.update_edges(key.keyword, key.after_next[i]);
           }
         }
+        vm.create_speaker_label();
         resolve('ok');
-      }))
-      .then(()=>{
-        console.log(2)
+      })
+    },
+    //現在のスピーカーを一覧表示するテーブルのデータを作成
+    create_speaker_label() {
+      this.speakers.forEach(speaker => {
+        let data = {}
+        data.speaker = speaker;
+        data.clabel = this.clabel_setter(speaker);
+        this.labels.push(data);
+      })
+    },
+    //グラフのスタイルの設定
+    set_graph_style() {
+      return new Promise((resolve)=> {
+        console.log(2);
         this.cy.style()
         .selector('node:parent')
         .style('label', '')
@@ -328,28 +385,7 @@ export default {
         .style('border-color', 'red')
         .style('border-style', 'dashed')
         .update()
-      })
-    },
-    
-    //グラフのスタイルの設定
-    set_graph_style() {
-      let style = [
-        {
-          selector: 'node',
-          style: {
-            'background-color': 'red',
-            'font-size': '20px',
-          }
-        },
-        {
-          selector: 'edge',
-          style: {
-            'width': '10px',
-            'arrow-scale': '10'
-          }
-        },
-      ];
-      this.cy.style(style).update();
+      });
     },
     clear_graph() {
       //keywordsの初期化
@@ -370,7 +406,7 @@ export default {
       for (let key of this.keywords) {
         this.cy.remove( key.keyword );
       }
-      this.update_node("start", 0, "default");
+      this.update_node("start", 0, "default", ["default"]);
       //clabel_setterの初期化
       this.speakers = ['default'];
     },
@@ -399,15 +435,26 @@ export default {
         if (files.name.indexOf('.csv') > -1) {
           vm.get_csv_data(files)
           .then(vm.process_csv_data)
+          .then(vm.start_from_json())
         }
         //jsonファイルを読み込んだとき
         else if (files.name.indexOf('.json') > -1) {
           vm.clear_graph();
           vm.get_json_data(files)
-          .then((res)=>{
-            vm.keywords = res;
-          })
         }
+      }
+    },
+    //input用に作り直し
+    onFileChange3(event) {
+      this.file = event.target.files ? event.target.files[0] : null;
+      if (this.file) {
+        this.clear_graph();
+        this.get_json_data(this.file)
+        .then(res=>{
+          this.start_from_json(res)
+          this.keywords = res;
+        })
+        .then(this.set_graph_style())
       }
     },
     //jsonファイルからデータを読み取るメソッド
@@ -661,11 +708,11 @@ export default {
         num += Number(value);
       }
 
-      console.log(speakers)
+      //console.log(speakers)
 
       let angle_now = 0, s_angle = 0, e_angle = 0, x = 0, y = 0, r = 0;
       for (const [key, value] of Object.entries(speakers)) {
-        console.log(key, value);
+        //console.log(key, value);
         context.beginPath();
         angle_now = (value / num) * 360;
         s_angle = e_angle;
@@ -992,7 +1039,8 @@ export default {
     this.graph_event_tap();
     this.graph_event_tap_edge();
     this.keywords = sample1;
-    this.start_from_json();
+    this.start_from_json(this.keywords);
+    this.set_graph_style();
     this.cy.fit();
     const options = {
       grabbedNode: node => true, // filter function to specify which nodes are valid to grab and drop into other nodes
@@ -1017,13 +1065,16 @@ export default {
         vm.removeParent(dropTarget);
       }
     });
+    //独自コンテキストメニューを追加
     window.addEventListener('contextmenu',(e)=>{
+      this.contextmenu = false;
       this.move_contextmenu(e.pageX, e.pageY);
-      this.contextmenu = !this.contextmenu;
-    })
+      this.contextmenu = true;
+    });
+    //コンテキストメニューの解除をクリックイベントに登録
     window.addEventListener('click',(e)=>{
       this.contextmenu = false;
-    })
+    });
   }
 }
 </script>
@@ -1031,26 +1082,7 @@ export default {
 <style scoped>
 #cy {
   background-color: #f3f3f2;
-  height: calc(100vw);
-}
-.design01 {
-  width: 100%;
-  text-align: center;
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-.design01 th {
-  padding: 10px;
-  background: #e9faf9;
-  border: solid 1px #778ca3;
-}
-.design01 td {
-  padding: 10px;
-  border: solid 1px #778ca3;
-}
-
-.original-height {
-  height: 100%;
+  height: calc(100vh);
 }
 
 .dialog {
@@ -1066,8 +1098,29 @@ export default {
   z-index: 5;
   position: fixed;
   inset: 20px; /* top, right, bottom left を一括指定するもの */
-  width: 600px;
+  width: 400px;
   height: 100px;
 }
 
+.speaker_list {
+  z-index: 5;
+  position: fixed;
+  top: 10px;
+  right: 0px;
+  width: 200px;
+  height: 500px;
+  background-color: #f3f3f2;
+}
+
+.title {
+  z-index: 5;
+  position: fixed;
+  inset: 10px;
+  width: 400px;
+  height: 100px;
+  color: #f3f3f2;
+  text-shadow: -1px -1px 1px #000000, 1px 1px #ffffff;
+  background-color: #f3f3f2;
+  font-weight: bold;
+}
 </style>
