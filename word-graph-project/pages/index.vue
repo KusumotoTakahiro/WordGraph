@@ -6,10 +6,10 @@
       <template v-slot:default>
         <thead>
           <tr>
-            <th class="text-left">
+            <th class="text-center">
               color label
             </th>
-            <th class="text-left">
+            <th class="text-center">
               name
             </th>
           </tr>
@@ -19,8 +19,12 @@
             v-for="item in labels"
             :key="item.speaker"
           >
-            <td ><div style="'color:red;'"> {{ item.clabel }} </div></td>
-            <td>{{ item.speaker }}</td>
+            <td>
+              <v-row justify="center">
+                <div class="clabel" :style="{ 'background-color':item.clabel }"></div>
+              </v-row>
+            </td>
+            <td class="text-center">{{ item.speaker }}</td>
           </tr>
         </tbody>
       </template>
@@ -1109,7 +1113,7 @@ export default {
   right: 0px;
   width: 200px;
   height: 500px;
-  background-color: #f3f3f2;
+  background: rgba(243, 243, 242, 0); /* 背景のみ透過 */
 }
 
 .title {
@@ -1120,7 +1124,13 @@ export default {
   height: 100px;
   color: #f3f3f2;
   text-shadow: -1px -1px 1px #000000, 1px 1px #ffffff;
-  background-color: #f3f3f2;
+  background: rgba(243, 243, 242, 0); /* 背景のみ透過 */
   font-weight: bold;
+}
+
+.clabel {
+  height: 30px;
+  width: 30px;
+  margin: 5px;
 }
 </style>
