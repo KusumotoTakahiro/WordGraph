@@ -343,7 +343,7 @@ export default {
         else cnt+=1;
       }
     },
-    //もとはthis.keywordsだったが，
+    //もとは引数なしでthis.keywordsだったが，直接引数でkeywordsをとることにした．
     start_from_json(keywords) {
       let vm = this;
       new Promise((resolve)=>{
@@ -354,10 +354,12 @@ export default {
         }
         //keywordからedgeを生成する 
         for (let key of keywords) {
-          let after_next = key.after_next.filter((ele, pos)=>{
-            return key.after_next.indexOf(ele)===pos;
-          })
-          for (let i = 0; i < after_next.length; i++) {
+          //おそらく，重複削除のために行っていたが，今回は重複削除済みのためいらない．
+          // let next_nodes = key.after_next.filter((ele, pos)=>{
+            //indexofでその配列内で特定の要素が初めて出現したときのindexを返す．
+          //   return key.after_next.indexOf(ele)===pos; 
+          // })
+          for (let i = 0; i < key.after_next.length; i++) {
             vm.update_edges(key.keyword, key.after_next[i]);
           }
         }
@@ -778,10 +780,10 @@ export default {
               'line-color':'#ccc',
               'target-arrow-color': '#ccc',
               'target-arrow-shape': 'triangle',
-              'curve-style': 'bezier',
               'arrow-scale': '4',
               'arrow-shape': 'vee',
-              'loop-direction': '-90deg',
+
+              'curve-style': 'bezier',
             }
           }, 
           {
@@ -843,6 +845,10 @@ export default {
     },
     update_edges(source_node, target_node) {
       return new Promise((resolve)=> {
+        let cyan = 'cyan';
+        let magenta = 'magenta';
+        let yellow = 'yellow';
+        let colors = cyan + " " + magenta + " " + yellow
         try {
           this.cy.add([
             {
@@ -852,13 +858,16 @@ export default {
                 target : target_node,
               },
               style: {
-                
+                // 'line-fill': 'linear-gradient',
+                // 'line-gradient-stop-colors': colors,
+                // 'line-gradient-stop-positions': '0% 50% 100%',
               }
             }
           ]);
         }
         catch(e) {
-          //console.log(e);
+          console.log(e);
+          //console.log('source: ', source_node, ', target: ', target_node)
         }
       })
       
@@ -1000,17 +1009,18 @@ export default {
         Object.keys(nxsp).forEach((key) => {
           if (key===data.target) {
             //console.log(key);
-            //console.log(nxsp[key]);
-            Object.keys(nxsp[key]).forEach((key2) => {
-              let speaker = String(nxsp[key][key2]);
-              if (speaker in label) {
-                //console.log('sp in data')
-                chartdata[speaker] += 10;
-                label.push(speaker);
+            //console.log(nxsp[key]); //この時点では重複は消えていない
+            nxsp[key].forEach((key2) => {
+              //console.log(key2)
+              let speaker = String(key2);
+              if (label.includes(speaker)) { //speaker in label は使えなかった
+                console.log('sp in data')
+                chartdata[speaker] += 1;
               }
               else {
-                //console.log('sp not in data')
-                chartdata[speaker] = 10;
+                console.log('sp not in data')
+                label.push(speaker);
+                chartdata[speaker] = 1;
               }
             })
           }
