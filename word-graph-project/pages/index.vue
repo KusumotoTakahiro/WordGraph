@@ -31,13 +31,13 @@
     </v-simple-table>
     <!-- 独自context-menu -->
     <v-card 
-      class="contextmenu" 
+      class="contextmenu py-0 " 
       v-if="contextmenu" 
       :style="contextmenu_style"
       light
       elevation="10"
     >
-      <v-list>
+      <v-list class="py-0">
         <v-list-item-group>
           <v-list-item @click="store_result()">
             <v-list-item-icon>
@@ -51,6 +51,7 @@
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+          <v-divider style="background:gainsboro"></v-divider>
           <v-list-item @click="$refs.input.click()">
             <v-list-item-icon>
               <v-icon>
@@ -78,6 +79,7 @@
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+          <v-divider style="background:gainsboro"></v-divider>
           <v-list-item @click="clear_graph()">
             <v-list-item-icon>
               <v-icon>
@@ -90,6 +92,7 @@
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+          <v-divider style="background:gainsboro"></v-divider>
           <v-list-item @click="removeParentsOfOneChild">
             <v-list-item-icon>
               <v-icon>
@@ -364,6 +367,7 @@ export default {
     },
     //現在のスピーカーを一覧表示するテーブルのデータを作成
     create_speaker_label() {
+      console.log(this.speakers)
       this.speakers.forEach(speaker => {
         let data = {}
         data.speaker = speaker;
@@ -413,6 +417,7 @@ export default {
       this.update_node("start", 0, "default", ["default"]);
       //clabel_setterの初期化
       this.speakers = ['default'];
+      this.labels = [];
     },
     // 通常のinputバージョン，input(typeがfile)では，eventが引数として入ってくる．
     // onFileChange(event) {
@@ -845,6 +850,9 @@ export default {
               data : {
                 source : source_node,
                 target : target_node,
+              },
+              style: {
+                
               }
             }
           ]);
@@ -974,10 +982,10 @@ export default {
         let chartdata = {};
         //edgeのevent情報を取得
         let data = evt.target._private.data
-        console.log(evt);
-        console.log(data.id);
-        console.log('source: '+data.source);
-        console.log('target: '+data.target);
+        //console.log(evt);
+        //console.log(data.id);
+        //console.log('source: '+data.source);
+        //console.log('target: '+data.target);
         vm.dataSource = data.source;
         vm.dataTarget = data.target;
         //元ノードをKeywordsから検索
@@ -988,26 +996,26 @@ export default {
           }
         })
         let nxsp = source.next_speakers;
-        console.log(nxsp)
+        //console.log(nxsp)
         Object.keys(nxsp).forEach((key) => {
           if (key===data.target) {
-            console.log(key);
-            console.log(nxsp[key]);
+            //console.log(key);
+            //console.log(nxsp[key]);
             Object.keys(nxsp[key]).forEach((key2) => {
               let speaker = String(nxsp[key][key2]);
               if (speaker in label) {
-                console.log('sp in data')
+                //console.log('sp in data')
                 chartdata[speaker] += 10;
                 label.push(speaker);
               }
               else {
-                console.log('sp not in data')
+                //console.log('sp not in data')
                 chartdata[speaker] = 10;
               }
             })
           }
         });
-        console.log(chartdata)
+        //console.log(chartdata)
         let l = [];
         let b = [];
         let d = [];
@@ -1031,11 +1039,30 @@ export default {
       this.cy.nodes().filter(this.isParentOfOneChild).forEach(this.removeParent);
     },
     move_contextmenu(x, y) {
+      //初期値として，マウスの位置を左上にContextMenuを表示する
       this.contextmenu_style.left = x.toString() + "px";
       this.contextmenu_style.top = y.toString() + "px";
+      //もし画面からはみ出した場合はその分ずらして表示する
+      let wj = Number(this.$vuetify.breakpoint.width) - Number(x+300)
+      let hj = Number(this.$vuetify.breakpoint.height) - Number(y+230);
+      if (wj < 0) {
+        //console.log('width over!!');
+        this.contextmenu_style.left = Number(x + wj).toString() + "px";
+      }
+      if (hj < 0) {
+        //console.log('height over!!');
+        this.contextmenu_style.top = Number(y + hj).toString() + "px";
+      }
+      
     }
   },
   computed: {
+  },
+  watch: {
+    labels: function() {
+      console.log('labels are deleted!!')
+      console.log(this.labels);
+    }
   },
   mounted() {
     let vm = this;
@@ -1102,8 +1129,8 @@ export default {
   z-index: 5;
   position: fixed;
   inset: 20px; /* top, right, bottom left を一括指定するもの */
-  width: 400px;
-  height: 100px;
+  width: 300px;
+  height: 230px;
 }
 
 .speaker_list {
@@ -1112,7 +1139,7 @@ export default {
   top: 10px;
   right: 0px;
   width: 200px;
-  height: 500px;
+  /* height: 500px;  */ /* 勝手にテーブルサイズに調節されるためなし */
   background: rgba(243, 243, 242, 0); /* 背景のみ透過 */
 }
 
