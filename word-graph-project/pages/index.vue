@@ -252,10 +252,10 @@ export default {
         '#f8b500',  //山吹色 default
         '#f08080',  //ピンク color4
         '#0D9FF2',  //水色 color5
-        '#0DF2A9',  //黄緑 color6
+        '#8a2be2',  //紫     color3
         '#3cb371',  //緑     color1 
         '#0000ff',  //青     color2
-        '#8a2be2',  //紫     color3
+        '#0DF2A9',  //黄緑 color6
         '#F20D37',  //赤 color7
         '#5D0212',  //赤褐色 color8
       ],
@@ -360,7 +360,8 @@ export default {
           //   return key.after_next.indexOf(ele)===pos; 
           // })
           for (let i = 0; i < key.after_next.length; i++) {
-            vm.update_edges(key.keyword, key.after_next[i]);
+            //引数はsource_node, target_node, s=>tの話題転換者
+            vm.update_edges(key.keyword, key.after_next[i], key.next_speakers[key.after_next[i]]);
           }
         }
         vm.create_speaker_label();
@@ -776,7 +777,7 @@ export default {
           {
             selector: 'edge',
             style : {
-              'width':4,
+              //'width':1,
               'line-color':'#ccc',
               'target-arrow-color': '#ccc',
               'target-arrow-shape': 'triangle',
@@ -843,12 +844,60 @@ export default {
         this.theta += Math.PI/10;
       })
     },
-    update_edges(source_node, target_node) {
+    update_edges(source_node, target_node, next_speakers) {
       return new Promise((resolve)=> {
-        let cyan = 'cyan';
-        let magenta = 'magenta';
-        let yellow = 'yellow';
-        let colors = cyan + " " + magenta + " " + yellow
+        //next_speakersの長さ兼，EdgeのWidth
+        let width = next_speakers.length;
+
+        //自己ループは今回無視
+        if (source_node===target_node) {
+          return;
+        }
+
+        //next_speakersの割合を取得
+        let label = [];
+        let ratio = {};
+        next_speakers.forEach(speaker=>{
+          if (label.includes(String(speaker))) {
+            ratio[String(speaker)] += 1;
+          }
+          else {
+            label.push(String(speaker));
+            ratio[String(speaker)] = 1;
+          }
+        })
+        let positions = "0% ";
+        let now = 0;
+        Object.keys(ratio).forEach(speaker => {
+          now += ratio[speaker] / width
+          Math.round(now).toString() + "% ";
+        })
+
+        //色を作成
+        let colors = "";
+        let color = "";
+        label.forEach(speaker => {
+          color = this.clabel_setter(speaker);
+          colors += color +  " "
+        }) 
+        
+        //styleの作成
+        let edge_style = {}
+        if (label.length===1) {
+          //発言者は一人だから
+          edge_style['line-color'] = color;
+        }
+        else {
+          //発言者は二人以上
+          edge_style['line-fill'] = 'linear-gradient';
+          edge_style['line-gradient-stop-colors'] = colors;
+          edge_style['line-gradient-stop-positions'] = positions;
+        }
+        edge_style['target-arrow-color'] = colors;
+        edge_style['width'] = width*3;
+        edge_style['arrow-scale'] = width;
+
+        //edgeの作成
         try {
           this.cy.add([
             {
@@ -857,11 +906,7 @@ export default {
                 source : source_node,
                 target : target_node,
               },
-              style: {
-                // 'line-fill': 'linear-gradient',
-                // 'line-gradient-stop-colors': colors,
-                // 'line-gradient-stop-positions': '0% 50% 100%',
-              }
+              style: edge_style,
             }
           ]);
         }
@@ -1159,8 +1204,8 @@ export default {
   inset: 10px;
   width: 400px;
   height: 100px;
-  color: #f3f3f2;
-  text-shadow: -1px -1px 1px #000000, 1px 1px #ffffff;
+  color: #E6E6E6;
+  text-shadow: -1px -1px 0px #000000, 1px 1px #ffffff;
   background: rgba(243, 243, 242, 0); /* 背景のみ透過 */
   font-weight: bold;
 }
