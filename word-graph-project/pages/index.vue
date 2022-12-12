@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-alert class="text-h2 title">Word Graph</v-alert>
+    <!-- <v-alert class="text-subtitle subtitle">selected:</v-alert> -->
     <div id="cy"></div>
     <v-simple-table class="speaker_list" light dense>
       <template v-slot:default>
@@ -96,12 +97,25 @@
           <v-list-item @click="removeParentsOfOneChild">
             <v-list-item-icon>
               <v-icon>
-                mdi-cached
+                mdi-select-off
               </v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>
                 グループ解除
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider style="background:gainsboro"></v-divider>
+          <v-list-item @click="remove_class">
+            <v-list-item-icon>
+              <v-icon>
+                mdi-cancel
+              </v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>
+                セレクト解除
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -227,6 +241,8 @@ export default {
   name: 'all_methods',
   data() {
     return {
+      selected_node: '',
+      selected_node_card: false,
       contextmenu: false,
       contextmenu_style:{'left':'20px', 'top':'20px'},
       node_info: null,
@@ -395,6 +411,8 @@ export default {
         .selector('.cdnd-drop-target')
         .style('border-color', 'red')
         .style('border-style', 'dashed')
+        .selector('.unselected')
+        .style('opacity', '0.1')
         .update()
       });
     },
@@ -815,6 +833,7 @@ export default {
             }
           }
         ],
+        wheelSensitivity: 0.1, //zoom sensitivity 0 ~ 1 is slower, 1 ~ is faster
       });
     },
     update_node(keyword, weight, speaker, speakers) {
@@ -886,6 +905,7 @@ export default {
         if (label.length===1) {
           //発言者は一人だから
           edge_style['line-color'] = color;
+          edge_style['target-arrow-color'] = color;
         }
         else {
           //発言者は二人以上
@@ -893,7 +913,6 @@ export default {
           edge_style['line-gradient-stop-colors'] = colors;
           edge_style['line-gradient-stop-positions'] = positions;
         }
-        edge_style['target-arrow-color'] = colors;
         edge_style['width'] = width*3;
         edge_style['arrow-scale'] = width;
 
@@ -973,9 +992,60 @@ export default {
         this.resize_node(weight);
       }
     },
-    graph_event_tap() {
+    remove_class() {
+      let vm = this;
+      vm.cy.edges().forEach(edge => {
+        if (edge.hasClass('unselected')) {
+          edge.removeClass('unselected');
+        }
+        if (edge.hasClass('selected')) {
+          edge.removeClass('selected');
+        }
+      })
+      vm.cy.nodes().forEach(node => {
+        if (node.hasClass('unselected')) {
+          node.removeClass('unselected');
+        }
+      })
+    },
+    set_selected_node(node) {
+      this.selected_node = node;
+    },
+    //tapしたnodeとそこから繋がるEdgeを強調する
+    highlight_nodes_and_edges() {
       let vm = this;
       this.cy.on('tap', 'node', function(evt){
+        //現在のclassを消去する
+        vm.remove_class();
+        let source_node = evt.target;
+        let target_nodes = [];
+        let edges = source_node._private.edges;
+        //ここでedgesのselectedをClassに追加する
+        for (let i = 0; i < edges.length; i++) {
+          edges[i].addClass('selected');
+          if (edges[i]._private.data.target !== source_node.data().id) {
+            target_nodes.push(edges[i]._private.data.target);
+          }
+        }
+        //edgesのうちselected以外のものをunselectedにする
+        vm.cy.edges().forEach(edge=>{
+          if (!edge.hasClass('selected')) {
+            edge.addClass('unselected');
+          }
+        })
+        //tapしたnode以外を透明にする
+        vm.cy.nodes().forEach(node => {
+          if (node!==source_node) {
+            if (!target_nodes.includes(node.data().id)) {
+              node.addClass('unselected');
+            }
+          } 
+        })
+      })
+    },
+    graph_event_tap() {
+      let vm = this;
+      this.cy.on('dbltap', 'node', function(evt){
         let node = evt.target;
         let next_nodes = "";
         let prev_nodes = "";
@@ -1098,8 +1168,8 @@ export default {
       this.contextmenu_style.left = x.toString() + "px";
       this.contextmenu_style.top = y.toString() + "px";
       //もし画面からはみ出した場合はその分ずらして表示する
-      let wj = Number(this.$vuetify.breakpoint.width) - Number(x+300)
-      let hj = Number(this.$vuetify.breakpoint.height) - Number(y+230);
+      let wj = Number(this.$vuetify.breakpoint.width) - Number(x+400)
+      let hj = Number(this.$vuetify.breakpoint.height) - Number(y+300);
       if (wj < 0) {
         //console.log('width over!!');
         this.contextmenu_style.left = Number(x + wj).toString() + "px";
@@ -1108,8 +1178,7 @@ export default {
         //console.log('height over!!');
         this.contextmenu_style.top = Number(y + hj).toString() + "px";
       }
-      
-    }
+    },
   },
   computed: {
   },
@@ -1161,6 +1230,12 @@ export default {
     window.addEventListener('click',(e)=>{
       this.contextmenu = false;
     });
+
+    //ダブルクリックしたnodeとそこから繋がるEdgeを強調する
+    this.highlight_nodes_and_edges();
+
+    //selectのオプション　defaultはsingle　addtiveは複数選択可能
+    //this.cy.selectionType('additive');
   }
 }
 </script>
@@ -1210,9 +1285,25 @@ export default {
   font-weight: bold;
 }
 
+.subtitle {
+  z-index: 5;
+  position: fixed;
+  inset: 10px;
+  top: 70px;
+  width: 400px;
+  height: 100px;
+  color: black;
+  background: rgba(243, 243, 242, 0); /* 背景のみ透過 */
+  font-weight: bold;
+}
+
 .clabel {
   height: 30px;
   width: 30px;
   margin: 5px;
+}
+
+.selected {
+  background: red;
 }
 </style>
