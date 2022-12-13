@@ -1098,20 +1098,31 @@ export default {
         let target_nodes = [];
         let source_nodes = [];
         let edges = source_node._private.edges;
+        let edges1 = [];
+        let edges2 = [];
         //ここでedgesのselectedをClassに追加する
         for (let i = 0; i < edges.length; i++) {
-          edges[i].addClass('selected');
+          //edges[i].addClass('selected');
           if (edges[i]._private.data.target !== source_node.data().id) {
             target_nodes.push(edges[i]._private.data.target);
+            edges1.push(edges[i].data().id);
           }
           else {
             source_nodes.push(edges[i]._private.data.source);
+            edges2.push(edges[i].data().id);
           }
         }
         //edgesのうちselected以外のものをunselectedにする
         vm.cy.edges().forEach(edge=>{
-          if (!edge.hasClass('selected')) {
-            edge.addClass('unselected');
+          if (vm.selected_flag) {
+            if (!edges1.includes(edge.data().id)) {
+              edge.addClass('unselected');
+            }
+          }
+          else {
+            if (!edges2.includes(edge.data().id)) {
+              edge.addClass('unselected');
+            }
           }
         })
         //tapしたnode以外を透明にする
