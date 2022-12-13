@@ -1,7 +1,17 @@
 <template>
   <div>
     <v-alert class="text-h2 title">Word Graph</v-alert>
-    <!-- <v-alert class="text-subtitle subtitle">selected:</v-alert> -->
+    <v-alert class="text-subtitle subtitle">
+      selected : {{selected_node}} <br/>
+      next_nodes : 
+        <v-icon v-if="selected_flag" color="green darken-2"> 
+          mdi-star 
+        </v-icon> <br/>
+      prev_nodes : 
+        <v-icon v-if="!selected_flag" color="green darken-2"> 
+          mdi-star 
+        </v-icon> <br/>
+    </v-alert>
     <div id="cy"></div>
     <v-simple-table class="speaker_list" light dense>
       <template v-slot:default>
@@ -40,6 +50,19 @@
     >
       <v-list class="py-0">
         <v-list-item-group>
+          <v-list-item @click="analysis_dialog = true">
+            <v-list-item-icon>
+              <v-icon>
+                mdi-chart-box
+              </v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>
+                解析結果を表示
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider style="background:gainsboro"></v-divider>
           <v-list-item @click="store_result()">
             <v-list-item-icon>
               <v-icon>
@@ -56,7 +79,7 @@
           <v-list-item @click="$refs.input.click()">
             <v-list-item-icon>
               <v-icon>
-                mdi-upload
+                mdi-alpha-j-box
               </v-icon>
             </v-list-item-icon>
             <v-list-item-content>
@@ -122,6 +145,30 @@
         </v-list-item-group>
       </v-list>
     </v-card>
+    <!-- 解析結果を表示するダイアログ -->
+    <v-dialog 
+      v-model="analysis_dialog"
+      fullscreen
+      transition="dialog-top-transition"
+      hide-overlay
+      light
+    >
+      <v-card>
+        <v-toolbar dark color="primary">
+          <v-toolbar-title>解析結果</v-toolbar-title>
+        </v-toolbar>
+        dialogです
+        ここに結果を表示していく
+        <v-row justify="center">
+          <v-btn
+            icon
+            light
+            @click="analysis_dialog=false"
+            right
+          ><v-icon>mdi-close</v-icon></v-btn>
+        </v-row>
+      </v-card>
+    </v-dialog>
     <v-dialog
       v-model="dialog"
       width="500"
@@ -241,8 +288,11 @@ export default {
   name: 'all_methods',
   data() {
     return {
-      selected_node: '',
-      selected_node_card: false,
+      selected_node: null,
+      analysis_dialog: false,
+      next_nodes: [],
+      prev_nodes: [],
+      selected_flag: null,
       contextmenu: false,
       contextmenu_style:{'left':'20px', 'top':'20px'},
       node_info: null,
@@ -381,6 +431,7 @@ export default {
           }
         }
         vm.create_speaker_label();
+        vm.set_graph_style();
         resolve('ok');
       })
     },
@@ -414,6 +465,24 @@ export default {
         .selector('.unselected')
         .style('opacity', '0.1')
         .update()
+
+        let options = {
+          name: 'concentric',
+
+          fit: true, // whether to fit to viewport
+          padding: 30, // fit padding
+          boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
+          animate: false, // whether to transition the node positions
+          animationDuration: 5000, // duration of animation in ms if enabled
+          animationEasing: undefined, // easing of animation if enabled
+          animateFilter: function ( node, i ){ return true; }, // a function that determines whether the node should be animated.  All nodes animated by default on animate enabled.  Non-animated nodes are positioned immediately when the layout starts
+          ready: undefined, // callback on layoutready
+          stop: undefined, // callback on layoutstop
+          transform: function (node, position ){ return position; } // transform a given node position. Useful for changing flow direction in discrete layouts 
+        };
+
+        this.cy.layout( options ).run();
+
       });
     },
     clear_graph() {
@@ -913,7 +982,7 @@ export default {
           edge_style['line-gradient-stop-colors'] = colors;
           edge_style['line-gradient-stop-positions'] = positions;
         }
-        edge_style['width'] = width*3;
+        edge_style['width'] = 3 * Math.pow(2, width); //最小値は3
         edge_style['arrow-scale'] = width;
 
         //edgeの作成
@@ -1008,23 +1077,35 @@ export default {
         }
       })
     },
-    set_selected_node(node) {
-      this.selected_node = node;
-    },
     //tapしたnodeとそこから繋がるEdgeを強調する
     highlight_nodes_and_edges() {
       let vm = this;
       this.cy.on('tap', 'node', function(evt){
+        //同じnodeを連続してtapした場合 nextとprevを入れ替える
+        if (vm.selected_node === evt.target.data().id) {
+          console.log('change');
+          vm.selected_flag = !vm.selected_flag;
+        }
+        //別のnodeをtapした場合 
+        else {
+          console.log('new')
+          vm.selected_flag = true;
+        }
+        console.log(vm.selected_flag);
         //現在のclassを消去する
         vm.remove_class();
         let source_node = evt.target;
         let target_nodes = [];
+        let source_nodes = [];
         let edges = source_node._private.edges;
         //ここでedgesのselectedをClassに追加する
         for (let i = 0; i < edges.length; i++) {
           edges[i].addClass('selected');
           if (edges[i]._private.data.target !== source_node.data().id) {
             target_nodes.push(edges[i]._private.data.target);
+          }
+          else {
+            source_nodes.push(edges[i]._private.data.source);
           }
         }
         //edgesのうちselected以外のものをunselectedにする
@@ -1036,11 +1117,21 @@ export default {
         //tapしたnode以外を透明にする
         vm.cy.nodes().forEach(node => {
           if (node!==source_node) {
-            if (!target_nodes.includes(node.data().id)) {
-              node.addClass('unselected');
+            if (vm.selected_flag) {
+              if (!target_nodes.includes(node.data().id)) {
+                node.addClass('unselected');
+              }
+            }
+            else {
+              if (!source_nodes.includes(node.data().id)) {
+                node.addClass('unselected');
+              }
             }
           } 
         })
+        vm.selected_node = source_node.data().id;
+        vm.next_nodes = target_nodes;
+        vm.prev_nodes = source_nodes;
       })
     },
     graph_event_tap() {
@@ -1168,8 +1259,8 @@ export default {
       this.contextmenu_style.left = x.toString() + "px";
       this.contextmenu_style.top = y.toString() + "px";
       //もし画面からはみ出した場合はその分ずらして表示する
-      let wj = Number(this.$vuetify.breakpoint.width) - Number(x+400)
-      let hj = Number(this.$vuetify.breakpoint.height) - Number(y+300);
+      let wj = Number(this.$vuetify.breakpoint.width) - Number(x+350)
+      let hj = Number(this.$vuetify.breakpoint.height) - Number(y+350);
       if (wj < 0) {
         //console.log('width over!!');
         this.contextmenu_style.left = Number(x + wj).toString() + "px";
@@ -1222,6 +1313,7 @@ export default {
     });
     //独自コンテキストメニューを追加
     window.addEventListener('contextmenu',(e)=>{
+      e.preventDefault(); //元のコンテキストメニューを無効化
       this.contextmenu = false;
       this.move_contextmenu(e.pageX, e.pageY);
       this.contextmenu = true;
