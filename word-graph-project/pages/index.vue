@@ -50,7 +50,7 @@
     >
       <v-list class="py-0">
         <v-list-item-group>
-          <v-list-item @click="analysis_dialog = true">
+          <v-list-item @click="make_analysis_contents()">
             <v-list-item-icon>
               <v-icon>
                 mdi-chart-box
@@ -153,12 +153,23 @@
       hide-overlay
       light
     >
-      <v-card>
+      <v-card v-if="loading">
+        <v-toolbar dark color="primary">
+          <v-toolbar-title>解析結果</v-toolbar-title>
+        </v-toolbar>
+        <!-- 気まぐれローディング画面 -->
+        <div class="loader text-center" text-align="center">
+          <div style="font-size:small; color:blue;" class="mt-2">Loading...</div>
+        </div>
+        <div></div>
+      </v-card>
+      <v-card v-else="!loading">
         <v-toolbar dark color="primary">
           <v-toolbar-title>解析結果</v-toolbar-title>
         </v-toolbar>
         dialogです
         ここに結果を表示していく
+        {{analysis_content}}
         <v-row justify="center">
           <v-btn
             icon
@@ -295,6 +306,8 @@ export default {
     return {
       selected_node: null,
       analysis_dialog: false,
+      analysis_content: null, //オブジェクト形式で格納する
+      loading: true,
       next_nodes: [],
       prev_nodes: [],
       selected_flag: null,
@@ -409,6 +422,8 @@ export default {
         }
         vm.create_speaker_label();
         vm.set_graph_style();
+        this.analysis_content = null; //解析結果の初期化
+        this.loading = true;
         resolve('ok');
       })
     },
@@ -1258,6 +1273,17 @@ export default {
         this.contextmenu_style.top = Number(y + hj).toString() + "px";
       }
     },
+    make_analysis_contents() {
+      //解析結果を作成していく
+      this.analysis_dialog = true;
+      //はじめての場合だけ実行する
+      this.analysis_content = {};
+      this.loading = true;
+      setTimeout(()=>{
+        this.analysis_content['message'] = 'テスト';
+        this.loading = false;
+      }, 4000)
+    }
   },
   computed: {
   },
@@ -1308,12 +1334,13 @@ export default {
     });
     //コンテキストメニューの解除をクリックイベントに登録
     window.addEventListener('click',(e)=>{
-      console.log((e.target).toString())
       if ((e.target).toString()===('[object HTMLDivElement]')) {
-        this.remove_class();
+        vm.remove_class();
+        vm.removeParentsOfOneChild();
       }
       if ((e.target).toString()===('[object HTMLTableCellElement]')) {
-        this.remove_class();
+        vm.remove_class();
+        vm.removeParentsOfOneChild();
       }
       this.contextmenu = false;
     });
@@ -1324,7 +1351,8 @@ export default {
     //nodeとedge以外をtapしたときにselectedを解除
     this.cy.on('tap', (e)=>{
       if (Object.keys(e.target._private).includes('container')) {
-        this.remove_class();
+        vm.remove_class();
+        vm.removeParentsOfOneChild();
       }
     })
 
@@ -1400,4 +1428,88 @@ export default {
 .selected {
   background: red;
 }
+
+/* レインボー */
+.rainbow {
+  text-indent: 0em;
+  -webkit-animation: load5 1.1s infinite ease;
+  animation: load5 1.1s infinite ease;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* ローディング画面 */
+.loader {
+  margin: 0px;
+  font-size: 30px;
+  width: 2.5em;
+  height: 2.5em;
+  border-radius: 50%;
+  position: absolute;
+  top: calc(50% - 1.25em);
+  left: calc(50% - 1.25em);
+  text-indent: 0em;
+  -webkit-animation: load5 1.1s infinite ease;
+  animation: load5 1.1s infinite ease;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+}
+@-webkit-keyframes load5 {
+  0%,
+  100% {
+    box-shadow: 0em -2.6em 0em 0em rgba(249, 31, 6, 1), 1.8em -1.8em 0 0em rgba(237, 18, 193, 0.7), 2.5em 0em 0 0em rgba(177, 17, 238, 0.7), 1.75em 1.75em 0 0em rgba(15, 44, 240, 0.7), 0em 2.5em 0 0em rgba(12, 238, 243, 0.7), -1.8em 1.8em 0 0em rgba(87, 243, 12, 0.7), -2.6em 0em 0 0em rgba(230, 241, 14, 0.7), -1.8em -1.8em 0 0em rgba(249, 146, 7, 0.7);
+  }
+  12.5% {
+    box-shadow: 0em -2.6em 0em 0em rgba(249, 146, 7, 0.7), 1.8em -1.8em 0 0em rgba(249, 31, 6, 1), 2.5em 0em 0 0em rgba(237, 18, 193, 0.7), 1.75em 1.75em 0 0em rgba(177, 17, 238, 0.7), 0em 2.5em 0 0em rgba(15, 44, 240, 0.7), -1.8em 1.8em 0 0em rgba(12, 238, 243, 0.7), -2.6em 0em 0 0em rgba(87, 243, 12, 0.7), -1.8em -1.8em 0 0em rgba(230, 241, 14, 0.7);
+  }
+  25% {
+    box-shadow: 0em -2.6em 0em 0em rgba(230, 241, 14, 0.7), 1.8em -1.8em 0 0em rgba(249, 146, 7, 0.7), 2.5em 0em 0 0em rgba(249, 31, 6, 1), 1.75em 1.75em 0 0em rgba(237, 18, 193, 0.7), 0em 2.5em 0 0em rgba(177, 17, 238, 0.7), -1.8em 1.8em 0 0em rgba(15, 44, 240, 0.7), -2.6em 0em 0 0em rgba(12, 238, 243, 0.7), -1.8em -1.8em 0 0em rgba(87, 243, 12, 0.7);
+  }
+  37.5% {
+    box-shadow: 0em -2.6em 0em 0em rgba(87, 243, 12, 0.7), 1.8em -1.8em 0 0em rgba(230, 241, 14, 0.7), 2.5em 0em 0 0em rgba(249, 146, 7, 0.7), 1.75em 1.75em 0 0em rgba(249, 31, 6, 1), 0em 2.5em 0 0em rgba(237, 18, 193, 0.7), -1.8em 1.8em 0 0em rgba(177, 17, 238, 0.7), -2.6em 0em 0 0em rgba(15, 44, 240, 0.7), -1.8em -1.8em 0 0em rgba(12, 238, 243, 0.7);
+  }
+  50% {
+    box-shadow: 0em -2.6em 0em 0em rgba(12, 238, 243, 0.7), 1.8em -1.8em 0 0em rgba(87, 243, 12, 0.7), 2.5em 0em 0 0em rgba(230, 241, 14, 0.7), 1.75em 1.75em 0 0em rgba(249, 146, 7, 0.7), 0em 2.5em 0 0em rgba(249, 31, 6, 1), -1.8em 1.8em 0 0em rgba(237, 18, 193, 0.7), -2.6em 0em 0 0em rgba(177, 17, 238, 0.7), -1.8em -1.8em 0 0em rgba(15, 44, 240, 0.7);
+  }
+  62.5% {
+    box-shadow: 0em -2.6em 0em 0em rgba(15, 44, 240, 0.7), 1.8em -1.8em 0 0em rgba(12, 238, 243, 0.7), 2.5em 0em 0 0em rgba(87, 243, 12, 0.7), 1.75em 1.75em 0 0em rgba(230, 241, 14, 0.7), 0em 2.5em 0 0em rgba(249, 146, 7, 0.7), -1.8em 1.8em 0 0em rgba(249, 31, 6, 1), -2.6em 0em 0 0em rgba(237, 18, 193, 0.7), -1.8em -1.8em 0 0em rgba(177, 17, 238, 0.7);
+  }
+  75% {
+    box-shadow: 0em -2.6em 0em 0em rgba(177, 17, 238, 0.7), 1.8em -1.8em 0 0em rgba(15, 44, 240, 0.7), 2.5em 0em 0 0em rgba(12, 238, 243, 0.7), 1.75em 1.75em 0 0em rgba(87, 243, 12, 0.7), 0em 2.5em 0 0em rgba(230, 241, 14, 0.7), -1.8em 1.8em 0 0em rgba(249, 146, 7, 0.7), -2.6em 0em 0 0em rgba(249, 31, 6, 1), -1.8em -1.8em 0 0em rgba(237, 18, 193, 0.7);
+  }
+  87.5% {
+    box-shadow: 0em -2.6em 0em 0em rgba(237, 18, 193, 0.7), 1.8em -1.8em 0 0em rgba(177, 17, 238, 0.7), 2.5em 0em 0 0em rgba(15, 44, 240, 0.7), 1.75em 1.75em 0 0em rgba(12, 238, 243, 0.7), 0em 2.5em 0 0em rgba(87, 243, 12, 0.7), -1.8em 1.8em 0 0em rgba(230, 241, 14, 0.7), -2.6em 0em 0 0em rgba(249, 146, 7, 0.7), -1.8em -1.8em 0 0em rgba(249, 31, 6, 1);
+  }
+}
+@keyframes load5 {
+  0%,
+  100% {
+    box-shadow: 0em -2.6em 0em 0em rgba(249, 31, 6, 1), 1.8em -1.8em 0 0em rgba(237, 18, 193, 0.7), 2.5em 0em 0 0em rgba(177, 17, 238, 0.7), 1.75em 1.75em 0 0em rgba(15, 44, 240, 0.7), 0em 2.5em 0 0em rgba(12, 238, 243, 0.7), -1.8em 1.8em 0 0em rgba(87, 243, 12, 0.7), -2.6em 0em 0 0em rgba(230, 241, 14, 0.7), -1.8em -1.8em 0 0em rgba(249, 146, 7, 0.7);
+  }
+  12.5% {
+    box-shadow: 0em -2.6em 0em 0em rgba(249, 146, 7, 0.7), 1.8em -1.8em 0 0em rgba(249, 31, 6, 1), 2.5em 0em 0 0em rgba(237, 18, 193, 0.7), 1.75em 1.75em 0 0em rgba(177, 17, 238, 0.7), 0em 2.5em 0 0em rgba(15, 44, 240, 0.7), -1.8em 1.8em 0 0em rgba(12, 238, 243, 0.7), -2.6em 0em 0 0em rgba(87, 243, 12, 0.7), -1.8em -1.8em 0 0em rgba(230, 241, 14, 0.7);
+  }
+  25% {
+    box-shadow: 0em -2.6em 0em 0em rgba(230, 241, 14, 0.7), 1.8em -1.8em 0 0em rgba(249, 146, 7, 0.7), 2.5em 0em 0 0em rgba(249, 31, 6, 1), 1.75em 1.75em 0 0em rgba(237, 18, 193, 0.7), 0em 2.5em 0 0em rgba(177, 17, 238, 0.7), -1.8em 1.8em 0 0em rgba(15, 44, 240, 0.7), -2.6em 0em 0 0em rgba(12, 238, 243, 0.7), -1.8em -1.8em 0 0em rgba(87, 243, 12, 0.7);
+  }
+  37.5% {
+    box-shadow: 0em -2.6em 0em 0em rgba(87, 243, 12, 0.7), 1.8em -1.8em 0 0em rgba(230, 241, 14, 0.7), 2.5em 0em 0 0em rgba(249, 146, 7, 0.7), 1.75em 1.75em 0 0em rgba(249, 31, 6, 1), 0em 2.5em 0 0em rgba(237, 18, 193, 0.7), -1.8em 1.8em 0 0em rgba(177, 17, 238, 0.7), -2.6em 0em 0 0em rgba(15, 44, 240, 0.7), -1.8em -1.8em 0 0em rgba(12, 238, 243, 0.7);
+  }
+  50% {
+    box-shadow: 0em -2.6em 0em 0em rgba(12, 238, 243, 0.7), 1.8em -1.8em 0 0em rgba(87, 243, 12, 0.7), 2.5em 0em 0 0em rgba(230, 241, 14, 0.7), 1.75em 1.75em 0 0em rgba(249, 146, 7, 0.7), 0em 2.5em 0 0em rgba(249, 31, 6, 1), -1.8em 1.8em 0 0em rgba(237, 18, 193, 0.7), -2.6em 0em 0 0em rgba(177, 17, 238, 0.7), -1.8em -1.8em 0 0em rgba(15, 44, 240, 0.7);
+  }
+  62.5% {
+    box-shadow: 0em -2.6em 0em 0em rgba(15, 44, 240, 0.7), 1.8em -1.8em 0 0em rgba(12, 238, 243, 0.7), 2.5em 0em 0 0em rgba(87, 243, 12, 0.7), 1.75em 1.75em 0 0em rgba(230, 241, 14, 0.7), 0em 2.5em 0 0em rgba(249, 146, 7, 0.7), -1.8em 1.8em 0 0em rgba(249, 31, 6, 1), -2.6em 0em 0 0em rgba(237, 18, 193, 0.7), -1.8em -1.8em 0 0em rgba(177, 17, 238, 0.7);
+  }
+  75% {
+    box-shadow: 0em -2.6em 0em 0em rgba(177, 17, 238, 0.7), 1.8em -1.8em 0 0em rgba(15, 44, 240, 0.7), 2.5em 0em 0 0em rgba(12, 238, 243, 0.7), 1.75em 1.75em 0 0em rgba(87, 243, 12, 0.7), 0em 2.5em 0 0em rgba(230, 241, 14, 0.7), -1.8em 1.8em 0 0em rgba(249, 146, 7, 0.7), -2.6em 0em 0 0em rgba(249, 31, 6, 1), -1.8em -1.8em 0 0em rgba(237, 18, 193, 0.7);
+  }
+  87.5% {
+    box-shadow: 0em -2.6em 0em 0em rgba(237, 18, 193, 0.7), 1.8em -1.8em 0 0em rgba(177, 17, 238, 0.7), 2.5em 0em 0 0em rgba(15, 44, 240, 0.7), 1.75em 1.75em 0 0em rgba(12, 238, 243, 0.7), 0em 2.5em 0 0em rgba(87, 243, 12, 0.7), -1.8em 1.8em 0 0em rgba(230, 241, 14, 0.7), -2.6em 0em 0 0em rgba(249, 146, 7, 0.7), -1.8em -1.8em 0 0em rgba(249, 31, 6, 1);
+  }
+}
+
+
 </style>
