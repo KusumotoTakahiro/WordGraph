@@ -171,42 +171,47 @@
     </v-dialog>
     <v-dialog
       v-model="dialog"
-      width="500"
+      width="400"
+      light
     >
+    <v-card style="background:white">
+    <v-alert
+      border="left"
+      color=""
+      dense
+      width="300"
+      icon="mdi-information-outline"
+      elevation="2"
+      light
+      class="mb-0"
+    >
+      ノード情報
+    </v-alert>
       <v-simple-table light>
-        <v-alert
-          border="left"
-          color=""
-          dense
-          width="300"
-          icon="mdi-information-outline"
-          elevation="2"
-        >
-          ノード情報
-        </v-alert>
         <tbody style="color:black">
           <tr>
-            <th>keyword</th>
-            <th>{{node_info.keyword}}</th>
+            <th >keyword</th>
+            <td >{{node_info.keyword}}</td>
           </tr>
           <tr>
-            <th>最初の発言者</th>
-            <th>{{node_info.speaker}}</th>
+            <th >最初の発言者</th>
+            <td >{{node_info.speaker}}</td>
           </tr>
           <tr>
-            <th>tf-idf値</th>
-            <th>{{node_info.weight}}</th>
+            <th >tf-idf値</th>
+            <td >{{node_info.weight}}</td>
           </tr>
           <tr>
-            <th>元ノード</th>
-            <th>{{node_info.prev}}</th>
+            <th >元ノード</th>
+            <td >{{node_info.prev}}</td>
           </tr>
           <tr>
-            <th>次ノード</th>
-            <th>{{node_info.next}}</th>
+            <th >次ノード</th>
+            <td >{{node_info.next}}</td>
           </tr>
         </tbody>
       </v-simple-table>
+    </v-card>
     </v-dialog>
     <v-card v-if="chart" class="dialog" light>
       <v-alert
@@ -328,34 +333,6 @@ export default {
       labels: [],
       k : 100,
       theta : 0,
-      headers: [//テーブルのheaderの設定
-        {
-          text: 'Keywords', //列の名前
-          align: 'start',
-          sortable: false,
-          value: 'keyword', //紐づける際のデータ名
-        },
-        {
-          text : '重さ',
-          value : 'weight',
-        },
-        {
-          text : '次ノード(before)',
-          value : 'before_next',
-        },
-        {
-          text : '次ノード(after)',
-          value : 'after_next',
-        },
-        {
-          text : '最新の単語',
-          value : 'isLatest'
-        },
-        {
-          text : '描画済み',
-          value : 'isInGraph'
-        }
-      ],
       removeEmptyParents : false, //demoサイトから引用
       chart: false,
       chartData: null,
@@ -1091,7 +1068,7 @@ export default {
           console.log('new')
           vm.selected_flag = true;
         }
-        console.log(vm.selected_flag);
+        //console.log(vm.selected_flag);
         //現在のclassを消去する
         vm.remove_class();
         let source_node = evt.target;
@@ -1331,11 +1308,25 @@ export default {
     });
     //コンテキストメニューの解除をクリックイベントに登録
     window.addEventListener('click',(e)=>{
+      console.log((e.target).toString())
+      if ((e.target).toString()===('[object HTMLDivElement]')) {
+        this.remove_class();
+      }
+      if ((e.target).toString()===('[object HTMLTableCellElement]')) {
+        this.remove_class();
+      }
       this.contextmenu = false;
     });
 
     //ダブルクリックしたnodeとそこから繋がるEdgeを強調する
     this.highlight_nodes_and_edges();
+
+    //nodeとedge以外をtapしたときにselectedを解除
+    this.cy.on('tap', (e)=>{
+      if (Object.keys(e.target._private).includes('container')) {
+        this.remove_class();
+      }
+    })
 
     //selectのオプション　defaultはsingle　addtiveは複数選択可能
     //this.cy.selectionType('additive');

@@ -9,9 +9,9 @@ export default {
 
   mounted () {
     this.renderChart(this.chartData, this.options);
-    console.log('chart.vue');
-    console.log(this.chartData);
-    console.log(this.options);
+    // console.log('chart.vue');
+    // console.log(this.chartData);
+    // console.log(this.options);
   }
 }
 </script>
