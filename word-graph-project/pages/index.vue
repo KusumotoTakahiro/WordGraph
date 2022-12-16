@@ -1433,6 +1433,23 @@ export default {
       ctx.font = "12px 'Verdana'";
       ctx.textAlign = 'right';
       ctx.fillText('Ｏ', oX - 5, oY + 15, maxWidth);
+
+      ctx.beginPath();
+      var maxWidth = 100;
+      ctx.font = "12px 'Verdana'";
+      ctx.textAlign = 'right';
+      ctx.fillText('First Speaker', canvasW - 5, oY + 15, maxWidth);
+
+      ctx.beginPath();
+      var maxWidth = 100;
+      ctx.font = "12px 'Verdana'";
+      ctx.textAlign = 'right';
+      ctx.fillText('Follower', oX-10, 10, maxWidth);
+
+      //データを描画
+      let fs = this.analysis_content['first_speaker'];
+
+
     }
   },
   computed: {
