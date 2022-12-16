@@ -153,24 +153,29 @@
       hide-overlay
       light
     >
+      <!-- 気まぐれローディング画面 -->
       <v-card v-if="loading">
         <v-toolbar dark color="primary">
           <v-toolbar-title>解析結果</v-toolbar-title>
         </v-toolbar>
-        <!-- 気まぐれローディング画面 -->
-        <div class="loader text-center" text-align="center">
-          <div style="font-size:small; color:blue;" class="mt-2">Loading...</div>
+        <div class="loader text-center" text-align="center" >
+          <span class="pyonpyon" id="pyonpyon">Loading...</span>
         </div>
         <div></div>
       </v-card>
-      <v-card v-else="!loading">
+      <v-card>
         <v-toolbar dark color="primary">
           <v-toolbar-title>解析結果</v-toolbar-title>
         </v-toolbar>
-        dialogです
-        ここに結果を表示していく
-        {{analysis_content}}
-        <v-row justify="center">
+        <v-row class="mt-5">
+          <v-col cols="5" sm="5" md="5" lg="5" xl="5">
+            <canvas id="axisCanvas" class="mx-5"></canvas>
+          </v-col>
+          <v-col cols="7" sm="7" md="7" lg="7" xl="7" >
+            <div id="parent"></div>
+          </v-col>
+        </v-row>
+        <v-row justify="center" v-if="!loading">
           <v-btn
             icon
             light
@@ -355,6 +360,7 @@ export default {
       },
       dataSource: '',
       dataTarget: '',
+      setIntervalID: null,
     }
   },
   methods: {
@@ -1273,16 +1279,160 @@ export default {
         this.contextmenu_style.top = Number(y + hj).toString() + "px";
       }
     },
-    make_analysis_contents() {
-      //解析結果を作成していく
+    create_graph_image() {
+      //現在のグラフを画像で取得
+      let width = (this.$vuetify.breakpoint.width)/3*2;
+      let cywidth = (this.cy.width())/3*2;
+      let cyheight = (this.cy.height())/3*2;
+      console.log(cywidth);
+      let blob = this.cy.png(
+        {
+          output:'blob',
+          bg:'white',
+          maxWidth: (cywidth > width) ? width:cywidth,
+          maxHeight: cyheight,
+        }
+      );
+      let link = document.createElement('img');
+      link.src = URL.createObjectURL(blob);
+      let parent = document.getElementById('parent');
+      if (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+      }
+      parent.appendChild(link);
+      URL.revokeObjectURL(link.href);
+    },
+    do_analysis() {
+      /* first_speakerの値を計算
+        first_speaker => 発言者ごとに，各自が最初に発言した単語のWeightの総和のこと
+        単語のWeight => 単語のTF-IDF値．およそ0から50の間で返ってくる値
+      */
+      //first_speakerの値を初期化
+      let first_speaker = {};
+      for (let i = 0; i < this.speakers.length; i++) {
+        first_speaker[(this.speakers[i]).toString()] = 0;
+      }
+      let ks = this.keywords;
+      for (let i = 0; i < ks.length; i++) {
+        let keyword = ks[i];
+        let sp = keyword.speaker;
+        let weight = keyword.weight;
+        first_speaker[(sp).toString()] += Number(weight);
+      }
+      this.analysis_content['first_speaker'] = first_speaker;
+      /* followerの値を計算
+        follower => 発言者ごとに，各自が一回以上発言した単語の総数のこと
+      */
+      let follower = {};
+      for (let i = 0; i < this.speakers.length; i++) {
+        follower[(this.speakers[i]).toString()] = 0;
+      }
+      for (let i = 0; i < ks.length; i++) {
+        let keyword = ks[i];
+        let sps = keyword.speakers;
+        //今回は同じ単語を重複していった分もカウントする
+        for (let j = 0; j < sps.length; j++) {
+          let sp = sps[j];
+          follower[(sp).toString()] += 1;
+        }
+      }
+      this.analysis_content['follower'] = follower;
+    },
+    make_analysis_contents() { //解析結果を作成していく
       this.analysis_dialog = true;
-      //はじめての場合だけ実行する
       this.analysis_content = {};
       this.loading = true;
       setTimeout(()=>{
-        this.analysis_content['message'] = 'テスト';
-        this.loading = false;
-      }, 4000)
+        /* loading画面を表示する */
+        let num = document.getElementById("pyonpyon").textContent.length;
+        let i = -1;
+        this.setIntervalID = setInterval(()=>{
+          i += 1;
+          i %= num;
+          this.myfunc("pyonpyon", i)
+        }, 500)
+
+        //ここで実際の解析処理（実際にほとんど時間はかからないが）を書いておく
+        this.create_graph_image();
+        this.do_analysis();
+        this.draw2DGraph();
+
+        setTimeout(()=>{
+          /* 解析終了 loading画面を閉じる */
+          this.loading = false;
+          clearInterval(this.setIntervalID);
+        }, ((500)*10+300)) 
+        //Interval500msの関数*10回実行+300msの予備時間
+      }, 500)
+    },
+    myfunc(id, num) {
+      let content = document.getElementById(id);
+      let contentText = content.textContent;
+      let contentLength = contentText.length;
+      let newContent = contentText.substring(0, num)
+      + "<div>" + contentText[num] + "</div>" 
+      + contentText.substring(num+1, contentLength);
+      console.log(num)
+      content.innerHTML = newContent;
+    },
+    draw2DGraph() {
+      let w = this.$vuetify.breakpoint.width;
+      let h = this.$vuetify.breakpoint.height; 
+      var len = w > h? w : h; 
+      var canvas; // canvas要素(HTMLCanvasElement)
+      var ctx; // 2Dコンテキスト(CanvasRenderingContext2D)
+      var canvasW = len/5*2; // canvas要素の横幅(px)
+      var canvasH = len/5*2; // canvas要素の縦幅(px)
+      var oX; // 中心Ｏのx座標
+      var oY; // 中心Ｏのy座標
+
+      canvas = document.getElementById('axisCanvas');
+      console.log(canvas)
+      canvas.width = canvasW;
+      canvas.height = canvasH;
+      oX = Math.ceil(canvasW / 2);
+      oY = Math.ceil(canvasH / 2);
+
+      // 描画のために2Dコンテキスト取得
+      ctx = canvas.getContext('2d');
+
+      // 一度描画をクリア
+      ctx.clearRect(0, 0, canvasW, canvasH);
+
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "#999";
+      ctx.fillStyle = "#999";
+
+      // x座標軸を描画
+      ctx.beginPath();
+      ctx.moveTo(0, oY);
+      ctx.lineTo(canvasW, oY);
+      ctx.stroke();
+      // x座標軸の矢印を描画
+      ctx.beginPath();
+      ctx.moveTo(canvasW, oY);
+      ctx.lineTo(canvasW - 10, oY - 7);
+      ctx.lineTo(canvasW - 10, oY + 7);
+      ctx.fill();
+
+      // y座標軸を描画
+      ctx.beginPath();
+      ctx.moveTo(oX, 0);
+      ctx.lineTo(oX, canvasH);
+      ctx.stroke();
+      // y座標軸の矢印を描画
+      ctx.beginPath();
+      ctx.moveTo(oX, 0);
+      ctx.lineTo(oX - 7, 10);
+      ctx.lineTo(oX + 7, 10);
+      ctx.fill();
+
+      // 原点を表す文字「Ｏ」を描画
+      ctx.beginPath();
+      var maxWidth = 100;
+      ctx.font = "12px 'Verdana'";
+      ctx.textAlign = 'right';
+      ctx.fillText('Ｏ', oX - 5, oY + 15, maxWidth);
     }
   },
   computed: {
@@ -1429,16 +1579,6 @@ export default {
   background: red;
 }
 
-/* レインボー */
-.rainbow {
-  text-indent: 0em;
-  -webkit-animation: load5 1.1s infinite ease;
-  animation: load5 1.1s infinite ease;
-  -webkit-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  transform: translateZ(0);
-}
-
 /* ローディング画面 */
 .loader {
   margin: 0px;
@@ -1511,5 +1651,34 @@ export default {
   }
 }
 
+</style>
 
+
+<!-- scopedなしのstyle -->
+<style>
+.pyonpyon {
+  font-size: 15px;
+  font-weight: bold;
+  color: skyblue;
+  widows: 100px;
+}
+
+.pyonpyon div {
+  animation: pyon 0.3s linear;
+  position: relative;
+  color: blue;
+  display: inline-block;
+}
+
+@keyframes pyon {
+  0% {top: 0}
+  50% {top:-17px}
+  100%{top: 0}
+}
+
+@-webkit-keyframes pyon {
+  0% {top: 0}
+  50% {top:-17px}
+  100%{top: 0}
+}
 </style>
