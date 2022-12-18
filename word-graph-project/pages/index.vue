@@ -153,29 +153,25 @@
       hide-overlay
       light
     >
-      <!-- 気まぐれローディング画面 -->
-      <v-card v-if="loading">
+      
+      <v-card >
         <v-toolbar dark color="primary">
           <v-toolbar-title>解析結果</v-toolbar-title>
         </v-toolbar>
-        <div class="loader text-center" text-align="center" >
+        <v-row class="mt-5" v-show="!loading">
+          <v-col cols="5" sm="5" md="5" lg="5" xl="5">
+            <canvas id="axisCanvas" class="mx-5" ></canvas>
+          </v-col>
+          <v-col cols="7" sm="7" md="7" lg="7" xl="7" >
+            <div id="parent" ></div>
+          </v-col>
+        </v-row>
+        <!-- 気まぐれローディング画面 -->
+        <div class="loader text-center" text-align="center" v-if="loading">
           <span class="pyonpyon" id="pyonpyon">Loading...</span>
         </div>
         <div></div>
-      </v-card>
-      <v-card>
-        <v-toolbar dark color="primary">
-          <v-toolbar-title>解析結果</v-toolbar-title>
-        </v-toolbar>
-        <v-row class="mt-5">
-          <v-col cols="5" sm="5" md="5" lg="5" xl="5">
-            <canvas id="axisCanvas" class="mx-5"></canvas>
-          </v-col>
-          <v-col cols="7" sm="7" md="7" lg="7" xl="7" >
-            <div id="parent"></div>
-          </v-col>
-        </v-row>
-        <v-row justify="center" v-if="!loading">
+        <v-row justify="center" v-show="!loading">
           <v-btn
             icon
             light
@@ -1345,34 +1341,55 @@ export default {
       setTimeout(()=>{
         /* loading画面を表示する */
         let num = document.getElementById("pyonpyon").textContent.length;
-        let i = -1;
+        let i = -2;
         this.setIntervalID = setInterval(()=>{
-          i += 1;
+          i += 2;
           i %= num;
-          this.myfunc("pyonpyon", i)
+          this.loading_animation("pyonpyon", i)
         }, 500)
-
         //ここで実際の解析処理（実際にほとんど時間はかからないが）を書いておく
         this.create_graph_image();
         this.do_analysis();
         this.draw2DGraph();
-
         setTimeout(()=>{
           /* 解析終了 loading画面を閉じる */
           this.loading = false;
           clearInterval(this.setIntervalID);
-        }, ((500)*10+300)) 
+        }, ((500)*6+300)) 
         //Interval500msの関数*10回実行+300msの予備時間
       }, 500)
     },
-    myfunc(id, num) {
+    loading_animation(id, num) {
       let content = document.getElementById(id);
       let contentText = content.textContent;
       let contentLength = contentText.length;
-      let newContent = contentText.substring(0, num)
-      + "<div>" + contentText[num] + "</div>" 
-      + contentText.substring(num+1, contentLength);
-      console.log(num)
+      let newContent = ""
+      // let randomNum = Math.floor(Math.random()*contentLength);
+      // let num2 = randomNum%contentLength;
+      // while (num===num2) {
+      //   randomNum = Math.floor(Math.random()*contentLength);
+      //   num2 = randomNum%contentLength;
+      // }
+      // console.log('num2=', num2);
+      // if (num < num2) {
+      //   newContent = 
+      //     contentText.substring(0, num)
+      //     + "<div>" + contentText[num] + "</div>" 
+      //     + contentText.substring(num+1, num2)
+      //     + "<div>" + contentText[num2] + "</div>"
+      //     +contentText.substring(num2+1, contentLength)
+      // }
+      // else if (num >= num2) {
+      //   newContent = 
+      //     contentText.substring(0, num2)
+      //     + "<div>" + contentText[num2] + "</div>" 
+      //     + contentText.substring(num2+1, num)
+      //     + "<div>" + contentText[num] + "</div>"
+      //     +contentText.substring(num+1, contentLength)
+      // }
+      newContent = contentText.substring(0, num)
+        + "<div>" + contentText[num] + "</div>" 
+        +contentText.substring(num+1, contentLength)
       content.innerHTML = newContent;
     },
     draw2DGraph() {
@@ -1501,11 +1518,13 @@ export default {
     });
     //コンテキストメニューの解除をクリックイベントに登録
     window.addEventListener('click',(e)=>{
-      if ((e.target).toString()===('[object HTMLDivElement]')) {
+      let isTable = (e.target).toString()===('[object HTMLTableCellElement]')
+      let isDiv = (e.target).toString()===('[object HTMLDivElement]')
+      if (isDiv && !this.contextmenu) {
         vm.remove_class();
         vm.removeParentsOfOneChild();
       }
-      if ((e.target).toString()===('[object HTMLTableCellElement]')) {
+      if (isTable && !this.contextmenu) {
         vm.remove_class();
         vm.removeParentsOfOneChild();
       }
