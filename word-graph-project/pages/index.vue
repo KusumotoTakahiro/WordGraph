@@ -433,10 +433,13 @@ export default {
     create_speaker_label() {
       console.log(this.speakers)
       this.speakers.forEach(speaker => {
+        //defaultのみ削除
         let data = {}
-        data.speaker = speaker;
-        data.clabel = this.clabel_setter(speaker);
-        this.labels.push(data);
+        if (speaker!="default") {
+          data.speaker = speaker;
+          data.clabel = this.clabel_setter(speaker);
+          this.labels.push(data);
+        }
       })
     },
     //グラフのスタイルの設定
@@ -1465,7 +1468,49 @@ export default {
 
       //データを描画
       let fs = this.analysis_content['first_speaker'];
-
+      let fl = this.analysis_content['follower'];
+      // fsのmax,min
+      let fs_max = 0;
+      let fs_min = 100000;
+      let fl_max = 0;
+      let fl_min = 100000;
+      Object.keys(fs).forEach(key => {
+        let speaker = (key).toString();
+        if (speaker!=='default') {
+          let fs_value = fs[key];
+          let fl_value = fl[key];
+          if (fs_value > fs_max) fs_max = fs_value;
+          if (fs_value < fs_min) fs_min = fs_value;
+          if (fl_value > fl_max) fl_max = fl_value;
+          if (fl_value < fl_min) fl_min = fl_value;
+        }
+      })
+      let fs_length = fs_max - fs_min
+      let fl_length = fl_max - fl_min
+      let real_len = canvasW * 100 / 120; //canvasW(canvasHと同一のため）を120%としたときの100%の長さ
+      let fs_ratio = real_len / fs_length; // x軸の範囲を [-100, 100]にするため
+      let fl_ratio = real_len / fl_length; // y軸も同様 
+      Object.keys(fs).forEach(key => {
+        let speaker = (key).toString();
+        if (speaker!=='default') {
+          let fs_value = (fs[key] - fs_min)*fs_ratio + canvasW/12;
+          let fl_value = (fl[key] - fl_min)*fl_ratio + canvasW/12;
+          //実際にcanvasに描画
+          ctx.beginPath();
+          ctx.arc(fs_value, canvasW - fl_value, 10, 0, Math.PI * 2, true);
+          ctx.fillStyle = this.clabel_setter(speaker);
+          ctx.fill();
+          ctx.strokeStyle = this.clabel_setter(speaker);
+          ctx.lineWidth = 1;
+          ctx.stroke();
+          //labelの部分
+          ctx.beginPath();
+          var maxWidth = 100;
+          ctx.font = "12px 'Verdana'";
+          ctx.textAlign = 'center';
+          ctx.fillText(speaker, fs_value, canvasW - fl_value-12, maxWidth);
+        }
+      }) 
 
     }
   },
