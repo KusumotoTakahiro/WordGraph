@@ -1476,14 +1476,20 @@ export default {
       let fl_min = 100000;
       Object.keys(fs).forEach(key => {
         let speaker = (key).toString();
-        if (speaker!=='default') {
-          let fs_value = fs[key];
-          let fl_value = fl[key];
-          if (fs_value > fs_max) fs_max = fs_value;
-          if (fs_value < fs_min) fs_min = fs_value;
-          if (fl_value > fl_max) fl_max = fl_value;
-          if (fl_value < fl_min) fl_min = fl_value;
-        }
+        // if (speaker!=='default') {
+        //   let fs_value = fs[key];
+        //   let fl_value = fl[key];
+        //   if (fs_value > fs_max) fs_max = fs_value;
+        //   if (fs_value < fs_min) fs_min = fs_value;
+        //   if (fl_value > fl_max) fl_max = fl_value;
+        //   if (fl_value < fl_min) fl_min = fl_value;
+        // }
+        let fs_value = fs[key];
+        let fl_value = fl[key];
+        if (fs_value > fs_max) fs_max = fs_value;
+        if (fs_value < fs_min) fs_min = fs_value;
+        if (fl_value > fl_max) fl_max = fl_value;
+        if (fl_value < fl_min) fl_min = fl_value;
       })
       let fs_length = fs_max - fs_min
       let fl_length = fl_max - fl_min
@@ -1492,24 +1498,43 @@ export default {
       let fl_ratio = real_len / fl_length; // y軸も同様 
       Object.keys(fs).forEach(key => {
         let speaker = (key).toString();
-        if (speaker!=='default') {
-          let fs_value = (fs[key] - fs_min)*fs_ratio + canvasW/12;
-          let fl_value = (fl[key] - fl_min)*fl_ratio + canvasW/12;
-          //実際にcanvasに描画
-          ctx.beginPath();
-          ctx.arc(fs_value, canvasW - fl_value, 10, 0, Math.PI * 2, true);
-          ctx.fillStyle = this.clabel_setter(speaker);
-          ctx.fill();
-          ctx.strokeStyle = this.clabel_setter(speaker);
-          ctx.lineWidth = 1;
-          ctx.stroke();
-          //labelの部分
-          ctx.beginPath();
-          var maxWidth = 100;
-          ctx.font = "12px 'Verdana'";
-          ctx.textAlign = 'center';
-          ctx.fillText(speaker, fs_value, canvasW - fl_value-12, maxWidth);
+        // if (speaker!=='default') {
+        //   let fs_value = (fs[key] - fs_min)*fs_ratio + canvasW/12;
+        //   let fl_value = (fl[key] - fl_min)*fl_ratio + canvasW/12;
+        //   //実際にcanvasに描画
+        //   ctx.beginPath();
+        //   ctx.arc(fs_value, canvasW - fl_value, 10, 0, Math.PI * 2, true);
+        //   ctx.fillStyle = this.clabel_setter(speaker);
+        //   ctx.fill();
+        //   ctx.strokeStyle = this.clabel_setter(speaker);
+        //   ctx.lineWidth = 1;
+        //   ctx.stroke();
+        //   //labelの部分
+        //   ctx.beginPath();
+        //   var maxWidth = 100;
+        //   ctx.font = "12px 'Verdana'";
+        //   ctx.textAlign = 'center';
+        //   ctx.fillText(speaker, fs_value, canvasW - fl_value-12, maxWidth);
+        // }
+        let fs_value = (fs[key] - fs_min)*fs_ratio + canvasW/12;
+        let fl_value = (fl[key] - fl_min)*fl_ratio + canvasW/12;
+        //実際にcanvasに描画
+        ctx.beginPath();
+        ctx.arc(fs_value, canvasW - fl_value, 10, 0, Math.PI * 2, true);
+        ctx.fillStyle = this.clabel_setter(speaker);
+        ctx.fill();
+        ctx.strokeStyle = this.clabel_setter(speaker);
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        //labelの部分
+        ctx.beginPath();
+        var maxWidth = 100;
+        ctx.font = "12px 'Verdana'";
+        ctx.textAlign = 'center';
+        if (speaker==="default") {
+          speaker = "Reference point" //「基準点」の意味に変更
         }
+        ctx.fillText(speaker, fs_value, canvasW - fl_value-12, maxWidth);
       }) 
 
     }
