@@ -166,6 +166,11 @@
             <div id="parent" ></div>
           </v-col>
         </v-row>
+        <v-row v-show="!loading">
+          <v-col cols="12" sm="12" md="12" lg="12" xl="12">
+            <canvas id="talkLogCanvas" class="mx-5"></canvas>
+          </v-col>
+        </v-row>
         <!-- 気まぐれローディング画面 -->
         <div class="loader text-center" text-align="center" v-if="loading">
           <span class="pyonpyon" id="pyonpyon">Loading...</span>
@@ -1354,6 +1359,7 @@ export default {
         this.create_graph_image();
         this.do_analysis();
         this.draw2DGraph();
+        this.draw1DGraph();
         setTimeout(()=>{
           /* 解析終了 loading画面を閉じる */
           this.loading = false;
@@ -1398,13 +1404,13 @@ export default {
     draw2DGraph() {
       let w = this.$vuetify.breakpoint.width;
       let h = this.$vuetify.breakpoint.height; 
-      var len = w > h? w : h; 
-      var canvas; // canvas要素(HTMLCanvasElement)
-      var ctx; // 2Dコンテキスト(CanvasRenderingContext2D)
-      var canvasW = len/5*2; // canvas要素の横幅(px)
-      var canvasH = len/5*2; // canvas要素の縦幅(px)
-      var oX; // 中心Ｏのx座標
-      var oY; // 中心Ｏのy座標
+      let len = w > h? w : h; 
+      let canvas; // canvas要素(HTMLCanvasElement)
+      let ctx; // 2Dコンテキスト(CanvasRenderingContext2D)
+      let canvasW = len/5*2; // canvas要素の横幅(px)
+      let canvasH = len/5*2; // canvas要素の縦幅(px)
+      let oX; // 中心Ｏのx座標
+      let oY; // 中心Ｏのy座標
 
       canvas = document.getElementById('axisCanvas');
       console.log(canvas)
@@ -1449,19 +1455,19 @@ export default {
 
       // 原点を表す文字「Ｏ」を描画
       ctx.beginPath();
-      var maxWidth = 100;
+      let maxWidth = 100;
       ctx.font = "12px 'Verdana'";
       ctx.textAlign = 'right';
       ctx.fillText('Ｏ', oX - 5, oY + 15, maxWidth);
 
       ctx.beginPath();
-      var maxWidth = 100;
+      maxWidth = 100;
       ctx.font = "12px 'Verdana'";
       ctx.textAlign = 'right';
       ctx.fillText('First Speaker', canvasW - 5, oY + 15, maxWidth);
 
       ctx.beginPath();
-      var maxWidth = 100;
+      maxWidth = 100;
       ctx.font = "12px 'Verdana'";
       ctx.textAlign = 'right';
       ctx.fillText('Follower', oX-10, 10, maxWidth);
@@ -1494,7 +1500,7 @@ export default {
       let fs_length = fs_max - fs_min
       let fl_length = fl_max - fl_min
       let real_len = canvasW * 100 / 120; //canvasW(canvasHと同一のため）を120%としたときの100%の長さ
-      let fs_ratio = real_len / fs_length; // x軸の範囲を [-100, 100]にするため
+      let fs_ratio = real_len / fs_length; // x軸の範囲をreal_len内に収めるため
       let fl_ratio = real_len / fl_length; // y軸も同様 
       Object.keys(fs).forEach(key => {
         let speaker = (key).toString();
@@ -1511,7 +1517,7 @@ export default {
         //   ctx.stroke();
         //   //labelの部分
         //   ctx.beginPath();
-        //   var maxWidth = 100;
+        //   let maxWidth = 100;
         //   ctx.font = "12px 'Verdana'";
         //   ctx.textAlign = 'center';
         //   ctx.fillText(speaker, fs_value, canvasW - fl_value-12, maxWidth);
@@ -1528,7 +1534,7 @@ export default {
         ctx.stroke();
         //labelの部分
         ctx.beginPath();
-        var maxWidth = 100;
+        let maxWidth = 100;
         ctx.font = "12px 'Verdana'";
         ctx.textAlign = 'center';
         if (speaker==="default") {
@@ -1536,7 +1542,137 @@ export default {
         }
         ctx.fillText(speaker, fs_value, canvasW - fl_value-12, maxWidth);
       }) 
-
+    },
+    draw1DGraph() {
+      let w = this.$vuetify.breakpoint.width;
+      let h = this.$vuetify.breakpoint.height; 
+      let canvas; // canvas要素(HTMLCanvasElement)
+      let ctx; // 2Dコンテキスト(CanvasRenderingContext2D)
+      let canvasW = w*9/10; // canvas要素の横幅(px)
+      let canvasH = h; // canvas要素の縦幅(px)
+      
+      canvas = document.getElementById('talkLogCanvas');
+      console.log(canvas)
+      canvas.width = canvasW;
+      canvas.height = canvasH;
+      
+      // 描画のために2Dコンテキスト取得
+      ctx = canvas.getContext('2d');
+      // 一度描画をクリア
+      ctx.clearRect(0, 0, canvasW, canvasH);
+      //ctxの諸設定
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "#999";
+      ctx.fillStyle = "#999";
+      //話題推移の数直線を表示
+      if ('period' in this.keywords[0]) {
+        //上位五単語を抜き出す
+        let results = this.keywords.sort(function(a, b){
+          return (a.weight > b.weight) ? -1 : 1;
+        })
+        let upto = 15; //表示する単語数
+        let y = 0;
+        let maxWidth = 100;
+        let end = this.keywords[(this.keywords).length-2].period[0].time;
+        let now=0;
+        let prev=0; 
+        let continuos_num=0;
+        let chip = Math.floor(canvasW / end);
+        if (chip%2===1) { //chipが奇数の時は強制的に偶数にする
+          chip -= 1;
+        }
+        let r = 0;
+        for (let i = 0; i < upto; i++) {
+          //各keyword用の数直線を描画する
+          y = Math.ceil(canvasH* (2+i) / (upto+2));
+          // x座標軸を描画
+          ctx.beginPath();
+          ctx.lineWidth = 1;
+          ctx.moveTo(0, y);
+          ctx.lineTo(canvasW, y);
+          ctx.stroke();
+          // x座標軸の矢印を描画
+          ctx.beginPath();
+          ctx.fillStyle = "#999"
+          ctx.moveTo(canvasW, y);
+          ctx.lineTo(canvasW - 10, y - 7);
+          ctx.lineTo(canvasW - 10, y + 7);
+          ctx.fill();
+          // ラベルを表示
+          ctx.beginPath();
+          ctx.font = "12px 'Verdana'";
+          ctx.textAlign = 'right';
+          ctx.fillText((results[i].keyword).toString(), canvasW - 10, y + 15, maxWidth);
+        
+          //各keywordのperiod情報をもとに話題のピーク時期を表示する
+          //各keywordのperiodをもとに数直線に変更を加えるか否かを確認する
+          prev = 0;
+          continuos_num = 1;
+          for (let k = 0; k < (results[i].period).length; k++) {
+            //現在の状況をもとに数直線上を塗る
+            let sp = ((results[i].period)[k].speaker).toString();
+            let now = (results[i].period)[k].time;
+            if (now===prev) {
+              ctx.fillStyle = this.clabel_setter(sp);
+              ctx.beginPath();
+              ctx.rect(now*chip, y-2-5*continuos_num, chip, 5);
+              ctx.fill();
+              continuos_num += 1;
+            }
+            else {
+              ctx.fillStyle = this.clabel_setter(sp);
+              ctx.beginPath();
+              ctx.rect(now*chip, y-2, chip, 5);
+              ctx.fill();
+              continuos_num = 1;
+            }
+          }
+          //円を表示する
+          let last = 0;
+          prev=0; 
+          continuos_num = 1;
+          for (let k = 0; k < (results[i].period).length; k++) {
+            now = (results[i].period)[k].time
+            if (now === prev+1) { //直前と同じ単語を繰り返し発言している
+              continuos_num += 1;
+              last = now;
+            }
+            else if (now === prev) {
+              //そのまま
+            }
+            else {
+              if (continuos_num>1) { //直前まで単語の繰り返しが起きていた場合
+                r = Math.floor(continuos_num*chip / 2);
+                ctx.beginPath();
+                ctx.lineWidth = 5;
+                if (continuos_num%2===1) { 
+                  //理由が全くわからないが奇数回続いたときの円だけchip/2pxずれる
+                  ctx.arc(prev*chip-chip/2, y, r, 0, Math.PI * 2, true);
+                }
+                else {
+                  ctx.arc(prev*chip, y, r, 0, Math.PI * 2, true);
+                }
+                ctx.stroke();
+              }
+              continuos_num = 1;
+            }
+            prev = now;
+          }
+          if (continuos_num>1) { //直前まで単語の繰り返しが起きていた場合
+            r = Math.floor(continuos_num*chip / 2);
+            ctx.beginPath();
+            ctx.lineWidth = 5;
+            if (continuos_num%2===1) { 
+              //理由が全くわからないが奇数回続いたときの円だけchip/2pxずれる
+              ctx.arc((last)*chip-chip/2, y, r, 0, Math.PI * 2, true);
+            }
+            else {
+              ctx.arc((last)*chip, y, r, 0, Math.PI * 2, true);
+            }
+            ctx.stroke();
+          }
+        }
+      }
     }
   },
   computed: {
