@@ -160,15 +160,56 @@
         </v-toolbar>
         <v-row class="mt-5" v-show="!loading">
           <v-col cols="5" sm="5" md="5" lg="5" xl="5">
+            <v-alert 
+              color="blue-grey"
+              dark
+              dense
+              icon="mdi-school"
+              text-align="center"
+              prominent
+            >話者の分類</v-alert>
             <canvas id="axisCanvas" class="mx-5" ></canvas>
           </v-col>
           <v-col cols="7" sm="7" md="7" lg="7" xl="7" >
+            <v-alert 
+              color="blue-grey"
+              dark
+              dense
+              icon="mdi-school"
+              text-align="center"
+              prominent
+            >Word Graph</v-alert>
             <div id="parent" ></div>
           </v-col>
         </v-row>
+        <v-divider style="background:gainsboro" v-show="!loading"></v-divider>
         <v-row v-show="!loading">
           <v-col cols="12" sm="12" md="12" lg="12" xl="12">
-            <canvas id="talkLogCanvas" class="mx-5"></canvas>
+            <v-alert 
+              color="blue-grey"
+              dark
+              dense
+              icon="mdi-school"
+              text-align="center"
+              prominent
+            >話題の推移 　　
+            <span class="text-caption">＜上位15件のデータから比較＞</span>
+            </v-alert>
+            <v-btn @click="draw1DGraph(5); upto.val=5">5件</v-btn>
+            <v-btn @click="draw1DGraph(10); upto.val=10">10件</v-btn>
+            <v-btn @click="draw1DGraph(15); upto.val=15">15件</v-btn>
+            <v-btn @click="draw1DGraph(upto.val);">表示</v-btn>
+            <div style="width: 600px">
+              <v-slider
+                v-model="upto.val"
+                :label="upto.label"
+                :thumb-color="upto.color"
+                thumb-label="always"
+                max="15"
+              >
+              </v-slider>
+            </div>
+            <canvas id="talkLogCanvas" class="mx-5 my-5"></canvas>
           </v-col>
         </v-row>
         <!-- 気まぐれローディング画面 -->
@@ -362,6 +403,7 @@ export default {
       dataSource: '',
       dataTarget: '',
       setIntervalID: null,
+      upto: { label: 'thumb-color', val: 15, color: 'red' }
     }
   },
   methods: {
@@ -1359,7 +1401,7 @@ export default {
         this.create_graph_image();
         this.do_analysis();
         this.draw2DGraph();
-        this.draw1DGraph();
+        this.draw1DGraph(15);
         setTimeout(()=>{
           /* 解析終了 loading画面を閉じる */
           this.loading = false;
@@ -1543,16 +1585,15 @@ export default {
         ctx.fillText(speaker, fs_value, canvasW - fl_value-12, maxWidth);
       }) 
     },
-    draw1DGraph() {
+    draw1DGraph(upto) {
       let w = this.$vuetify.breakpoint.width;
       let h = this.$vuetify.breakpoint.height; 
       let canvas; // canvas要素(HTMLCanvasElement)
       let ctx; // 2Dコンテキスト(CanvasRenderingContext2D)
       let canvasW = w*9/10; // canvas要素の横幅(px)
-      let canvasH = h; // canvas要素の縦幅(px)
+      let canvasH = (upto - 5)/10*h + h; // canvas要素の縦幅(px)
       
       canvas = document.getElementById('talkLogCanvas');
-      console.log(canvas)
       canvas.width = canvasW;
       canvas.height = canvasH;
       
@@ -1560,33 +1601,63 @@ export default {
       ctx = canvas.getContext('2d');
       // 一度描画をクリア
       ctx.clearRect(0, 0, canvasW, canvasH);
-      //ctxの諸設定
-      ctx.lineWidth = 1;
-      ctx.strokeStyle = "#999";
-      ctx.fillStyle = "#999";
+      
       //話題推移の数直線を表示
       if ('period' in this.keywords[0]) {
         //上位五単語を抜き出す
         let results = this.keywords.sort(function(a, b){
           return (a.weight > b.weight) ? -1 : 1;
         })
-        let upto = 15; //表示する単語数
+        //let upto = 15; //表示する単語数
         let y = 0;
         let maxWidth = 100;
-        let end = this.keywords[(this.keywords).length-2].period[0].time;
         let now=0;
         let prev=0; 
         let continuos_num=0;
+        let e = this.keywords.filter(function(keyword){
+          return keyword.keyword==='e';
+        })
+        let end = (e[0])['period'][0]['time'];
+        //console.log(end);
         let chip = Math.floor(canvasW / end);
         if (chip%2===1) { //chipが奇数の時は強制的に偶数にする
           chip -= 1;
         }
         let r = 0;
+        let keyword = null;
+
+        //ctxの諸設定
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "#999";
+        ctx.fillStyle = "#999";
+
+        // y座標軸を描画
+        ctx.beginPath();
+        ctx.setLineDash([2, 2]);
+        ctx.moveTo(20, 0);
+        ctx.lineTo(20, canvasH);
+        ctx.stroke();
+        // y座標軸の矢印を描画
+        ctx.beginPath();
+        ctx.moveTo(20, 0);
+        ctx.lineTo(20 - 7, 10);
+        ctx.lineTo(20 + 7, 10);
+        ctx.fill();
+        // y軸のラベル
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.font = "12px 'Verdana'";
+        ctx.textAlign = 'right';
+        ctx.fillText('TF-IDF', 70, 10, 100);
+
+        //各keyword用の数直線を描画する
         for (let i = 0; i < upto; i++) {
-          //各keyword用の数直線を描画する
+          keyword = results[i];
           y = Math.ceil(canvasH* (2+i) / (upto+2));
           // x座標軸を描画
+          ctx.strokeStyle="#999";
           ctx.beginPath();
+          ctx.setLineDash([2, 2]);
           ctx.lineWidth = 1;
           ctx.moveTo(0, y);
           ctx.lineTo(canvasW, y);
@@ -1599,23 +1670,23 @@ export default {
           ctx.lineTo(canvasW - 10, y + 7);
           ctx.fill();
           // ラベルを表示
+          ctx.fillStyle = "black";
           ctx.beginPath();
           ctx.font = "12px 'Verdana'";
           ctx.textAlign = 'right';
-          ctx.fillText((results[i].keyword).toString(), canvasW - 10, y + 15, maxWidth);
+          ctx.fillText((keyword.keyword).toString(), canvasW - 10, y + 15, maxWidth);
         
-          //各keywordのperiod情報をもとに話題のピーク時期を表示する
-          //各keywordのperiodをもとに数直線に変更を加えるか否かを確認する
           prev = 0;
           continuos_num = 1;
-          for (let k = 0; k < (results[i].period).length; k++) {
+          //各keywordのperiodをもとに話題のピーク時期を表示する
+          for (let k = 0; k < (keyword.period).length; k++) {
             //現在の状況をもとに数直線上を塗る
-            let sp = ((results[i].period)[k].speaker).toString();
-            let now = (results[i].period)[k].time;
+            let sp = ((keyword.period)[k].speaker).toString();
+            let now = (keyword.period)[k].time;
             if (now===prev) {
               ctx.fillStyle = this.clabel_setter(sp);
               ctx.beginPath();
-              ctx.rect(now*chip, y-2-5*continuos_num, chip, 5);
+              ctx.rect(now*chip, y-2+5*continuos_num, chip, 5);
               ctx.fill();
               continuos_num += 1;
             }
@@ -1627,12 +1698,57 @@ export default {
               continuos_num = 1;
             }
           }
-          //円を表示する
+
           let last = 0;
-          prev=0; 
+          prev=-1; 
           continuos_num = 1;
-          for (let k = 0; k < (results[i].period).length; k++) {
-            now = (results[i].period)[k].time
+
+          //円を表示する2 (一つ飛ばしまで許容したもの)
+          for (let k = 0; k < (keyword.period).length; k++) {
+            now = (keyword.period)[k].time;
+            if (now === prev+1) { //直前と同じ単語を繰り返し発言している
+              continuos_num += 1;
+              last = now;
+            }
+            else if (now === prev) {
+              //そのまま
+            }
+            else if (now === prev+2) {
+              continuos_num += 2;
+              last = now;
+            }
+            else {
+              if (continuos_num>1) { //直前まで単語の繰り返しが起きていた場合
+                r = (continuos_num*chip / 2);
+                ctx.strokeStyle="orange";
+                ctx.beginPath();
+                ctx.setLineDash([2, 2]);
+                ctx.lineWidth = 3;
+                //arc(円の中心のX座標, 円の中心のY座標, 半径, 開始角度, 終了角度, 回転の向き)
+                ctx.arc((prev+1)*chip - r, y, r, 0, Math.PI * 2, true);
+                ctx.stroke();
+              }
+              continuos_num = 1;
+            }
+            prev = now;
+          }
+          if (continuos_num>1) { //直前まで単語の繰り返しが起きていた場合
+            r = continuos_num*chip / 2;
+            ctx.strokeStyle="orange";
+            ctx.beginPath();
+            ctx.setLineDash([2, 2]);
+            ctx.lineWidth = 3;
+            ctx.arc((last+1)*chip - r, y, r, 0, Math.PI * 2, true);
+            ctx.stroke();
+          }
+          
+          prev = -1;
+          last = 0;
+          continuos_num = 1;
+
+          //円を表示する (完全に連続のもの)
+          for (let k = 0; k < (keyword.period).length; k++) {
+            now = (keyword.period)[k].time
             if (now === prev+1) { //直前と同じ単語を繰り返し発言している
               continuos_num += 1;
               last = now;
@@ -1642,16 +1758,13 @@ export default {
             }
             else {
               if (continuos_num>1) { //直前まで単語の繰り返しが起きていた場合
-                r = Math.floor(continuos_num*chip / 2);
+                r = (continuos_num*chip / 2);
+                ctx.strokeStyle="red";
                 ctx.beginPath();
-                ctx.lineWidth = 5;
-                if (continuos_num%2===1) { 
-                  //理由が全くわからないが奇数回続いたときの円だけchip/2pxずれる
-                  ctx.arc(prev*chip-chip/2, y, r, 0, Math.PI * 2, true);
-                }
-                else {
-                  ctx.arc(prev*chip, y, r, 0, Math.PI * 2, true);
-                }
+                ctx.setLineDash([2, 0]);
+                ctx.lineWidth = 3;
+                //arc(円の中心のX座標, 円の中心のY座標, 半径, 開始角度, 終了角度, 回転の向き)
+                ctx.arc((prev+1)*chip - r, y, r, 0, Math.PI * 2, true);
                 ctx.stroke();
               }
               continuos_num = 1;
@@ -1659,18 +1772,17 @@ export default {
             prev = now;
           }
           if (continuos_num>1) { //直前まで単語の繰り返しが起きていた場合
-            r = Math.floor(continuos_num*chip / 2);
+            r = continuos_num*chip / 2;
+            ctx.strokeStyle="red";
             ctx.beginPath();
-            ctx.lineWidth = 5;
-            if (continuos_num%2===1) { 
-              //理由が全くわからないが奇数回続いたときの円だけchip/2pxずれる
-              ctx.arc((last)*chip-chip/2, y, r, 0, Math.PI * 2, true);
-            }
-            else {
-              ctx.arc((last)*chip, y, r, 0, Math.PI * 2, true);
-            }
+            ctx.setLineDash([2, 0]);
+            ctx.lineWidth = 3;
+            ctx.arc((last+1)*chip - r, y, r, 0, Math.PI * 2, true);
             ctx.stroke();
           }
+          
+          
+
         }
       }
     }
