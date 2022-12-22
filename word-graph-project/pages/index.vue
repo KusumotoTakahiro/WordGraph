@@ -403,7 +403,7 @@ export default {
       dataSource: '',
       dataTarget: '',
       setIntervalID: null,
-      upto: { label: 'thumb-color', val: 15, color: 'red' }
+      upto: { label: '表示件数', val: 15, color: 'red' }
     }
   },
   methods: {
@@ -1647,8 +1647,8 @@ export default {
         ctx.fillStyle = "black";
         ctx.beginPath();
         ctx.font = "12px 'Verdana'";
-        ctx.textAlign = 'right';
-        ctx.fillText('TF-IDF', 70, 10, 100);
+        ctx.textAlign = 'center';
+        ctx.fillText('TF-IDF', 2*chip, 10, 100);
 
         //各keyword用の数直線を描画する
         for (let i = 0; i < upto; i++) {
