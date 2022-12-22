@@ -1619,7 +1619,7 @@ export default {
         })
         let end = (e[0])['period'][0]['time'];
         //console.log(end);
-        let chip = Math.floor(canvasW / end);
+        let chip = Math.floor(canvasW / (end+1));
         if (chip%2===1) { //chipが奇数の時は強制的に偶数にする
           chip -= 1;
         }
@@ -1634,14 +1634,14 @@ export default {
         // y座標軸を描画
         ctx.beginPath();
         ctx.setLineDash([2, 2]);
-        ctx.moveTo(20, 0);
-        ctx.lineTo(20, canvasH);
+        ctx.moveTo(chip, 0);
+        ctx.lineTo(chip, canvasH);
         ctx.stroke();
         // y座標軸の矢印を描画
         ctx.beginPath();
-        ctx.moveTo(20, 0);
-        ctx.lineTo(20 - 7, 10);
-        ctx.lineTo(20 + 7, 10);
+        ctx.moveTo(chip, 0);
+        ctx.lineTo(chip - 7, 10);
+        ctx.lineTo(chip + 7, 10);
         ctx.fill();
         // y軸のラベル
         ctx.fillStyle = "black";
@@ -1686,14 +1686,14 @@ export default {
             if (now===prev) {
               ctx.fillStyle = this.clabel_setter(sp);
               ctx.beginPath();
-              ctx.rect(now*chip, y-2+5*continuos_num, chip, 5);
+              ctx.rect((now+1)*chip, y-2+5*continuos_num, chip, 5);
               ctx.fill();
               continuos_num += 1;
             }
             else {
               ctx.fillStyle = this.clabel_setter(sp);
               ctx.beginPath();
-              ctx.rect(now*chip, y-2, chip, 5);
+              ctx.rect((now+1)*chip, y-2, chip, 5);
               ctx.fill();
               continuos_num = 1;
             }
@@ -1701,7 +1701,7 @@ export default {
 
           let last = 0;
           prev=-1; 
-          continuos_num = 1;
+          continuos_num = 0;
 
           //円を表示する2 (一つ飛ばしまで許容したもの)
           for (let k = 0; k < (keyword.period).length; k++) {
@@ -1713,7 +1713,7 @@ export default {
             else if (now === prev) {
               //そのまま
             }
-            else if (now === prev+2) {
+            else if ((now === prev+2)&&(prev!==-1)) {
               continuos_num += 2;
               last = now;
             }
@@ -1725,7 +1725,7 @@ export default {
                 ctx.setLineDash([2, 2]);
                 ctx.lineWidth = 3;
                 //arc(円の中心のX座標, 円の中心のY座標, 半径, 開始角度, 終了角度, 回転の向き)
-                ctx.arc((prev+1)*chip - r, y, r, 0, Math.PI * 2, true);
+                ctx.arc((prev+2)*chip - r, y, r, 0, Math.PI * 2, true);
                 ctx.stroke();
               }
               continuos_num = 1;
@@ -1738,13 +1738,13 @@ export default {
             ctx.beginPath();
             ctx.setLineDash([2, 2]);
             ctx.lineWidth = 3;
-            ctx.arc((last+1)*chip - r, y, r, 0, Math.PI * 2, true);
+            ctx.arc((last+2)*chip - r, y, r, 0, Math.PI * 2, true);
             ctx.stroke();
           }
           
           prev = -1;
           last = 0;
-          continuos_num = 1;
+          continuos_num = 0;
 
           //円を表示する (完全に連続のもの)
           for (let k = 0; k < (keyword.period).length; k++) {
@@ -1764,7 +1764,7 @@ export default {
                 ctx.setLineDash([2, 0]);
                 ctx.lineWidth = 3;
                 //arc(円の中心のX座標, 円の中心のY座標, 半径, 開始角度, 終了角度, 回転の向き)
-                ctx.arc((prev+1)*chip - r, y, r, 0, Math.PI * 2, true);
+                ctx.arc((prev+2)*chip - r, y, r, 0, Math.PI * 2, true);
                 ctx.stroke();
               }
               continuos_num = 1;
@@ -1777,7 +1777,7 @@ export default {
             ctx.beginPath();
             ctx.setLineDash([2, 0]);
             ctx.lineWidth = 3;
-            ctx.arc((last+1)*chip - r, y, r, 0, Math.PI * 2, true);
+            ctx.arc((last+2)*chip - r, y, r, 0, Math.PI * 2, true);
             ctx.stroke();
           }
           

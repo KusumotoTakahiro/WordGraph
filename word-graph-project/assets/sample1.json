@@ -6,39 +6,20 @@
         "weight": 0,
         "before_next": [],
         "after_next": [
-            "自分",
-            "ウォーキングアプリ",
-            "アプリ",
-            "ウォーキング",
-            "情報",
-            "歩数"
+            "状況",
+            "卒論"
         ],
         "isLatest": false,
         "isInGraph": true,
         "position": "noun",
         "next_speakers": {
-            "自分": [
-                "小田敏人 "
+            "状況": [
+                "大島",
+                "大島",
+                "大島"
             ],
-            "ウォーキングアプリ": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "アプリ": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "ウォーキング": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "情報": [
-                "小田敏人 ",
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "歩数": [
-                "小田敏人 "
+            "卒論": [
+                "大島"
             ]
         },
         "period": [
@@ -49,1774 +30,1173 @@
         ]
     },
     {
-        "keyword": "自分",
-        "speaker": "小田敏人 ",
+        "keyword": "状況",
+        "speaker": "大島",
         "speakers": [
-            "小田敏人 ",
             "大島"
         ],
-        "weight": 13,
+        "weight": 19,
         "before_next": [],
         "after_next": [
-            "学生",
-            "ウォーキング",
-            "アンケート",
-            "感じ",
-            "あと",
-            "卒論",
-            "書き方"
+            "ポートフォリオ",
+            "自動",
+            "システム"
         ],
         "isLatest": false,
         "isInGraph": false,
         "position": "noun",
         "next_speakers": {
-            "学生": [
-                "小田敏人 "
+            "ポートフォリオ": [
+                "片山陸人"
             ],
-            "ウォーキング": [
-                "小田敏人 "
+            "自動": [
+                "片山陸人"
             ],
-            "アンケート": [
-                "小田敏人 ",
-                "大島"
-            ],
-            "感じ": [
-                "小田敏人 "
-            ],
-            "あと": [
-                "大島"
-            ],
-            "卒論": [
-                "大島"
-            ],
-            "書き方": [
-                "大島"
+            "システム": [
+                "片山陸人"
             ]
         },
         "period": [
             {
-                "speaker": "小田敏人 ",
-                "time": 2
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 6
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 7
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 9
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 13
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 23
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 24
+                "speaker": "大島",
+                "time": 0
             },
             {
                 "speaker": "大島",
-                "time": 38
+                "time": 0
             },
             {
                 "speaker": "大島",
-                "time": 47
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 49
-            },
-            {
-                "speaker": "大島",
-                "time": 60
+                "time": 0
             }
         ]
     },
     {
-        "keyword": "ウォーキングアプリ",
-        "speaker": "小田敏人 ",
+        "keyword": "卒論",
+        "speaker": "大島",
         "speakers": [
-            "小田敏人 "
+            "大島",
+            "片山陸人"
         ],
-        "weight": 7,
+        "weight": 19,
         "before_next": [],
         "after_next": [
-            "学生",
-            "ウォーキング",
-            "アンケート",
+            "ポートフォリオ",
+            "自動",
+            "システム",
             "感じ"
         ],
         "isLatest": false,
         "isInGraph": false,
         "position": "noun",
         "next_speakers": {
-            "学生": [
-                "小田敏人 "
+            "ポートフォリオ": [
+                "片山陸人"
             ],
-            "ウォーキング": [
-                "小田敏人 "
+            "自動": [
+                "片山陸人"
             ],
-            "アンケート": [
-                "小田敏人 "
+            "システム": [
+                "片山陸人"
             ],
             "感じ": [
-                "小田敏人 "
+                "大島"
             ]
         },
         "period": [
             {
-                "speaker": "小田敏人 ",
-                "time": 2
+                "speaker": "大島",
+                "time": 0
             },
             {
-                "speaker": "小田敏人 ",
-                "time": 2
+                "speaker": "大島",
+                "time": 30
+            },
+            {
+                "speaker": "片山陸人",
+                "time": 31
             }
         ]
     },
     {
-        "keyword": "アプリ",
-        "speaker": "小田敏人 ",
+        "keyword": "ポートフォリオ",
+        "speaker": "片山陸人",
         "speakers": [
-            "小田敏人 ",
-            "大島"
+            "片山陸人"
         ],
-        "weight": 39,
+        "weight": 8,
         "before_next": [],
         "after_next": [
-            "学生",
-            "ウォーキング",
-            "アンケート",
-            "感じ",
-            "コース",
-            "モード",
-            "自分"
+            "パスワード",
+            "ライブ",
+            "キャンパス"
         ],
         "isLatest": false,
         "isInGraph": false,
         "position": "noun",
         "next_speakers": {
-            "学生": [
-                "小田敏人 "
+            "パスワード": [
+                "片山陸人",
+                "片山陸人"
             ],
-            "ウォーキング": [
-                "小田敏人 ",
-                "小田敏人 "
+            "ライブ": [
+                "片山陸人"
             ],
-            "アンケート": [
-                "小田敏人 "
-            ],
-            "感じ": [
-                "小田敏人 "
-            ],
-            "コース": [
-                "小田敏人 ",
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "モード": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "自分": [
-                "小田敏人 "
+            "キャンパス": [
+                "片山陸人"
             ]
         },
         "period": [
             {
-                "speaker": "小田敏人 ",
+                "speaker": "片山陸人",
+                "time": 1
+            }
+        ]
+    },
+    {
+        "keyword": "自動",
+        "speaker": "片山陸人",
+        "speakers": [
+            "片山陸人"
+        ],
+        "weight": 8,
+        "before_next": [],
+        "after_next": [
+            "パスワード",
+            "ライブ",
+            "キャンパス"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun",
+        "next_speakers": {
+            "パスワード": [
+                "片山陸人",
+                "片山陸人"
+            ],
+            "ライブ": [
+                "片山陸人"
+            ],
+            "キャンパス": [
+                "片山陸人"
+            ]
+        },
+        "period": [
+            {
+                "speaker": "片山陸人",
+                "time": 1
+            }
+        ]
+    },
+    {
+        "keyword": "システム",
+        "speaker": "片山陸人",
+        "speakers": [
+            "片山陸人",
+            "大島"
+        ],
+        "weight": 31,
+        "before_next": [],
+        "after_next": [
+            "パスワード",
+            "ライブ",
+            "キャンパス",
+            "キモ"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun",
+        "next_speakers": {
+            "パスワード": [
+                "片山陸人",
+                "片山陸人"
+            ],
+            "ライブ": [
+                "片山陸人"
+            ],
+            "キャンパス": [
+                "片山陸人"
+            ],
+            "キモ": [
+                "大島"
+            ]
+        },
+        "period": [
+            {
+                "speaker": "片山陸人",
+                "time": 1
+            },
+            {
+                "speaker": "片山陸人",
+                "time": 4
+            },
+            {
+                "speaker": "大島",
+                "time": 8
+            },
+            {
+                "speaker": "大島",
+                "time": 13
+            },
+            {
+                "speaker": "片山陸人",
+                "time": 16
+            },
+            {
+                "speaker": "片山陸人",
+                "time": 43
+            }
+        ]
+    },
+    {
+        "keyword": "パスワード",
+        "speaker": "片山陸人",
+        "speakers": [
+            "片山陸人"
+        ],
+        "weight": 16,
+        "before_next": [],
+        "after_next": [
+            "数値"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun",
+        "next_speakers": {
+            "数値": [
+                "片山陸人"
+            ]
+        },
+        "period": [
+            {
+                "speaker": "片山陸人",
                 "time": 2
             },
             {
-                "speaker": "小田敏人 ",
+                "speaker": "片山陸人",
                 "time": 2
+            }
+        ]
+    },
+    {
+        "keyword": "ライブ",
+        "speaker": "片山陸人",
+        "speakers": [
+            "片山陸人"
+        ],
+        "weight": 8,
+        "before_next": [],
+        "after_next": [
+            "数値"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun",
+        "next_speakers": {
+            "数値": [
+                "片山陸人"
+            ]
+        },
+        "period": [
+            {
+                "speaker": "片山陸人",
+                "time": 2
+            }
+        ]
+    },
+    {
+        "keyword": "キャンパス",
+        "speaker": "片山陸人",
+        "speakers": [
+            "片山陸人"
+        ],
+        "weight": 8,
+        "before_next": [],
+        "after_next": [
+            "数値"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun",
+        "next_speakers": {
+            "数値": [
+                "片山陸人"
+            ]
+        },
+        "period": [
+            {
+                "speaker": "片山陸人",
+                "time": 2
+            }
+        ]
+    },
+    {
+        "keyword": "数値",
+        "speaker": "片山陸人",
+        "speakers": [
+            "片山陸人",
+            "大島"
+        ],
+        "weight": 16,
+        "before_next": [],
+        "after_next": [
+            "システム",
+            "環境",
+            "つま"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun",
+        "next_speakers": {
+            "システム": [
+                "片山陸人",
+                "片山陸人"
+            ],
+            "環境": [
+                "片山陸人",
+                "片山陸人"
+            ],
+            "つま": [
+                "片山陸人"
+            ]
+        },
+        "period": [
+            {
+                "speaker": "片山陸人",
+                "time": 3
+            },
+            {
+                "speaker": "大島",
+                "time": 14
+            }
+        ]
+    },
+    {
+        "keyword": "被験者",
+        "speaker": "片山陸人",
+        "speakers": [
+            "片山陸人",
+            "大島"
+        ],
+        "weight": 24,
+        "before_next": [],
+        "after_next": [
+            "感じ",
+            "自分",
+            "数値"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun",
+        "next_speakers": {
+            "感じ": [
+                "片山陸人"
+            ],
+            "自分": [
+                "大島"
+            ],
+            "数値": [
+                "大島"
+            ]
+        },
+        "period": [
+            {
+                "speaker": "片山陸人",
+                "time": 5
+            },
+            {
+                "speaker": "大島",
+                "time": 13
+            },
+            {
+                "speaker": "大島",
+                "time": 13
+            }
+        ]
+    },
+    {
+        "keyword": "感じ",
+        "speaker": "片山陸人",
+        "speakers": [
+            "片山陸人",
+            "大島"
+        ],
+        "weight": 33,
+        "before_next": [],
+        "after_next": [
+            "感じ",
+            "被験者",
+            "システム"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun",
+        "next_speakers": {
+            "感じ": [
+                "片山陸人"
+            ],
+            "被験者": [
+                "大島",
+                "大島"
+            ],
+            "システム": [
+                "大島"
+            ]
+        },
+        "period": [
+            {
+                "speaker": "片山陸人",
+                "time": 5
+            },
+            {
+                "speaker": "片山陸人",
+                "time": 6
             },
             {
                 "speaker": "大島",
                 "time": 12
             },
             {
-                "speaker": "大島",
-                "time": 27
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 28
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 28
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 29
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 31
-            },
-            {
-                "speaker": "大島",
-                "time": 32
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 33
-            },
-            {
-                "speaker": "大島",
-                "time": 41
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 42
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 42
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 49
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 51
-            },
-            {
-                "speaker": "大島",
-                "time": 60
-            }
-        ]
-    },
-    {
-        "keyword": "ウォーキング",
-        "speaker": "小田敏人 ",
-        "speakers": [
-            "小田敏人 "
-        ],
-        "weight": 26,
-        "before_next": [],
-        "after_next": [
-            "学生",
-            "ウォーキング",
-            "アンケート",
-            "感じ"
-        ],
-        "isLatest": false,
-        "isInGraph": false,
-        "position": "noun",
-        "next_speakers": {
-            "学生": [
-                "小田敏人 "
-            ],
-            "ウォーキング": [
-                "小田敏人 "
-            ],
-            "アンケート": [
-                "小田敏人 "
-            ],
-            "感じ": [
-                "小田敏人 "
-            ]
-        },
-        "period": [
-            {
-                "speaker": "小田敏人 ",
-                "time": 2
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 2
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 3
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 6
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 6
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 13
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 15
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 15
-            }
-        ]
-    },
-    {
-        "keyword": "情報",
-        "speaker": "小田敏人 ",
-        "speakers": [
-            "小田敏人 ",
-            "大島"
-        ],
-        "weight": 20,
-        "before_next": [],
-        "after_next": [
-            "学生",
-            "ウォーキング",
-            "アンケート",
-            "感じ",
-            "地図",
-            "あと",
-            "卒論",
-            "締め切り"
-        ],
-        "isLatest": false,
-        "isInGraph": false,
-        "position": "noun",
-        "next_speakers": {
-            "学生": [
-                "小田敏人 "
-            ],
-            "ウォーキング": [
-                "小田敏人 "
-            ],
-            "アンケート": [
-                "小田敏人 "
-            ],
-            "感じ": [
-                "小田敏人 "
-            ],
-            "地図": [
-                "小田敏人 "
-            ],
-            "あと": [
-                "小田敏人 "
-            ],
-            "卒論": [
-                "小田敏人 "
-            ],
-            "締め切り": [
-                "小田敏人 "
-            ]
-        },
-        "period": [
-            {
-                "speaker": "小田敏人 ",
-                "time": 2
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 2
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 2
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 6
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 7
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 8
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 11
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 18
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 19
-            },
-            {
-                "speaker": "大島",
-                "time": 61
-            }
-        ]
-    },
-    {
-        "keyword": "歩数",
-        "speaker": "小田敏人 ",
-        "speakers": [
-            "小田敏人 "
-        ],
-        "weight": 7,
-        "before_next": [],
-        "after_next": [
-            "学生",
-            "ウォーキング",
-            "アンケート",
-            "感じ"
-        ],
-        "isLatest": false,
-        "isInGraph": false,
-        "position": "noun",
-        "next_speakers": {
-            "学生": [
-                "小田敏人 "
-            ],
-            "ウォーキング": [
-                "小田敏人 "
-            ],
-            "アンケート": [
-                "小田敏人 "
-            ],
-            "感じ": [
-                "小田敏人 "
-            ]
-        },
-        "period": [
-            {
-                "speaker": "小田敏人 ",
-                "time": 2
-            },
-            {
-                "speaker": "小田敏人 ",
+                "speaker": "片山陸人",
                 "time": 17
-            }
-        ]
-    },
-    {
-        "keyword": "学生",
-        "speaker": "小田敏人 ",
-        "speakers": [
-            "小田敏人 ",
-            "大島"
-        ],
-        "weight": 14,
-        "before_next": [],
-        "after_next": [
-            "ボタン",
-            "学生",
-            "データ",
-            "感じ",
-            "アプリ",
-            "パターン"
-        ],
-        "isLatest": false,
-        "isInGraph": false,
-        "position": "noun",
-        "next_speakers": {
-            "ボタン": [
-                "小田敏人 "
-            ],
-            "学生": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "データ": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "感じ": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "アプリ": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "パターン": [
-                "小田敏人 "
-            ]
-        },
-        "period": [
-            {
-                "speaker": "小田敏人 ",
-                "time": 3
             },
             {
                 "speaker": "大島",
-                "time": 27
+                "time": 23
             },
             {
-                "speaker": "小田敏人 ",
-                "time": 28
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 28
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 31
-            },
-            {
-                "speaker": "大島",
-                "time": 32
-            },
-            {
-                "speaker": "大島",
-                "time": 32
-            }
-        ]
-    },
-    {
-        "keyword": "アンケート",
-        "speaker": "小田敏人 ",
-        "speakers": [
-            "小田敏人 ",
-            "大島"
-        ],
-        "weight": 29,
-        "before_next": [],
-        "after_next": [
-            "ボタン",
-            "あと",
-            "卒論",
-            "アンケート",
-            "書き方"
-        ],
-        "isLatest": false,
-        "isInGraph": false,
-        "position": "noun",
-        "next_speakers": {
-            "ボタン": [
-                "小田敏人 "
-            ],
-            "あと": [
-                "大島"
-            ],
-            "卒論": [
-                "大島"
-            ],
-            "アンケート": [
-                "大島"
-            ],
-            "書き方": [
-                "大島"
-            ]
-        },
-        "period": [
-            {
-                "speaker": "小田敏人 ",
-                "time": 3
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 25
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 31
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 31
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 31
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 37
-            },
-            {
-                "speaker": "大島",
-                "time": 38
-            },
-            {
-                "speaker": "大島",
-                "time": 38
-            },
-            {
-                "speaker": "大島",
-                "time": 40
-            }
-        ]
-    },
-    {
-        "keyword": "感じ",
-        "speaker": "小田敏人 ",
-        "speakers": [
-            "小田敏人 ",
-            "大島"
-        ],
-        "weight": 18,
-        "before_next": [],
-        "after_next": [
-            "ボタン",
-            "学生",
-            "データ",
-            "感じ",
-            "アプリ",
-            "パターン"
-        ],
-        "isLatest": false,
-        "isInGraph": false,
-        "position": "noun",
-        "next_speakers": {
-            "ボタン": [
-                "小田敏人 "
-            ],
-            "学生": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "データ": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "感じ": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "アプリ": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "パターン": [
-                "小田敏人 "
-            ]
-        },
-        "period": [
-            {
-                "speaker": "小田敏人 ",
-                "time": 3
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 7
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 8
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 10
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 15
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 16
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 18
-            },
-            {
-                "speaker": "小田敏人 ",
+                "speaker": "片山陸人",
                 "time": 24
             },
             {
                 "speaker": "大島",
-                "time": 27
-            },
-            {
-                "speaker": "小田敏人 ",
                 "time": 28
             },
             {
-                "speaker": "小田敏人 ",
-                "time": 28
+                "speaker": "片山陸人",
+                "time": 29
             },
             {
-                "speaker": "小田敏人 ",
+                "speaker": "片山陸人",
+                "time": 31
+            },
+            {
+                "speaker": "大島",
+                "time": 32
+            },
+            {
+                "speaker": "大島",
                 "time": 35
             },
             {
-                "speaker": "小田敏人 ",
-                "time": 49
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 49
-            },
-            {
                 "speaker": "大島",
-                "time": 58
+                "time": 41
             }
         ]
     },
     {
-        "keyword": "ボタン",
-        "speaker": "小田敏人 ",
+        "keyword": "博士",
+        "speaker": "片山陸人",
         "speakers": [
-            "小田敏人 "
+            "片山陸人"
         ],
-        "weight": 10,
+        "weight": 8,
         "before_next": [],
         "after_next": [
-            "情報",
-            "ボタン",
-            "ウォーキング",
-            "現場",
-            "自分"
+            "感じ"
         ],
         "isLatest": false,
         "isInGraph": false,
         "position": "noun",
         "next_speakers": {
-            "情報": [
-                "小田敏人 "
-            ],
-            "ボタン": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "ウォーキング": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "現場": [
-                "小田敏人 "
-            ],
-            "自分": [
-                "小田敏人 "
+            "感じ": [
+                "片山陸人"
             ]
         },
         "period": [
             {
-                "speaker": "小田敏人 ",
+                "speaker": "片山陸人",
                 "time": 5
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 6
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 6
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 8
             }
         ]
     },
     {
-        "keyword": "現場",
-        "speaker": "小田敏人 ",
+        "keyword": "キモ",
+        "speaker": "大島",
         "speakers": [
-            "小田敏人 ",
             "大島"
         ],
-        "weight": 7,
+        "weight": 8,
         "before_next": [],
         "after_next": [
-            "情報",
             "自分",
-            "感じ",
-            "地図",
-            "卒論",
-            "締め切り"
+            "感じ"
         ],
         "isLatest": false,
         "isInGraph": false,
         "position": "noun",
         "next_speakers": {
-            "情報": [
-                "小田敏人 ",
-                "大島"
-            ],
             "自分": [
-                "小田敏人 "
+                "大島"
             ],
             "感じ": [
-                "小田敏人 "
-            ],
-            "地図": [
-                "大島"
-            ],
-            "卒論": [
-                "大島"
-            ],
-            "締め切り": [
                 "大島"
             ]
         },
         "period": [
-            {
-                "speaker": "小田敏人 ",
-                "time": 6
-            },
             {
                 "speaker": "大島",
-                "time": 60
-            }
-        ]
-    },
-    {
-        "keyword": "書き方",
-        "speaker": "小田敏人 ",
-        "speakers": [
-            "小田敏人 ",
-            "大島"
-        ],
-        "weight": 10,
-        "before_next": [],
-        "after_next": [
-            "自分",
-            "コース",
-            "アプリ"
-        ],
-        "isLatest": false,
-        "isInGraph": false,
-        "position": "noun",
-        "next_speakers": {
-            "自分": [
-                "小田敏人 "
-            ],
-            "コース": [
-                "小田敏人 "
-            ],
-            "アプリ": [
-                "大島"
-            ]
-        },
-        "period": [
-            {
-                "speaker": "小田敏人 ",
-                "time": 8
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 8
-            },
-            {
-                "speaker": "大島",
-                "time": 40
-            }
-        ]
-    },
-    {
-        "keyword": "コース",
-        "speaker": "小田敏人 ",
-        "speakers": [
-            "小田敏人 ",
-            "大島"
-        ],
-        "weight": 49,
-        "before_next": [],
-        "after_next": [
-            "自分",
-            "コース"
-        ],
-        "isLatest": false,
-        "isInGraph": false,
-        "position": "noun",
-        "next_speakers": {
-            "自分": [
-                "小田敏人 "
-            ],
-            "コース": [
-                "小田敏人 ",
-                "小田敏人 "
-            ]
-        },
-        "period": [
-            {
-                "speaker": "小田敏人 ",
-                "time": 8
-            },
-            {
-                "speaker": "小田敏人 ",
                 "time": 9
+            }
+        ]
+    },
+    {
+        "keyword": "自分",
+        "speaker": "大島",
+        "speakers": [
+            "大島",
+            "片山陸人"
+        ],
+        "weight": 33,
+        "before_next": [],
+        "after_next": [
+            "被験者",
+            "システム",
+            "自分",
+            "先輩"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun",
+        "next_speakers": {
+            "被験者": [
+                "大島",
+                "大島"
+            ],
+            "システム": [
+                "大島"
+            ],
+            "自分": [
+                "大島",
+                "大島"
+            ],
+            "先輩": [
+                "大島"
+            ]
+        },
+        "period": [
+            {
+                "speaker": "大島",
+                "time": 12
             },
             {
-                "speaker": "小田敏人 ",
-                "time": 11
+                "speaker": "大島",
+                "time": 14
             },
             {
-                "speaker": "小田敏人 ",
-                "time": 13
+                "speaker": "片山陸人",
+                "time": 19
             },
             {
-                "speaker": "小田敏人 ",
-                "time": 13
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 13
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 15
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 15
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 15
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 16
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 18
+                "speaker": "片山陸人",
+                "time": 19
             },
             {
                 "speaker": "大島",
                 "time": 21
             },
             {
-                "speaker": "小田敏人 ",
-                "time": 22
+                "speaker": "大島",
+                "time": 21
             },
             {
-                "speaker": "小田敏人 ",
-                "time": 23
+                "speaker": "片山陸人",
+                "time": 26
             },
             {
-                "speaker": "小田敏人 ",
-                "time": 24
+                "speaker": "大島",
+                "time": 27
+            },
+            {
+                "speaker": "大島",
+                "time": 35
+            },
+            {
+                "speaker": "片山陸人",
+                "time": 48
+            },
+            {
+                "speaker": "片山陸人",
+                "time": 49
+            },
+            {
+                "speaker": "片山陸人",
+                "time": 49
             }
         ]
     },
     {
-        "keyword": "モード",
-        "speaker": "小田敏人 ",
+        "keyword": "環境",
+        "speaker": "片山陸人",
         "speakers": [
-            "小田敏人 "
+            "片山陸人"
         ],
-        "weight": 7,
+        "weight": 16,
         "before_next": [],
         "after_next": [
-            "あと"
+            "先輩",
+            "感じ"
         ],
         "isLatest": false,
         "isInGraph": false,
         "position": "noun",
         "next_speakers": {
-            "あと": [
-                "大島"
+            "先輩": [
+                "片山陸人"
+            ],
+            "感じ": [
+                "片山陸人"
             ]
         },
         "period": [
             {
-                "speaker": "小田敏人 ",
-                "time": 13
+                "speaker": "片山陸人",
+                "time": 16
             },
             {
-                "speaker": "小田敏人 ",
-                "time": 13
+                "speaker": "片山陸人",
+                "time": 16
             }
         ]
     },
     {
-        "keyword": "あと",
-        "speaker": "大島",
+        "keyword": "つま",
+        "speaker": "片山陸人",
         "speakers": [
-            "大島",
-            "小田敏人 "
+            "片山陸人"
         ],
         "weight": 8,
         "before_next": [],
         "after_next": [
-            "ウォーキング",
-            "コース",
-            "感じ",
-            "情報"
+            "先輩",
+            "感じ"
         ],
         "isLatest": false,
         "isInGraph": false,
         "position": "noun",
         "next_speakers": {
-            "ウォーキング": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "コース": [
-                "小田敏人 ",
-                "小田敏人 ",
-                "小田敏人 ",
-                "小田敏人 "
+            "先輩": [
+                "片山陸人"
             ],
             "感じ": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "情報": [
-                "小田敏人 "
+                "片山陸人"
             ]
         },
         "period": [
             {
-                "speaker": "大島",
-                "time": 14
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 17
-            },
-            {
-                "speaker": "大島",
-                "time": 36
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 37
-            },
-            {
-                "speaker": "大島",
-                "time": 38
-            },
-            {
-                "speaker": "大島",
-                "time": 40
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 62
+                "speaker": "片山陸人",
+                "time": 16
             }
         ]
     },
     {
-        "keyword": "卒論",
-        "speaker": "小田敏人 ",
+        "keyword": "先輩",
+        "speaker": "片山陸人",
         "speakers": [
-            "小田敏人 ",
+            "片山陸人",
             "大島"
         ],
-        "weight": 13,
+        "weight": 15,
         "before_next": [],
         "after_next": [
-            "アンケート",
-            "アプリ"
+            "自分",
+            "調べ",
+            "そいつ",
+            "最後",
+            "先輩",
+            "感じ"
         ],
         "isLatest": false,
         "isInGraph": false,
         "position": "noun",
         "next_speakers": {
-            "アンケート": [
-                "小田敏人 "
+            "自分": [
+                "片山陸人",
+                "片山陸人"
             ],
-            "アプリ": [
+            "調べ": [
+                "片山陸人",
+                "片山陸人"
+            ],
+            "そいつ": [
+                "片山陸人"
+            ],
+            "最後": [
+                "片山陸人"
+            ],
+            "先輩": [
+                "片山陸人"
+            ],
+            "感じ": [
                 "大島"
             ]
         },
         "period": [
             {
-                "speaker": "小田敏人 ",
-                "time": 24
+                "speaker": "片山陸人",
+                "time": 17
+            },
+            {
+                "speaker": "片山陸人",
+                "time": 19
             },
             {
                 "speaker": "大島",
-                "time": 40
-            },
-            {
-                "speaker": "大島",
-                "time": 61
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 62
+                "time": 21
             }
         ]
     },
     {
-        "keyword": "パターン",
-        "speaker": "大島",
+        "keyword": "調べ",
+        "speaker": "片山陸人",
         "speakers": [
-            "大島",
-            "小田敏人 "
-        ],
-        "weight": 7,
-        "before_next": [],
-        "after_next": [
-            "学生",
-            "データ",
-            "感じ",
-            "アプリ",
-            "パターン"
-        ],
-        "isLatest": false,
-        "isInGraph": false,
-        "position": "noun",
-        "next_speakers": {
-            "学生": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "データ": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "感じ": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "アプリ": [
-                "小田敏人 ",
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "パターン": [
-                "小田敏人 "
-            ]
-        },
-        "period": [
-            {
-                "speaker": "大島",
-                "time": 27
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 28
-            }
-        ]
-    },
-    {
-        "keyword": "データ",
-        "speaker": "大島",
-        "speakers": [
-            "大島",
-            "小田敏人 "
+            "片山陸人"
         ],
         "weight": 12,
         "before_next": [],
         "after_next": [
-            "学生",
-            "データ",
-            "感じ",
-            "アプリ",
-            "パターン"
+            "自分",
+            "先輩"
         ],
         "isLatest": false,
         "isInGraph": false,
         "position": "noun",
         "next_speakers": {
-            "学生": [
-                "小田敏人 ",
-                "小田敏人 "
+            "自分": [
+                "大島",
+                "大島"
             ],
-            "データ": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "感じ": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "アプリ": [
-                "小田敏人 ",
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "パターン": [
-                "小田敏人 "
+            "先輩": [
+                "大島"
             ]
         },
         "period": [
             {
-                "speaker": "大島",
-                "time": 27
+                "speaker": "片山陸人",
+                "time": 19
             },
             {
-                "speaker": "小田敏人 ",
-                "time": 28
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 28
-            },
-            {
-                "speaker": "大島",
-                "time": 36
-            },
-            {
-                "speaker": "大島",
-                "time": 36
+                "speaker": "片山陸人",
+                "time": 19
             }
         ]
     },
     {
-        "keyword": "条件",
-        "speaker": "大島",
+        "keyword": "そいつ",
+        "speaker": "片山陸人",
         "speakers": [
-            "大島",
-            "小田敏人 "
+            "片山陸人"
         ],
-        "weight": 10,
+        "weight": 8,
         "before_next": [],
         "after_next": [
-            "アプリ",
-            "人中",
-            "アンケート",
-            "棒グラフ",
-            "あと",
-            "自分"
+            "自分",
+            "先輩"
         ],
         "isLatest": false,
         "isInGraph": false,
         "position": "noun",
         "next_speakers": {
-            "アプリ": [
-                "小田敏人 "
-            ],
-            "人中": [
-                "大島"
-            ],
-            "アンケート": [
+            "自分": [
                 "大島",
                 "大島"
             ],
-            "棒グラフ": [
-                "大島"
-            ],
-            "あと": [
-                "大島"
-            ],
-            "自分": [
+            "先輩": [
                 "大島"
             ]
         },
         "period": [
             {
-                "speaker": "大島",
-                "time": 32
-            },
-            {
-                "speaker": "大島",
-                "time": 36
-            },
-            {
-                "speaker": "大島",
-                "time": 36
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 37
-            }
-        ]
-    },
-    {
-        "keyword": "最初",
-        "speaker": "大島",
-        "speakers": [
-            "大島",
-            "小田敏人 "
-        ],
-        "weight": 10,
-        "before_next": [],
-        "after_next": [
-            "最後",
-            "限界",
-            "最初",
-            "条件",
-            "人中",
-            "アンケート",
-            "棒グラフ",
-            "あと",
-            "自分"
-        ],
-        "isLatest": false,
-        "isInGraph": false,
-        "position": "noun",
-        "next_speakers": {
-            "最後": [
-                "小田敏人 "
-            ],
-            "限界": [
-                "小田敏人 "
-            ],
-            "最初": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "条件": [
-                "小田敏人 "
-            ],
-            "人中": [
-                "小田敏人 ",
-                "大島"
-            ],
-            "アンケート": [
-                "小田敏人 ",
-                "大島",
-                "大島"
-            ],
-            "棒グラフ": [
-                "小田敏人 ",
-                "大島"
-            ],
-            "あと": [
-                "小田敏人 ",
-                "大島"
-            ],
-            "自分": [
-                "大島"
-            ]
-        },
-        "period": [
-            {
-                "speaker": "大島",
-                "time": 36
-            },
-            {
-                "speaker": "大島",
-                "time": 36
-            },
-            {
-                "speaker": "大島",
-                "time": 36
-            },
-            {
-                "speaker": "大島",
-                "time": 36
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 37
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 37
+                "speaker": "片山陸人",
+                "time": 19
             }
         ]
     },
     {
         "keyword": "最後",
+        "speaker": "片山陸人",
+        "speakers": [
+            "片山陸人"
+        ],
+        "weight": 19,
+        "before_next": [],
+        "after_next": [
+            "自分",
+            "先輩"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun",
+        "next_speakers": {
+            "自分": [
+                "大島",
+                "大島"
+            ],
+            "先輩": [
+                "大島"
+            ]
+        },
+        "period": [
+            {
+                "speaker": "片山陸人",
+                "time": 19
+            },
+            {
+                "speaker": "片山陸人",
+                "time": 37
+            },
+            {
+                "speaker": "片山陸人",
+                "time": 37
+            }
+        ]
+    },
+    {
+        "keyword": "進め方",
         "speaker": "大島",
         "speakers": [
             "大島",
-            "小田敏人 "
+            "片山陸人"
         ],
-        "weight": 10,
+        "weight": 16,
+        "before_next": [],
+        "after_next": [
+            "卒論",
+            "進め方",
+            "論文",
+            "感じ"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun",
+        "next_speakers": {
+            "卒論": [
+                "片山陸人"
+            ],
+            "進め方": [
+                "片山陸人"
+            ],
+            "論文": [
+                "片山陸人"
+            ],
+            "感じ": [
+                "片山陸人",
+                "大島"
+            ]
+        },
+        "period": [
+            {
+                "speaker": "大島",
+                "time": 30
+            },
+            {
+                "speaker": "片山陸人",
+                "time": 31
+            }
+        ]
+    },
+    {
+        "keyword": "論文",
+        "speaker": "片山陸人",
+        "speakers": [
+            "片山陸人"
+        ],
+        "weight": 8,
+        "before_next": [],
+        "after_next": [
+            "感じ"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun",
+        "next_speakers": {
+            "感じ": [
+                "大島"
+            ]
+        },
+        "period": [
+            {
+                "speaker": "片山陸人",
+                "time": 31
+            }
+        ]
+    },
+    {
+        "keyword": "ケーキ",
+        "speaker": "大島",
+        "speakers": [
+            "大島"
+        ],
+        "weight": 8,
+        "before_next": [],
+        "after_next": [
+            "感じ",
+            "トロ",
+            "背景",
+            "自分",
+            "花器"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun",
+        "next_speakers": {
+            "感じ": [
+                "大島"
+            ],
+            "トロ": [
+                "大島"
+            ],
+            "背景": [
+                "大島"
+            ],
+            "自分": [
+                "大島"
+            ],
+            "花器": [
+                "大島"
+            ]
+        },
+        "period": [
+            {
+                "speaker": "大島",
+                "time": 33
+            }
+        ]
+    },
+    {
+        "keyword": "トロ",
+        "speaker": "大島",
+        "speakers": [
+            "大島"
+        ],
+        "weight": 8,
         "before_next": [],
         "after_next": [
             "最後",
-            "限界",
-            "最初",
-            "条件",
-            "人中",
-            "アンケート",
-            "棒グラフ",
-            "あと",
-            "自分"
+            "概要",
+            "背景"
         ],
         "isLatest": false,
         "isInGraph": false,
         "position": "noun",
         "next_speakers": {
             "最後": [
-                "小田敏人 "
+                "片山陸人",
+                "片山陸人"
             ],
-            "限界": [
-                "小田敏人 "
+            "概要": [
+                "片山陸人"
             ],
-            "最初": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "条件": [
-                "小田敏人 "
-            ],
-            "人中": [
-                "小田敏人 ",
-                "大島"
-            ],
-            "アンケート": [
-                "小田敏人 ",
-                "大島",
-                "大島"
-            ],
-            "棒グラフ": [
-                "小田敏人 ",
-                "大島"
-            ],
-            "あと": [
-                "小田敏人 ",
-                "大島"
-            ],
-            "自分": [
-                "大島"
+            "背景": [
+                "片山陸人"
             ]
         },
         "period": [
             {
                 "speaker": "大島",
-                "time": 36
-            },
-            {
-                "speaker": "大島",
-                "time": 36
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 37
+                "time": 35
             }
         ]
     },
     {
-        "keyword": "限界",
+        "keyword": "背景",
         "speaker": "大島",
         "speakers": [
             "大島",
-            "小田敏人 "
+            "片山陸人"
         ],
-        "weight": 7,
+        "weight": 24,
         "before_next": [],
         "after_next": [
             "最後",
-            "限界",
-            "最初",
-            "条件",
-            "人中",
-            "アンケート",
-            "棒グラフ",
-            "あと",
-            "自分"
+            "概要",
+            "背景"
         ],
         "isLatest": false,
         "isInGraph": false,
         "position": "noun",
         "next_speakers": {
             "最後": [
-                "小田敏人 "
+                "片山陸人",
+                "片山陸人"
             ],
-            "限界": [
-                "小田敏人 "
+            "概要": [
+                "片山陸人"
             ],
-            "最初": [
-                "小田敏人 ",
-                "小田敏人 "
-            ],
-            "条件": [
-                "小田敏人 "
-            ],
-            "人中": [
-                "小田敏人 ",
-                "大島"
-            ],
-            "アンケート": [
-                "小田敏人 ",
-                "大島",
-                "大島"
-            ],
-            "棒グラフ": [
-                "小田敏人 ",
-                "大島"
-            ],
-            "あと": [
-                "小田敏人 ",
-                "大島"
-            ],
-            "自分": [
+            "背景": [
+                "片山陸人",
                 "大島"
             ]
         },
         "period": [
             {
                 "speaker": "大島",
-                "time": 36
+                "time": 35
             },
             {
-                "speaker": "小田敏人 ",
-                "time": 37
-            }
-        ]
-    },
-    {
-        "keyword": "人中",
-        "speaker": "小田敏人 ",
-        "speakers": [
-            "小田敏人 ",
-            "大島"
-        ],
-        "weight": 7,
-        "before_next": [],
-        "after_next": [
-            "人中",
-            "アンケート",
-            "棒グラフ",
-            "あと",
-            "自分",
-            "卒論",
-            "書き方"
-        ],
-        "isLatest": false,
-        "isInGraph": false,
-        "position": "noun",
-        "next_speakers": {
-            "人中": [
-                "大島"
-            ],
-            "アンケート": [
-                "大島",
-                "大島",
-                "大島"
-            ],
-            "棒グラフ": [
-                "大島"
-            ],
-            "あと": [
-                "大島",
-                "大島"
-            ],
-            "自分": [
-                "大島"
-            ],
-            "卒論": [
-                "大島"
-            ],
-            "書き方": [
-                "大島"
-            ]
-        },
-        "period": [
-            {
-                "speaker": "小田敏人 ",
+                "speaker": "片山陸人",
                 "time": 37
             },
             {
                 "speaker": "大島",
-                "time": 38
+                "time": 40
             }
         ]
     },
     {
-        "keyword": "棒グラフ",
-        "speaker": "小田敏人 ",
-        "speakers": [
-            "小田敏人 ",
-            "大島"
-        ],
-        "weight": 7,
-        "before_next": [],
-        "after_next": [
-            "人中",
-            "アンケート",
-            "棒グラフ",
-            "あと",
-            "自分",
-            "卒論",
-            "書き方"
-        ],
-        "isLatest": false,
-        "isInGraph": false,
-        "position": "noun",
-        "next_speakers": {
-            "人中": [
-                "大島"
-            ],
-            "アンケート": [
-                "大島",
-                "大島",
-                "大島"
-            ],
-            "棒グラフ": [
-                "大島"
-            ],
-            "あと": [
-                "大島",
-                "大島"
-            ],
-            "自分": [
-                "大島"
-            ],
-            "卒論": [
-                "大島"
-            ],
-            "書き方": [
-                "大島"
-            ]
-        },
-        "period": [
-            {
-                "speaker": "小田敏人 ",
-                "time": 37
-            },
-            {
-                "speaker": "大島",
-                "time": 38
-            }
-        ]
-    },
-    {
-        "keyword": "両面",
+        "keyword": "花器",
         "speaker": "大島",
         "speakers": [
-            "大島",
-            "小田敏人 "
+            "大島"
         ],
-        "weight": 7,
+        "weight": 8,
         "before_next": [],
         "after_next": [
-            "両面",
+            "最後",
+            "概要",
+            "背景"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun",
+        "next_speakers": {
+            "最後": [
+                "片山陸人",
+                "片山陸人"
+            ],
+            "概要": [
+                "片山陸人"
+            ],
+            "背景": [
+                "片山陸人"
+            ]
+        },
+        "period": [
+            {
+                "speaker": "大島",
+                "time": 35
+            }
+        ]
+    },
+    {
+        "keyword": "概要",
+        "speaker": "片山陸人",
+        "speakers": [
+            "片山陸人"
+        ],
+        "weight": 8,
+        "before_next": [],
+        "after_next": [
+            "背景"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun",
+        "next_speakers": {
+            "背景": [
+                "大島"
+            ]
+        },
+        "period": [
+            {
+                "speaker": "片山陸人",
+                "time": 37
+            }
+        ]
+    },
+    {
+        "keyword": "自身",
+        "speaker": "大島",
+        "speakers": [
+            "大島"
+        ],
+        "weight": 8,
+        "before_next": [],
+        "after_next": [
+            "メッセージ",
+            "可視",
+            "システム"
+        ],
+        "isLatest": false,
+        "isInGraph": false,
+        "position": "noun",
+        "next_speakers": {
+            "メッセージ": [
+                "片山陸人"
+            ],
+            "可視": [
+                "片山陸人"
+            ],
+            "システム": [
+                "片山陸人"
+            ]
+        },
+        "period": [
+            {
+                "speaker": "大島",
+                "time": 41
+            }
+        ]
+    },
+    {
+        "keyword": "メッセージ",
+        "speaker": "片山陸人",
+        "speakers": [
+            "片山陸人"
+        ],
+        "weight": 8,
+        "before_next": [],
+        "after_next": [
             "自分"
         ],
         "isLatest": false,
         "isInGraph": false,
         "position": "noun",
         "next_speakers": {
-            "両面": [
-                "小田敏人 "
-            ],
             "自分": [
-                "大島"
+                "片山陸人"
             ]
         },
         "period": [
             {
-                "speaker": "大島",
-                "time": 45
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 46
+                "speaker": "片山陸人",
+                "time": 43
             }
         ]
     },
     {
-        "keyword": "加速度",
-        "speaker": "小田敏人 ",
+        "keyword": "可視",
+        "speaker": "片山陸人",
         "speakers": [
-            "小田敏人 ",
-            "大島"
+            "片山陸人"
         ],
-        "weight": 7,
+        "weight": 8,
         "before_next": [],
         "after_next": [
-            "アプリ",
-            "地図",
-            "情報",
-            "卒論",
-            "締め切り"
+            "自分"
         ],
         "isLatest": false,
         "isInGraph": false,
         "position": "noun",
         "next_speakers": {
-            "アプリ": [
-                "小田敏人 "
-            ],
-            "地図": [
-                "大島"
-            ],
-            "情報": [
-                "大島"
-            ],
-            "卒論": [
-                "大島"
-            ],
-            "締め切り": [
-                "大島"
+            "自分": [
+                "片山陸人"
             ]
         },
         "period": [
             {
-                "speaker": "小田敏人 ",
-                "time": 49
-            },
-            {
-                "speaker": "大島",
-                "time": 60
-            }
-        ]
-    },
-    {
-        "keyword": "地図",
-        "speaker": "大島",
-        "speakers": [
-            "大島",
-            "小田敏人 "
-        ],
-        "weight": 7,
-        "before_next": [],
-        "after_next": [
-            "地図",
-            "あと",
-            "卒論",
-            "締め切り"
-        ],
-        "isLatest": true,
-        "isInGraph": false,
-        "position": "noun",
-        "next_speakers": {
-            "地図": [
-                "小田敏人 "
-            ],
-            "あと": [
-                "小田敏人 "
-            ],
-            "卒論": [
-                "小田敏人 "
-            ],
-            "締め切り": [
-                "小田敏人 "
-            ]
-        },
-        "period": [
-            {
-                "speaker": "大島",
-                "time": 61
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 62
-            }
-        ]
-    },
-    {
-        "keyword": "締め切り",
-        "speaker": "大島",
-        "speakers": [
-            "大島",
-            "小田敏人 "
-        ],
-        "weight": 7,
-        "before_next": [],
-        "after_next": [
-            "地図",
-            "あと",
-            "卒論",
-            "締め切り"
-        ],
-        "isLatest": true,
-        "isInGraph": false,
-        "position": "noun",
-        "next_speakers": {
-            "地図": [
-                "小田敏人 "
-            ],
-            "あと": [
-                "小田敏人 "
-            ],
-            "卒論": [
-                "小田敏人 "
-            ],
-            "締め切り": [
-                "小田敏人 "
-            ]
-        },
-        "period": [
-            {
-                "speaker": "大島",
-                "time": 61
-            },
-            {
-                "speaker": "小田敏人 ",
-                "time": 62
+                "speaker": "片山陸人",
+                "time": 43
             }
         ]
     },
@@ -1834,7 +1214,7 @@
         "period": [
             {
                 "speaker": "default",
-                "time": 64
+                "time": 51
             }
         ]
     }
