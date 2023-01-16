@@ -1028,7 +1028,7 @@ export default {
           edge_style['line-gradient-stop-positions'] = positions;
         }
         edge_style['width'] = 3 * Math.pow(2, width); //最小値は3
-        edge_style['arrow-scale'] = width;
+        edge_style['arrow-scale'] = 1;
 
         //edgeの作成
         try {
