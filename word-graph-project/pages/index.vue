@@ -592,6 +592,7 @@ export default {
       this.file = event.target.files ? event.target.files[0] : null;
       if (this.file) {
         this.clear_graph();
+        this.clabel_setter('大島');
         this.get_json_data(this.file)
         .then(res=>{
           this.start_from_json(res)
